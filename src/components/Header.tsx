@@ -49,18 +49,18 @@ const Header = () => {
         </div>
         
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Dashboard
-          </a>
-          <a href="#" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+          </Link>
+          <Link to="/standings" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             Standings
-          </a>
-          <a href="#" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+          </Link>
+          <Link to="/schedule" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             Schedule
-          </a>
-          <a href="#" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Teams
-          </a>
+          </Link>
+          <Link to="/drivers" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            Drivers
+          </Link>
         </nav>
         
         <div className="flex items-center gap-2">

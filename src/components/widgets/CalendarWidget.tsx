@@ -1,17 +1,18 @@
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Clock, CheckCircle } from 'lucide-react';
-import { races } from '@/data/wecData';
+import { Calendar, MapPin, Clock, CheckCircle, Trophy } from 'lucide-react';
+import { races2025 } from '@/data/wecData';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const CalendarWidget = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-muted">Completed</Badge>;
+        return <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-muted">Done</Badge>;
       case 'live':
         return <Badge className="bg-secondary text-secondary-foreground animate-pulse">LIVE</Badge>;
       case 'upcoming':
-        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Upcoming</Badge>;
+        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Next</Badge>;
       default:
         return null;
     }
@@ -24,13 +25,16 @@ const CalendarWidget = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-4 h-4 text-primary" />
-        <h3 className="font-racing text-lg font-bold">2024 Calendar</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-primary" />
+          <h3 className="font-racing text-lg font-bold">2025 Calendar</h3>
+        </div>
+        <Link to="/schedule" className="text-xs text-primary hover:underline">View All</Link>
       </div>
       
       <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
-        {races.map((race, index) => (
+        {races2025.slice(0, 5).map((race, index) => (
           <motion.div
             key={race.id}
             className={`p-3 rounded-lg border transition-all ${
