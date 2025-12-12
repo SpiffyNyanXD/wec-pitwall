@@ -14,7 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      favorite_teams: {
+        Row: {
+          car_class: string
+          created_at: string
+          id: string
+          team_id: string
+          team_name: string
+          user_id: string
+        }
+        Insert: {
+          car_class: string
+          created_at?: string
+          id?: string
+          team_id: string
+          team_name: string
+          user_id: string
+        }
+        Update: {
+          car_class?: string
+          created_at?: string
+          id?: string
+          team_id?: string
+          team_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_subscriptions: {
+        Row: {
+          created_at: string
+          email_notifications: boolean
+          favorite_team_alerts: boolean
+          id: string
+          push_notifications: boolean
+          push_subscription: Json | null
+          race_start_alerts: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_notifications?: boolean
+          favorite_team_alerts?: boolean
+          id?: string
+          push_notifications?: boolean
+          push_subscription?: Json | null
+          race_start_alerts?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_notifications?: boolean
+          favorite_team_alerts?: boolean
+          id?: string
+          push_notifications?: boolean
+          push_subscription?: Json | null
+          race_start_alerts?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
