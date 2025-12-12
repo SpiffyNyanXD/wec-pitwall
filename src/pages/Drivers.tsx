@@ -1,0 +1,126 @@
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Trophy, Flag, Medal, ChevronRight } from 'lucide-react';
+import Header from '@/components/Header';
+import { Badge } from '@/components/ui/badge';
+import { drivers2024, getDriversByClass } from '@/data/wecData';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+const Drivers = () => {
+  const getClassBadge = (carClass: string) => {
+    switch (carClass) {
+      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
+      case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      default: return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  const DriverCard = ({ driver, index }: { driver: typeof drivers2024[0]; index: number }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+    >
+      <Link 
+        to={`/drivers/${driver.id}`}
+        className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300"
+      >
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-2xl font-racing">
+              {driver.countryFlag}
+            </div>
+            <div>
+              <h3 className="font-racing text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                {driver.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">{driver.team}</p>
+            </div>
+          </div>
+          <Badge variant="outline" className={`${getClassBadge(driver.class)} text-xs`}>
+            {driver.class}
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-wec-gold mb-1">
+              <Trophy className="w-3 h-3" />
+            </div>
+            <p className="text-lg font-racing font-bold">{driver.championships}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Titles</p>
+          </div>
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-secondary mb-1">
+              <Flag className="w-3 h-3" />
+            </div>
+            <p className="text-lg font-racing font-bold">{driver.leMansWins}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Le Mans</p>
+          </div>
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-primary mb-1">
+              <Medal className="w-3 h-3" />
+            </div>
+            <p className="text-lg font-racing font-bold">{driver.wecWins}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">WEC Wins</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-racing text-primary">{driver.carNumber}</span>
+            <span className="text-xs text-muted-foreground">|</span>
+            <span className="text-sm text-muted-foreground">{driver.nationality}</span>
+          </div>
+          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+        </div>
+      </Link>
+    </motion.div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Background effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
+      </div>
+
+      <Header />
+
+      <main className="container py-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
+            <span className="text-gradient">Drivers</span>
+          </h1>
+          <p className="text-muted-foreground">2024 FIA World Endurance Championship drivers</p>
+        </motion.div>
+
+        <Tabs defaultValue="HYPERCAR" className="w-full">
+          <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
+            <TabsTrigger value="HYPERCAR" className="font-racing">Hypercar</TabsTrigger>
+            <TabsTrigger value="LMP2" className="font-racing">LMP2</TabsTrigger>
+            <TabsTrigger value="LMGT3" className="font-racing">LMGT3</TabsTrigger>
+          </TabsList>
+
+          {(['HYPERCAR', 'LMP2', 'LMGT3'] as const).map((carClass) => (
+            <TabsContent key={carClass} value={carClass}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getDriversByClass(carClass).map((driver, index) => (
+                  <DriverCard key={driver.id} driver={driver} index={index} />
+                ))}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </main>
+    </div>
+  );
+};
+
+export default Drivers;

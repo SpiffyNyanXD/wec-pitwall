@@ -15,7 +15,7 @@ const LiveTimingWidget = () => {
 
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
-      case 'HYPER': return 'bg-primary/20 text-primary border-primary/30';
+      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
       case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
       case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
       default: return 'bg-muted text-muted-foreground';
