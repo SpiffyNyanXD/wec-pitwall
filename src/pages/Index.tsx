@@ -2,9 +2,7 @@ import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
 import StandingsWidget from '@/components/widgets/StandingsWidget';
-import LiveTimingWidget from '@/components/widgets/LiveTimingWidget';
 import CalendarWidget from '@/components/widgets/CalendarWidget';
-import WeatherWidget from '@/components/widgets/WeatherWidget';
 import QuickStatsWidget from '@/components/widgets/QuickStatsWidget';
 
 const Index = () => {
@@ -32,11 +30,8 @@ const Index = () => {
           <StandingsWidget />
           <CalendarWidget />
           
-          {/* Row 3: Live Timing spans 2 cols, Weather on side */}
-          <LiveTimingWidget />
-          
-          <div className="space-y-4 md:space-y-6">
-            <WeatherWidget />
+          {/* Row 3: Quick Stats */}
+          <div className="col-span-full lg:col-span-2">
             <QuickStatsWidget />
           </div>
         </motion.div>

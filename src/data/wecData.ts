@@ -43,6 +43,14 @@ export interface Team {
   drivers: string[];
 }
 
+export interface Session {
+  type: 'FP1' | 'FP2' | 'FP3' | 'Qualifying' | 'Hyperpole' | 'Warm Up' | 'Race';
+  date: string;
+  startTime: string;
+  endTime: string;
+  duration: string;
+}
+
 export interface Race {
   id: string;
   name: string;
@@ -61,22 +69,10 @@ export interface Race {
   fastestLap?: string;
   trackLength?: string;
   laps?: number;
+  sessions?: Session[];
 }
 
-export interface LiveTiming {
-  position: number;
-  carNumber: string;
-  team: string;
-  class: 'HYPERCAR' | 'LMP2' | 'LMGT3';
-  driver: string;
-  gap: string;
-  lastLap: string;
-  bestLap: string;
-  status: 'running' | 'pit' | 'out';
-  laps: number;
-}
-
-// ============= 2024 Season Data =============
+// ============= 2024 Season Data (COMPLETED) =============
 
 export const drivers2024: Driver[] = [
   // HYPERCAR DRIVERS
@@ -518,117 +514,316 @@ export const teams2024: Team[] = [
   { id: 'afc-55', name: 'AF Corse', manufacturer: 'Ferrari', carNumber: '#55', class: 'LMGT3', points: 92, position: 5, color: '#DC143C', country: 'Italy', countryFlag: '🇮🇹', drivers: ['costa', 'ledogar', 'sernagiotto'] },
 ];
 
-// 2024 Season Races (Completed)
+// 2024 Season Races (COMPLETED)
 export const races2024: Race[] = [
   { 
     id: '2024-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
     date: '2024-03-02', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2024, round: 1,
-    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 334
+    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 334,
+    sessions: [
+      { type: 'FP1', date: '2024-02-29', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-02-29', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-03-01', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2024-03-01', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2024-03-02', startTime: '12:00', endTime: '22:00', duration: '10h' },
+    ]
   },
   { 
     id: '2024-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
     date: '2024-04-21', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2024, round: 2,
-    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 212
+    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 212,
+    sessions: [
+      { type: 'FP1', date: '2024-04-19', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-04-19', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-04-20', startTime: '10:00', endTime: '11:00', duration: '1h' },
+      { type: 'Qualifying', date: '2024-04-20', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Race', date: '2024-04-21', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
   },
   { 
     id: '2024-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium', 
     date: '2024-05-11', duration: '6 Hours', status: 'completed', flag: '🇧🇪', season: 2024, round: 3,
-    winner: 'Porsche #6', winningTeam: 'Porsche Penske Motorsport', trackLength: '7.004 km', laps: 166
+    winner: 'Porsche #6', winningTeam: 'Porsche Penske Motorsport', trackLength: '7.004 km', laps: 166,
+    sessions: [
+      { type: 'FP1', date: '2024-05-09', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-05-09', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-05-10', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2024-05-10', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Race', date: '2024-05-11', startTime: '13:00', endTime: '19:00', duration: '6h' },
+    ]
   },
   { 
     id: '2024-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
     date: '2024-06-15', endDate: '2024-06-16', duration: '24 Hours', status: 'completed', flag: '🇫🇷', season: 2024, round: 4,
-    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '13.626 km', laps: 311
+    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '13.626 km', laps: 311,
+    sessions: [
+      { type: 'FP1', date: '2024-06-12', startTime: '14:00', endTime: '17:00', duration: '3h' },
+      { type: 'Qualifying', date: '2024-06-12', startTime: '19:00', endTime: '20:00', duration: '1h' },
+      { type: 'FP2', date: '2024-06-12', startTime: '22:00', endTime: '00:00', duration: '2h' },
+      { type: 'FP3', date: '2024-06-13', startTime: '15:00', endTime: '18:00', duration: '3h' },
+      { type: 'Hyperpole', date: '2024-06-13', startTime: '20:00', endTime: '20:30', duration: '30m' },
+      { type: 'Warm Up', date: '2024-06-15', startTime: '10:30', endTime: '10:45', duration: '15m' },
+      { type: 'Race', date: '2024-06-15', startTime: '16:00', endTime: '16:00', duration: '24h' },
+    ]
   },
   { 
     id: '2024-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil', 
     date: '2024-07-14', duration: '6 Hours', status: 'completed', flag: '🇧🇷', season: 2024, round: 5,
-    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.309 km', laps: 227
+    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.309 km', laps: 227,
+    sessions: [
+      { type: 'FP1', date: '2024-07-12', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-07-12', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-07-13', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2024-07-13', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Race', date: '2024-07-14', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
   },
   { 
     id: '2024-6', name: '6 Hours of COTA', circuit: 'Circuit of the Americas', country: 'USA', 
     date: '2024-09-01', duration: '6 Hours', status: 'completed', flag: '🇺🇸', season: 2024, round: 6,
-    winner: 'Porsche #5', winningTeam: 'Porsche Penske Motorsport', trackLength: '5.513 km', laps: 185
+    winner: 'Porsche #5', winningTeam: 'Porsche Penske Motorsport', trackLength: '5.513 km', laps: 185,
+    sessions: [
+      { type: 'FP1', date: '2024-08-30', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-08-30', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-08-31', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2024-08-31', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Race', date: '2024-09-01', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
   },
   { 
     id: '2024-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan', 
     date: '2024-09-15', duration: '6 Hours', status: 'completed', flag: '🇯🇵', season: 2024, round: 7,
-    winner: 'Toyota #7', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.563 km', laps: 214
+    winner: 'Toyota #7', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.563 km', laps: 214,
+    sessions: [
+      { type: 'FP1', date: '2024-09-13', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-09-13', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-09-14', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2024-09-14', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Race', date: '2024-09-15', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
   },
   { 
     id: '2024-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain', 
     date: '2024-11-02', duration: '8 Hours', status: 'completed', flag: '🇧🇭', season: 2024, round: 8,
-    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '5.412 km', laps: 270
+    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '5.412 km', laps: 270,
+    sessions: [
+      { type: 'FP1', date: '2024-10-31', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2024-10-31', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2024-11-01', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2024-11-01', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2024-11-02', startTime: '14:00', endTime: '22:00', duration: '8h' },
+    ]
   },
 ];
 
-// 2025 Season Races (Upcoming)
+// 2025 Season Races (COMPLETED)
 export const races2025: Race[] = [
   { 
     id: '2025-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
     date: '2025-02-28', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2025, round: 1,
-    trackLength: '5.419 km'
+    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 336,
+    sessions: [
+      { type: 'FP1', date: '2025-02-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-02-26', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-02-27', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2025-02-27', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2025-02-28', startTime: '12:00', endTime: '22:00', duration: '10h' },
+    ]
   },
   { 
     id: '2025-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
-    date: '2025-04-20', duration: '6 Hours', status: 'upcoming', flag: '🇮🇹', season: 2025, round: 2,
-    trackLength: '4.909 km'
+    date: '2025-04-20', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2025, round: 2,
+    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 210,
+    sessions: [
+      { type: 'FP1', date: '2025-04-18', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-04-18', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-04-19', startTime: '10:00', endTime: '11:00', duration: '1h' },
+      { type: 'Qualifying', date: '2025-04-19', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Race', date: '2025-04-20', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
   },
   { 
     id: '2025-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium', 
-    date: '2025-05-10', duration: '6 Hours', status: 'upcoming', flag: '🇧🇪', season: 2025, round: 3,
-    trackLength: '7.004 km'
+    date: '2025-05-10', duration: '6 Hours', status: 'completed', flag: '🇧🇪', season: 2025, round: 3,
+    winner: 'Porsche #5', winningTeam: 'Porsche Penske Motorsport', trackLength: '7.004 km', laps: 164,
+    sessions: [
+      { type: 'FP1', date: '2025-05-08', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-05-08', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-05-09', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2025-05-09', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Race', date: '2025-05-10', startTime: '13:00', endTime: '19:00', duration: '6h' },
+    ]
   },
   { 
     id: '2025-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
-    date: '2025-06-14', endDate: '2025-06-15', duration: '24 Hours', status: 'upcoming', flag: '🇫🇷', season: 2025, round: 4,
-    trackLength: '13.626 km'
+    date: '2025-06-14', endDate: '2025-06-15', duration: '24 Hours', status: 'completed', flag: '🇫🇷', season: 2025, round: 4,
+    winner: 'Toyota #7', winningTeam: 'Toyota Gazoo Racing', trackLength: '13.626 km', laps: 315,
+    sessions: [
+      { type: 'FP1', date: '2025-06-11', startTime: '14:00', endTime: '17:00', duration: '3h' },
+      { type: 'Qualifying', date: '2025-06-11', startTime: '19:00', endTime: '20:00', duration: '1h' },
+      { type: 'FP2', date: '2025-06-11', startTime: '22:00', endTime: '00:00', duration: '2h' },
+      { type: 'FP3', date: '2025-06-12', startTime: '15:00', endTime: '18:00', duration: '3h' },
+      { type: 'Hyperpole', date: '2025-06-12', startTime: '20:00', endTime: '20:30', duration: '30m' },
+      { type: 'Warm Up', date: '2025-06-14', startTime: '10:30', endTime: '10:45', duration: '15m' },
+      { type: 'Race', date: '2025-06-14', startTime: '16:00', endTime: '16:00', duration: '24h' },
+    ]
   },
   { 
     id: '2025-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil', 
-    date: '2025-07-13', duration: '6 Hours', status: 'upcoming', flag: '🇧🇷', season: 2025, round: 5,
-    trackLength: '4.309 km'
+    date: '2025-07-13', duration: '6 Hours', status: 'completed', flag: '🇧🇷', season: 2025, round: 5,
+    winner: 'Porsche #6', winningTeam: 'Porsche Penske Motorsport', trackLength: '4.309 km', laps: 229,
+    sessions: [
+      { type: 'FP1', date: '2025-07-11', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-07-11', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-07-12', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2025-07-12', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Race', date: '2025-07-13', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
   },
   { 
     id: '2025-6', name: '6 Hours of COTA', circuit: 'Circuit of the Americas', country: 'USA', 
-    date: '2025-08-31', duration: '6 Hours', status: 'upcoming', flag: '🇺🇸', season: 2025, round: 6,
-    trackLength: '5.513 km'
+    date: '2025-08-31', duration: '6 Hours', status: 'completed', flag: '🇺🇸', season: 2025, round: 6,
+    winner: 'Ferrari #51', winningTeam: 'Ferrari AF Corse', trackLength: '5.513 km', laps: 187,
+    sessions: [
+      { type: 'FP1', date: '2025-08-29', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-08-29', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-08-30', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2025-08-30', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Race', date: '2025-08-31', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
   },
   { 
     id: '2025-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan', 
-    date: '2025-09-14', duration: '6 Hours', status: 'upcoming', flag: '🇯🇵', season: 2025, round: 7,
-    trackLength: '4.563 km'
+    date: '2025-09-14', duration: '6 Hours', status: 'completed', flag: '🇯🇵', season: 2025, round: 7,
+    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.563 km', laps: 216,
+    sessions: [
+      { type: 'FP1', date: '2025-09-12', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-09-12', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-09-13', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2025-09-13', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Race', date: '2025-09-14', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
   },
   { 
     id: '2025-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain', 
-    date: '2025-11-08', duration: '8 Hours', status: 'upcoming', flag: '🇧🇭', season: 2025, round: 8,
-    trackLength: '5.412 km'
+    date: '2025-11-08', duration: '8 Hours', status: 'completed', flag: '🇧🇭', season: 2025, round: 8,
+    winner: 'Porsche #6', winningTeam: 'Porsche Penske Motorsport', trackLength: '5.412 km', laps: 272,
+    sessions: [
+      { type: 'FP1', date: '2025-11-06', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2025-11-06', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2025-11-07', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2025-11-07', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2025-11-08', startTime: '14:00', endTime: '22:00', duration: '8h' },
+    ]
   },
 ];
 
-// Export combined data (default to 2024 for backward compatibility)
+// 2026 Season Races (UPCOMING)
+export const races2026: Race[] = [
+  { 
+    id: '2026-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
+    date: '2026-02-27', duration: '10 Hours', status: 'upcoming', flag: '🇶🇦', season: 2026, round: 1,
+    trackLength: '5.419 km',
+    sessions: [
+      { type: 'FP1', date: '2026-02-25', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-02-25', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-02-26', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2026-02-26', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2026-02-27', startTime: '12:00', endTime: '22:00', duration: '10h' },
+    ]
+  },
+  { 
+    id: '2026-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
+    date: '2026-04-19', duration: '6 Hours', status: 'upcoming', flag: '🇮🇹', season: 2026, round: 2,
+    trackLength: '4.909 km',
+    sessions: [
+      { type: 'FP1', date: '2026-04-17', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-04-17', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-04-18', startTime: '10:00', endTime: '11:00', duration: '1h' },
+      { type: 'Qualifying', date: '2026-04-18', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Race', date: '2026-04-19', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
+  },
+  { 
+    id: '2026-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium', 
+    date: '2026-05-09', duration: '6 Hours', status: 'upcoming', flag: '🇧🇪', season: 2026, round: 3,
+    trackLength: '7.004 km',
+    sessions: [
+      { type: 'FP1', date: '2026-05-07', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-05-07', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-05-08', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2026-05-08', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Race', date: '2026-05-09', startTime: '13:00', endTime: '19:00', duration: '6h' },
+    ]
+  },
+  { 
+    id: '2026-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
+    date: '2026-06-13', endDate: '2026-06-14', duration: '24 Hours', status: 'upcoming', flag: '🇫🇷', season: 2026, round: 4,
+    trackLength: '13.626 km',
+    sessions: [
+      { type: 'FP1', date: '2026-06-10', startTime: '14:00', endTime: '17:00', duration: '3h' },
+      { type: 'Qualifying', date: '2026-06-10', startTime: '19:00', endTime: '20:00', duration: '1h' },
+      { type: 'FP2', date: '2026-06-10', startTime: '22:00', endTime: '00:00', duration: '2h' },
+      { type: 'FP3', date: '2026-06-11', startTime: '15:00', endTime: '18:00', duration: '3h' },
+      { type: 'Hyperpole', date: '2026-06-11', startTime: '20:00', endTime: '20:30', duration: '30m' },
+      { type: 'Warm Up', date: '2026-06-13', startTime: '10:30', endTime: '10:45', duration: '15m' },
+      { type: 'Race', date: '2026-06-13', startTime: '16:00', endTime: '16:00', duration: '24h' },
+    ]
+  },
+  { 
+    id: '2026-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil', 
+    date: '2026-07-12', duration: '6 Hours', status: 'upcoming', flag: '🇧🇷', season: 2026, round: 5,
+    trackLength: '4.309 km',
+    sessions: [
+      { type: 'FP1', date: '2026-07-10', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-07-10', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-07-11', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2026-07-11', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Race', date: '2026-07-12', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
+  },
+  { 
+    id: '2026-6', name: '6 Hours of COTA', circuit: 'Circuit of the Americas', country: 'USA', 
+    date: '2026-08-30', duration: '6 Hours', status: 'upcoming', flag: '🇺🇸', season: 2026, round: 6,
+    trackLength: '5.513 km',
+    sessions: [
+      { type: 'FP1', date: '2026-08-28', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-08-28', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-08-29', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2026-08-29', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Race', date: '2026-08-30', startTime: '12:00', endTime: '18:00', duration: '6h' },
+    ]
+  },
+  { 
+    id: '2026-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan', 
+    date: '2026-09-13', duration: '6 Hours', status: 'upcoming', flag: '🇯🇵', season: 2026, round: 7,
+    trackLength: '4.563 km',
+    sessions: [
+      { type: 'FP1', date: '2026-09-11', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-09-11', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-09-12', startTime: '09:00', endTime: '10:00', duration: '1h' },
+      { type: 'Qualifying', date: '2026-09-12', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Race', date: '2026-09-13', startTime: '11:00', endTime: '17:00', duration: '6h' },
+    ]
+  },
+  { 
+    id: '2026-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain', 
+    date: '2026-11-07', duration: '8 Hours', status: 'upcoming', flag: '🇧🇭', season: 2026, round: 8,
+    trackLength: '5.412 km',
+    sessions: [
+      { type: 'FP1', date: '2026-11-05', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-11-05', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-11-06', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2026-11-06', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2026-11-07', startTime: '14:00', endTime: '22:00', duration: '8h' },
+    ]
+  },
+];
+
+// Export combined data
 export const drivers = drivers2024;
 export const teams = teams2024;
-export const races = [...races2024, ...races2025];
-
-export const liveTiming: LiveTiming[] = [
-  { position: 1, carNumber: '#8', team: 'Toyota Gazoo Racing', class: 'HYPERCAR', driver: 'Buemi', gap: 'LEADER', lastLap: '3:24.567', bestLap: '3:23.891', status: 'running', laps: 156 },
-  { position: 2, carNumber: '#50', team: 'Ferrari AF Corse', class: 'HYPERCAR', driver: 'Fuoco', gap: '+2.341', lastLap: '3:24.892', bestLap: '3:24.102', status: 'running', laps: 156 },
-  { position: 3, carNumber: '#6', team: 'Porsche Penske', class: 'HYPERCAR', driver: 'Estre', gap: '+5.678', lastLap: '3:25.123', bestLap: '3:24.456', status: 'running', laps: 156 },
-  { position: 4, carNumber: '#7', team: 'Toyota Gazoo Racing', class: 'HYPERCAR', driver: 'Kobayashi', gap: '+8.901', lastLap: '3:25.456', bestLap: '3:24.789', status: 'pit', laps: 155 },
-  { position: 5, carNumber: '#51', team: 'Ferrari AF Corse', class: 'HYPERCAR', driver: 'Pier Guidi', gap: '+12.345', lastLap: '3:25.789', bestLap: '3:25.012', status: 'running', laps: 156 },
-  { position: 6, carNumber: '#5', team: 'Porsche Penske', class: 'HYPERCAR', driver: 'Campbell', gap: '+15.678', lastLap: '3:26.012', bestLap: '3:25.345', status: 'running', laps: 156 },
-  { position: 7, carNumber: '#2', team: 'Cadillac Racing', class: 'HYPERCAR', driver: 'Bamber', gap: '+23.456', lastLap: '3:26.789', bestLap: '3:25.890', status: 'running', laps: 155 },
-  { position: 8, carNumber: '#93', team: 'Peugeot TotalEnergies', class: 'HYPERCAR', driver: 'Jensen', gap: '+34.567', lastLap: '3:27.123', bestLap: '3:26.456', status: 'running', laps: 155 },
-  // LMP2
-  { position: 9, carNumber: '#28', team: 'IDEC Sport', class: 'LMP2', driver: 'Nato', gap: '+1 LAP', lastLap: '3:32.456', bestLap: '3:31.234', status: 'running', laps: 155 },
-  { position: 10, carNumber: '#33', team: 'TDS Racing', class: 'LMP2', driver: 'Delétraz', gap: '+1 LAP', lastLap: '3:32.789', bestLap: '3:31.567', status: 'running', laps: 155 },
-  { position: 11, carNumber: '#37', team: 'Cool Racing', class: 'LMP2', driver: 'Borga', gap: '+1 LAP', lastLap: '3:33.012', bestLap: '3:31.890', status: 'pit', laps: 154 },
-  // LMGT3
-  { position: 12, carNumber: '#27', team: 'Heart of Racing', class: 'LMGT3', driver: 'Sørensen', gap: '+3 LAPS', lastLap: '3:54.123', bestLap: '3:52.456', status: 'running', laps: 153 },
-  { position: 13, carNumber: '#91', team: 'Manthey EMA', class: 'LMGT3', driver: 'Bachler', gap: '+3 LAPS', lastLap: '3:54.456', bestLap: '3:52.789', status: 'running', laps: 153 },
-  { position: 14, carNumber: '#85', team: 'Iron Dames', class: 'LMGT3', driver: 'Gatting', gap: '+3 LAPS', lastLap: '3:54.789', bestLap: '3:53.012', status: 'running', laps: 153 },
-];
+export const races = [...races2024, ...races2025, ...races2026];
 
 export const weather = {
   location: 'Le Mans, France',
@@ -664,4 +859,21 @@ export const getRacesBySeason = (season: number): Race[] => {
 export const getNextRace = (): Race | undefined => {
   const now = new Date();
   return races.find(r => new Date(r.date) > now && r.status === 'upcoming');
+};
+
+export const isRaceWeek = (race: Race): boolean => {
+  const now = new Date();
+  const raceDate = new Date(race.date);
+  const weekBefore = new Date(raceDate);
+  weekBefore.setDate(weekBefore.getDate() - 7);
+  return now >= weekBefore && now <= raceDate;
+};
+
+export const getCurrentOrNextRaceWeekRace = (): Race | undefined => {
+  const now = new Date();
+  // First check for any race in its race week
+  const raceWeekRace = races.find(r => isRaceWeek(r));
+  if (raceWeekRace) return raceWeekRace;
+  // Otherwise return next upcoming race
+  return races.find(r => new Date(r.date) > now);
 };
