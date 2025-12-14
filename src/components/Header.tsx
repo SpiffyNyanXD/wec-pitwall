@@ -64,12 +64,16 @@ const Header = () => {
         </nav>
         
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full" />
+          <Button variant="ghost" size="icon" className="relative" asChild>
+            <Link to="/settings">
+              <Bell className="h-5 w-5 text-muted-foreground" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full" />
+            </Link>
           </Button>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5 text-muted-foreground" />
+          <Button variant="ghost" size="icon" asChild>
+            <Link to="/settings">
+              <Settings className="h-5 w-5 text-muted-foreground" />
+            </Link>
           </Button>
 
           {!loading && (
