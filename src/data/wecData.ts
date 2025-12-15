@@ -41,6 +41,21 @@ export interface Team {
   country: string;
   countryFlag: string;
   drivers: string[];
+  // Extended team profile data
+  fullName?: string;
+  chassis?: string;
+  engine?: string;
+  teamPrincipal?: string;
+  base?: string;
+  founded?: string;
+  wecDebut?: string;
+  championships?: number;
+  leMansWins?: number;
+  wecWins?: number;
+  poles?: number;
+  fastestLaps?: number;
+  about?: string;
+  facts?: string[];
 }
 
 export interface Session {
@@ -490,12 +505,66 @@ export const drivers2024: Driver[] = [
 
 export const teams2024: Team[] = [
   // HYPERCAR
-  { id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', points: 186, position: 1, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: ['buemi', 'hartley', 'hirakawa'] },
-  { id: 'toyota-7', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', points: 158, position: 2, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: ['conway', 'kobayashi', 'delacruz'] },
-  { id: 'ferrari-50', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', points: 172, position: 3, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: ['fuoco', 'molina', 'nielsen'] },
-  { id: 'ferrari-51', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', points: 145, position: 4, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: ['calado', 'pier-guidi', 'giovinazzi'] },
-  { id: 'porsche-6', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', points: 156, position: 5, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: ['estre', 'lotterer', 'vanthoor'] },
-  { id: 'porsche-5', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', points: 134, position: 6, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: ['campbell', 'christensen', 'makowiecki'] },
+  { 
+    id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', 
+    points: 186, position: 1, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', 
+    drivers: ['buemi', 'hartley', 'hirakawa'],
+    fullName: 'Toyota Gazoo Racing', chassis: 'Toyota GR010 Hybrid', engine: 'Toyota 3.5L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Kamui Kobayashi', base: 'Cologne, Germany', founded: '1999', wecDebut: '2012',
+    championships: 6, leMansWins: 5, wecWins: 35, poles: 28, fastestLaps: 32,
+    about: 'Toyota Gazoo Racing is the works motorsport team of Japanese automobile manufacturer Toyota. The team has been dominant in the WEC, winning multiple championships and the prestigious 24 Hours of Le Mans. Their hybrid technology has set the benchmark in endurance racing.',
+    facts: ['Most successful team in modern WEC era', 'First Japanese manufacturer to win Le Mans overall since Mazda in 1991', 'GR010 Hybrid uses technology from Toyota road cars', 'Has won 5 consecutive Le Mans races (2018-2022)']
+  },
+  { 
+    id: 'toyota-7', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', 
+    points: 158, position: 2, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', 
+    drivers: ['conway', 'kobayashi', 'delacruz'],
+    fullName: 'Toyota Gazoo Racing', chassis: 'Toyota GR010 Hybrid', engine: 'Toyota 3.5L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Kamui Kobayashi', base: 'Cologne, Germany', founded: '1999', wecDebut: '2012',
+    championships: 3, leMansWins: 2, wecWins: 22, poles: 18, fastestLaps: 20,
+    about: 'The sister car of Toyota Gazoo Racing, car #7 has been a consistent challenger for victories. The crew features the legendary Kamui Kobayashi who also serves as team principal.',
+    facts: ['Kamui Kobayashi is both driver and team principal', 'Won Le Mans in 2021 and 2023', 'Known for aggressive pit strategies']
+  },
+  { 
+    id: 'ferrari-50', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', 
+    points: 172, position: 3, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['fuoco', 'molina', 'nielsen'],
+    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
+    championships: 1, leMansWins: 1, wecWins: 4, poles: 5, fastestLaps: 6,
+    about: 'Ferrari AF Corse marks the return of the Prancing Horse to top-tier prototype racing. In just their first full season, they achieved the remarkable feat of winning Le Mans - exactly 50 years after Ferrari\'s last overall victory at the Circuit de la Sarthe.',
+    facts: ['Won Le Mans on their first attempt in 2023', 'The 499P name celebrates Ferrari\'s 499th World Championship Grand Prix', 'Car designed entirely at Ferrari\'s Maranello facility', 'Livery inspired by classic Ferrari endurance cars']
+  },
+  { 
+    id: 'ferrari-51', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', 
+    points: 145, position: 4, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['calado', 'pier-guidi', 'giovinazzi'],
+    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 2, poles: 3, fastestLaps: 4,
+    about: 'The #51 Ferrari 499P carries the spirit of Ferrari\'s endurance racing heritage. The crew includes former Formula 1 driver Antonio Giovinazzi.',
+    facts: ['Features former F1 driver Antonio Giovinazzi', 'Finished on the podium at Le Mans 2023', 'James Calado is a WEC GTE Pro champion']
+  },
+  { 
+    id: 'porsche-6', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', 
+    points: 156, position: 5, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['estre', 'lotterer', 'vanthoor'],
+    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
+    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 3, poles: 4, fastestLaps: 5,
+    about: 'Porsche Penske Motorsport represents the partnership between Porsche and legendary American racing team owner Roger Penske. The 963 is named in honor of Porsche\'s iconic 956/962 Le Mans winners.',
+    facts: ['Partnership with legendary Roger Penske', '963 design inspired by the iconic 956/962', 'Team operates from both Germany and USA', 'Uses LMDh regulations for both WEC and IMSA']
+  },
+  { 
+    id: 'porsche-5', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', 
+    points: 134, position: 6, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['campbell', 'christensen', 'makowiecki'],
+    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
+    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 2, poles: 2, fastestLaps: 3,
+    about: 'The #5 Porsche 963 features a talented crew including Matt Campbell who has proven himself as one of the fastest GT and prototype drivers.',
+    facts: ['Matt Campbell is the fastest Australian in WEC', 'Michael Christensen is a former Porsche Supercup champion', 'Frédéric Makowiecki is a veteran GT racer']
+  },
   { id: 'cadillac-2', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 112, position: 7, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: ['bamber', 'lynn', 'westbrook'] },
   { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 98, position: 8, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['jensen', 'vergne', 'muller'] },
   { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 87, position: 9, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['vandoorne', 'di-resta', 'duval'] },
@@ -516,7 +585,7 @@ export const teams2024: Team[] = [
 
 // 2024 Season Races (COMPLETED)
 export const races2024: Race[] = [
-  { 
+  {
     id: '2024-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
     date: '2024-03-02', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2024, round: 1,
     winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 334,

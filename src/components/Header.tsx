@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Menu, Bell, Settings, LogIn, LogOut, User } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -11,14 +12,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+
+const navItems = [
+  { to: '/', label: 'Dashboard', icon: Home },
+  { to: '/standings', label: 'Standings', icon: Trophy },
+  { to: '/schedule', label: 'Schedule', icon: Calendar },
+  { to: '/drivers', label: 'Drivers', icon: Users },
+  { to: '/teams', label: 'Teams', icon: Car },
+];
 
 const Header = () => {
   const { user, signOut, loading } = useAuth();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
     toast.success('Signed out successfully');
   };
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <motion.header 
@@ -29,9 +49,102 @@ const Header = () => {
     >
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-          </Button>
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72 bg-background/95 backdrop-blur-xl">
+              <SheetHeader className="pb-6 border-b border-border/50">
+                <SheetTitle className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
+                    <span className="font-racing text-lg font-bold text-primary-foreground">W</span>
+                  </div>
+                  <div>
+                    <span className="font-racing text-xl font-bold text-foreground tracking-wide">
+                      WEC<span className="text-primary">Hub</span>
+                    </span>
+                  </div>
+                </SheetTitle>
+              </SheetHeader>
+              
+              <nav className="flex flex-col gap-2 mt-6">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                      isActive(item.to) 
+                        ? 'bg-primary/20 text-primary' 
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                ))}
+                
+                <div className="my-4 border-t border-border/50" />
+                
+                {user && (
+                  <Link
+                    to="/favorites"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                      isActive('/favorites') 
+                        ? 'bg-primary/20 text-primary' 
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    }`}
+                  >
+                    <Heart className="w-5 h-5" />
+                    <span className="font-medium">Favorites</span>
+                  </Link>
+                )}
+                
+                <Link
+                  to="/settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    isActive('/settings') 
+                      ? 'bg-primary/20 text-primary' 
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  }`}
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="font-medium">Settings</span>
+                </Link>
+
+                {!loading && (
+                  <>
+                    {user ? (
+                      <button
+                        onClick={() => {
+                          handleSignOut();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-all mt-4"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span className="font-medium">Sign Out</span>
+                      </button>
+                    ) : (
+                      <Link
+                        to="/auth"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg racing-gradient text-primary-foreground mt-4"
+                      >
+                        <LogIn className="w-5 h-5" />
+                        <span className="font-medium">Sign In</span>
+                      </Link>
+                    )}
+                  </>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
           
           <Link to="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
@@ -48,19 +161,21 @@ const Header = () => {
           </Link>
         </div>
         
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Dashboard
-          </Link>
-          <Link to="/standings" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Standings
-          </Link>
-          <Link to="/schedule" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Schedule
-          </Link>
-          <Link to="/drivers" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Drivers
-          </Link>
+          {navItems.map((item) => (
+            <Link 
+              key={item.to}
+              to={item.to} 
+              className={`text-sm font-medium transition-colors ${
+                isActive(item.to) 
+                  ? 'text-primary' 
+                  : 'text-muted-foreground hover:text-primary'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
         
         <div className="flex items-center gap-2">
@@ -70,7 +185,7 @@ const Header = () => {
               <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full" />
             </Link>
           </Button>
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild className="hidden md:flex">
             <Link to="/settings">
               <Settings className="h-5 w-5 text-muted-foreground" />
             </Link>
@@ -91,6 +206,19 @@ const Header = () => {
                     <div className="px-2 py-1.5 text-sm">
                       <p className="font-medium truncate">{user.email}</p>
                     </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/favorites" className="cursor-pointer">
+                        <Heart className="mr-2 h-4 w-4" />
+                        Favorites
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                       <LogOut className="mr-2 h-4 w-4" />
