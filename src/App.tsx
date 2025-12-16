@@ -11,6 +11,7 @@ import DriverProfile from "./pages/DriverProfile";
 import Teams from "./pages/Teams";
 import TeamProfile from "./pages/TeamProfile";
 import Schedule from "./pages/Schedule";
+import RaceProfile from "./pages/RaceProfile";
 import Standings from "./pages/Standings";
 import Settings from "./pages/Settings";
 import Favorites from "./pages/Favorites";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/teams" element={<Teams />} />
             <Route path="/teams/:id" element={<TeamProfile />} />
             <Route path="/schedule" element={<Schedule />} />
+            <Route path="/race/:id" element={<RaceProfile />} />
             <Route path="/standings" element={<Standings />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/favorites" element={<Favorites />} />
