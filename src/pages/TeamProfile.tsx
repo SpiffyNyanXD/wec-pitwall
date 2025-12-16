@@ -36,21 +36,50 @@ const TeamProfile = () => {
     }
   };
 
+  // Get class-appropriate default values
+  const getDefaultChassis = () => {
+    if (team.class === 'LMP2') return 'Oreca 07';
+    if (team.class === 'LMGT3') return `${team.manufacturer} GT3`;
+    return `${team.manufacturer} Hypercar`;
+  };
+
+  const getDefaultEngine = () => {
+    if (team.class === 'LMP2') return 'Gibson GK428 4.2L V8';
+    if (team.class === 'LMGT3') {
+      const gt3Engines: Record<string, string> = {
+        'Aston Martin': 'Aston Martin 4.0L Twin-Turbo V8',
+        'Porsche': 'Porsche 4.0L Flat-Six',
+        'Lamborghini': 'Lamborghini 5.2L V10',
+        'Ford': 'Ford 5.0L Coyote V8',
+        'Ferrari': 'Ferrari 3.0L Twin-Turbo V6',
+        'BMW': 'BMW 4.4L Twin-Turbo V8',
+        'Mercedes': 'Mercedes-AMG 4.0L Twin-Turbo V8',
+      };
+      return gt3Engines[team.manufacturer] || `${team.manufacturer} Engine`;
+    }
+    return `${team.manufacturer} Hybrid Power Unit`;
+  };
+
+  const getClassLabel = () => {
+    if (team.class === 'LMP2') return 'Le Mans 24h Only';
+    return team.class;
+  };
+
   // Default values for extended data
   const teamData = {
     fullName: team.fullName || team.name,
-    chassis: team.chassis || `${team.manufacturer} Hypercar`,
-    engine: team.engine || `${team.manufacturer} V6 Hybrid`,
-    teamPrincipal: team.teamPrincipal || 'Team Principal',
+    chassis: team.chassis || getDefaultChassis(),
+    engine: team.engine || getDefaultEngine(),
+    teamPrincipal: team.teamPrincipal || 'TBC',
     base: team.base || team.country,
-    founded: team.founded || '2020',
-    wecDebut: team.wecDebut || '2021',
+    founded: team.founded || '-',
+    wecDebut: team.wecDebut || '-',
     championships: team.championships || 0,
     leMansWins: team.leMansWins || 0,
-    wecWins: team.wecWins || Math.floor(team.points / 25),
-    poles: team.poles || Math.floor(team.points / 30),
-    fastestLaps: team.fastestLaps || Math.floor(team.points / 35),
-    about: team.about || `${team.name} is a professional endurance racing team competing in the FIA World Endurance Championship. The team campaigns the ${team.manufacturer} in the ${team.class} category, representing ${team.country} on the world stage.`,
+    wecWins: team.wecWins || 0,
+    poles: team.poles || 0,
+    fastestLaps: team.fastestLaps || 0,
+    about: team.about || `${team.name} is a professional endurance racing team competing in the FIA World Endurance Championship ${team.class} category with ${team.manufacturer} machinery.`,
     facts: team.facts || [
       `Based in ${team.country}`,
       `Competes with ${team.manufacturer} machinery`,
@@ -115,6 +144,11 @@ const TeamProfile = () => {
                   <Badge variant="outline" className={getClassBadge(team.class)}>
                     {team.class}
                   </Badge>
+                  {team.class === 'LMP2' && (
+                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
+                      Le Mans 24h Only
+                    </Badge>
+                  )}
                   <span className="text-2xl">{team.countryFlag}</span>
                 </div>
 
@@ -246,7 +280,9 @@ const TeamProfile = () => {
                   <span className="font-racing text-2xl text-primary">{teamData.wecWins}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">2024 Position</span>
+                  <span className="text-muted-foreground">
+                    {team.class === 'LMP2' ? 'Le Mans 2024' : '2024 Season'} Position
+                  </span>
                   <span className="font-racing text-2xl text-foreground">P{team.position}</span>
                 </div>
               </div>

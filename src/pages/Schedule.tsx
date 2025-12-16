@@ -3,7 +3,7 @@ import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { races2024, races2025 } from '@/data/wecData';
+import { races2024, races2025, races2026 } from '@/data/wecData';
 
 const Schedule = () => {
   const formatDate = (dateString: string, endDate?: string) => {
@@ -117,11 +117,20 @@ const Schedule = () => {
           <p className="text-muted-foreground">FIA World Endurance Championship Schedule</p>
         </motion.div>
 
-        <Tabs defaultValue="2025" className="w-full">
-          <TabsList className="grid w-full max-w-xs grid-cols-2 mb-8">
+        <Tabs defaultValue="2026" className="w-full">
+          <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
+            <TabsTrigger value="2026" className="font-racing">2026 Season</TabsTrigger>
             <TabsTrigger value="2025" className="font-racing">2025 Season</TabsTrigger>
             <TabsTrigger value="2024" className="font-racing">2024 Season</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="2026">
+            <div className="space-y-4">
+              {races2026.map((race, index) => (
+                <RaceCard key={race.id} race={race} index={index} />
+              ))}
+            </div>
+          </TabsContent>
 
           <TabsContent value="2025">
             <div className="space-y-4">

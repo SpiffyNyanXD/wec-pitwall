@@ -569,18 +569,108 @@ export const teams2024: Team[] = [
   { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 98, position: 8, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['jensen', 'vergne', 'muller'] },
   { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 87, position: 9, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['vandoorne', 'di-resta', 'duval'] },
   { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 76, position: 10, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: ['schumacher', 'lapierre', 'chatin'] },
-  // LMP2
-  { id: 'idec-28', name: 'IDEC Sport', manufacturer: 'Oreca', carNumber: '#28', class: 'LMP2', points: 145, position: 1, color: '#FF6B00', country: 'France', countryFlag: '🇫🇷', drivers: ['nato', 'aberdein', 'lafargue'] },
-  { id: 'tds-33', name: 'TDS Racing x Vaillante', manufacturer: 'Oreca', carNumber: '#33', class: 'LMP2', points: 132, position: 2, color: '#00A651', country: 'France', countryFlag: '🇫🇷', drivers: ['deletraz', 'beche', 'buret'] },
-  { id: 'cool-37', name: 'Cool Racing', manufacturer: 'Oreca', carNumber: '#37', class: 'LMP2', points: 118, position: 3, color: '#1E90FF', country: 'Switzerland', countryFlag: '🇨🇭', drivers: ['borga', 'coigny', 'bolduc'] },
-  { id: 'united-22', name: 'United Autosports', manufacturer: 'Oreca', carNumber: '#22', class: 'LMP2', points: 105, position: 4, color: '#FFD700', country: 'UK', countryFlag: '🇬🇧', drivers: ['hanson', 'scherer', 'albuquerque'] },
-  { id: 'inter-34', name: 'Inter Europol Competition', manufacturer: 'Oreca', carNumber: '#34', class: 'LMP2', points: 92, position: 5, color: '#FF4500', country: 'Poland', countryFlag: '🇵🇱', drivers: ['smiechowski', 'kari', 'gore'] },
-  // LMGT3
-  { id: 'hor-27', name: 'Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#27', class: 'LMGT3', points: 124, position: 1, color: '#006400', country: 'USA', countryFlag: '🇺🇸', drivers: ['sorensen', 'gunn', 'de-angelis'] },
-  { id: 'manthey-91', name: 'Manthey EMA', manufacturer: 'Porsche', carNumber: '#91', class: 'LMGT3', points: 118, position: 2, color: '#FFA500', country: 'Germany', countryFlag: '🇩🇪', drivers: ['bachler', 'malykhin', 'sturm'] },
-  { id: 'iron-85', name: 'Iron Dames', manufacturer: 'Lamborghini', carNumber: '#85', class: 'LMGT3', points: 105, position: 3, color: '#FF1493', country: 'Italy', countryFlag: '🇮🇹', drivers: ['gatting', 'frey', 'pin'] },
-  { id: 'proton-77', name: 'Proton Competition', manufacturer: 'Ford', carNumber: '#77', class: 'LMGT3', points: 98, position: 4, color: '#4169E1', country: 'Germany', countryFlag: '🇩🇪', drivers: ['ried', 'priaulx', 'tincknell'] },
-  { id: 'afc-55', name: 'AF Corse', manufacturer: 'Ferrari', carNumber: '#55', class: 'LMGT3', points: 92, position: 5, color: '#DC143C', country: 'Italy', countryFlag: '🇮🇹', drivers: ['costa', 'ledogar', 'sernagiotto'] },
+  // LMP2 (Le Mans 24h Only - not a full-season WEC championship post-2023)
+  { 
+    id: 'idec-28', name: 'IDEC Sport', manufacturer: 'Oreca', carNumber: '#28', class: 'LMP2', 
+    points: 145, position: 1, color: '#FF6B00', country: 'France', countryFlag: '🇫🇷', 
+    drivers: ['nato', 'aberdein', 'lafargue'],
+    fullName: 'IDEC Sport', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Paul Lafargue', base: 'La Rochelle, France', founded: '2014', wecDebut: '2016',
+    championships: 0, leMansWins: 0, wecWins: 2, poles: 1, fastestLaps: 2,
+    about: 'IDEC Sport is a French racing team competing in the LMP2 category at the 24 Hours of Le Mans. The team is known for its professional approach and consistent performances.',
+    facts: ['Competes exclusively at Le Mans 24h in WEC', 'Uses the standard Gibson V8 engine', 'French-based privateer team']
+  },
+  { 
+    id: 'tds-33', name: 'TDS Racing x Vaillante', manufacturer: 'Oreca', carNumber: '#33', class: 'LMP2', 
+    points: 132, position: 2, color: '#00A651', country: 'France', countryFlag: '🇫🇷', 
+    drivers: ['deletraz', 'beche', 'buret'],
+    fullName: 'TDS Racing x Vaillante', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Jacques Nicolet', base: 'Magny-Cours, France', founded: '2012', wecDebut: '2016',
+    championships: 0, leMansWins: 1, wecWins: 3, poles: 2, fastestLaps: 3,
+    about: 'TDS Racing partnered with legendary French comic book brand Vaillante brings heritage and passion to endurance racing.',
+    facts: ['Partnership with iconic Vaillante brand', 'Multiple Le Mans class podiums', 'Competes at Le Mans 24h']
+  },
+  { 
+    id: 'cool-37', name: 'Cool Racing', manufacturer: 'Oreca', carNumber: '#37', class: 'LMP2', 
+    points: 118, position: 3, color: '#1E90FF', country: 'Switzerland', countryFlag: '🇨🇭', 
+    drivers: ['borga', 'coigny', 'bolduc'],
+    fullName: 'Cool Racing', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Nicolas Lapierre', base: 'Geneva, Switzerland', founded: '2018', wecDebut: '2019',
+    championships: 0, leMansWins: 0, wecWins: 1, poles: 1, fastestLaps: 1,
+    about: 'Cool Racing is a Swiss team that has established itself as a competitive force in the LMP2 category.',
+    facts: ['Swiss-based privateer team', 'Consistent top-5 finisher at Le Mans', 'Uses Gibson V8 powerplant']
+  },
+  { 
+    id: 'united-22', name: 'United Autosports', manufacturer: 'Oreca', carNumber: '#22', class: 'LMP2', 
+    points: 105, position: 4, color: '#FFD700', country: 'UK', countryFlag: '🇬🇧', 
+    drivers: ['hanson', 'scherer', 'albuquerque'],
+    fullName: 'United Autosports', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Zak Brown', base: 'Leeds, United Kingdom', founded: '2010', wecDebut: '2017',
+    championships: 2, leMansWins: 1, wecWins: 8, poles: 5, fastestLaps: 7,
+    about: 'United Autosports, co-owned by McLaren CEO Zak Brown, is one of the most successful LMP2 teams in recent history.',
+    facts: ['Co-owned by McLaren CEO Zak Brown', 'Multiple LMP2 championship titles', 'Also competes in IMSA']
+  },
+  { 
+    id: 'inter-34', name: 'Inter Europol Competition', manufacturer: 'Oreca', carNumber: '#34', class: 'LMP2', 
+    points: 92, position: 5, color: '#FF4500', country: 'Poland', countryFlag: '🇵🇱', 
+    drivers: ['smiechowski', 'kari', 'gore'],
+    fullName: 'Inter Europol Competition', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Jakub Smiechowski', base: 'Warsaw, Poland', founded: '2012', wecDebut: '2018',
+    championships: 0, leMansWins: 0, wecWins: 1, poles: 0, fastestLaps: 1,
+    about: 'Inter Europol Competition is a Polish racing team that has expanded from national racing to international endurance competition.',
+    facts: ['First Polish team in WEC', 'Consistent Le Mans competitor', 'Family-run operation']
+  },
+  // LMGT3 (GT3-based customer racing category)
+  { 
+    id: 'hor-27', name: 'Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#27', class: 'LMGT3', 
+    points: 124, position: 1, color: '#006400', country: 'USA', countryFlag: '🇺🇸', 
+    drivers: ['sorensen', 'gunn', 'de-angelis'],
+    fullName: 'Heart of Racing Team', chassis: 'Aston Martin Vantage AMR GT3', engine: 'Aston Martin 4.0L Twin-Turbo V8',
+    teamPrincipal: 'Ian James', base: 'Indianapolis, USA', founded: '2020', wecDebut: '2024',
+    championships: 0, leMansWins: 0, wecWins: 2, poles: 2, fastestLaps: 3,
+    about: 'Heart of Racing is an American team that has quickly established itself in GT racing with strong Aston Martin factory support.',
+    facts: ['American-based Aston Martin customer team', 'Also competes in IMSA WeatherTech Championship', 'Team owner Ian James also drives']
+  },
+  { 
+    id: 'manthey-91', name: 'Manthey EMA', manufacturer: 'Porsche', carNumber: '#91', class: 'LMGT3', 
+    points: 118, position: 2, color: '#FFA500', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['bachler', 'malykhin', 'sturm'],
+    fullName: 'Manthey EMA', chassis: 'Porsche 911 GT3 R (992)', engine: 'Porsche 4.0L Flat-Six',
+    teamPrincipal: 'Nicolas Raeder', base: 'Meuspath, Germany', founded: '1996', wecDebut: '2024',
+    championships: 0, leMansWins: 0, wecWins: 1, poles: 3, fastestLaps: 2,
+    about: 'Manthey is a legendary Porsche partner team with decades of success at the Nürburgring and now competing in WEC LMGT3.',
+    facts: ['Legendary Porsche partner team', 'Multiple Nürburgring 24h winners', 'Based near the Nürburgring']
+  },
+  { 
+    id: 'iron-85', name: 'Iron Dames', manufacturer: 'Lamborghini', carNumber: '#85', class: 'LMGT3', 
+    points: 105, position: 3, color: '#FF1493', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['gatting', 'frey', 'pin'],
+    fullName: 'Iron Dames', chassis: 'Lamborghini Huracán GT3 EVO2', engine: 'Lamborghini 5.2L V10',
+    teamPrincipal: 'Deborah Mayer', base: 'Piacenza, Italy', founded: '2019', wecDebut: '2024',
+    championships: 0, leMansWins: 0, wecWins: 0, poles: 1, fastestLaps: 1,
+    about: 'Iron Dames is an all-female racing project promoting women in motorsport, competing with factory Lamborghini support.',
+    facts: ['All-female driver lineup', 'Lamborghini factory-supported program', 'Competes globally to promote women in motorsport']
+  },
+  { 
+    id: 'proton-77', name: 'Proton Competition', manufacturer: 'Ford', carNumber: '#77', class: 'LMGT3', 
+    points: 98, position: 4, color: '#4169E1', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['ried', 'priaulx', 'tincknell'],
+    fullName: 'Proton Competition', chassis: 'Ford Mustang GT3', engine: 'Ford 5.0L Coyote V8',
+    teamPrincipal: 'Christian Ried', base: 'Griesheim, Germany', founded: '2006', wecDebut: '2012',
+    championships: 0, leMansWins: 1, wecWins: 4, poles: 2, fastestLaps: 3,
+    about: 'Proton Competition is a German customer racing team with extensive experience in endurance racing, now running Ford machinery.',
+    facts: ['Long-time Porsche partner now running Ford', 'Class winners at Le Mans', 'German privateer team']
+  },
+  { 
+    id: 'afc-55', name: 'AF Corse', manufacturer: 'Ferrari', carNumber: '#55', class: 'LMGT3', 
+    points: 92, position: 5, color: '#DC143C', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['costa', 'ledogar', 'sernagiotto'],
+    fullName: 'AF Corse', chassis: 'Ferrari 296 GT3', engine: 'Ferrari 3.0L Twin-Turbo V6',
+    teamPrincipal: 'Amato Ferrari', base: 'Piacenza, Italy', founded: '1995', wecDebut: '2008',
+    championships: 5, leMansWins: 4, wecWins: 28, poles: 15, fastestLaps: 20,
+    about: 'AF Corse is the official Ferrari racing partner with unparalleled success in GT racing, now also running the Hypercar program.',
+    facts: ['Official Ferrari racing partner', 'Most successful GT team in WEC history', 'Also runs Ferrari Hypercar program']
+  },
 ];
 
 // 2024 Season Races (COMPLETED)

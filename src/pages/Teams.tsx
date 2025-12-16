@@ -43,10 +43,15 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
 
             {/* Team Info */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 <Badge variant="outline" className={getClassBadge(team.class)}>
                   {team.class}
                 </Badge>
+                {team.class === 'LMP2' && (
+                  <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs">
+                    Le Mans 24h
+                  </Badge>
+                )}
                 <span className="text-lg">{team.countryFlag}</span>
               </div>
               
@@ -99,12 +104,13 @@ const Teams = () => {
             WEC <span className="text-primary">Teams</span>
           </h1>
           <p className="text-muted-foreground">2024 Season Teams & Manufacturers</p>
+          <p className="text-xs text-muted-foreground mt-1">Note: LMP2 competes only at Le Mans 24h since 2024</p>
         </motion.div>
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
             <TabsTrigger value="HYPERCAR" className="font-racing">Hypercar</TabsTrigger>
-            <TabsTrigger value="LMP2" className="font-racing">LMP2</TabsTrigger>
+            <TabsTrigger value="LMP2" className="font-racing">LMP2 (Le Mans)</TabsTrigger>
             <TabsTrigger value="LMGT3" className="font-racing">LMGT3</TabsTrigger>
           </TabsList>
 

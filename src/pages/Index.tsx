@@ -41,12 +41,8 @@ const Index = () => {
       <footer className="border-t border-border/50 mt-8">
         <div className="container py-6 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>© 2024 WECHub. Not affiliated with FIA or WEC.</p>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-              <a href="#" className="hover:text-primary transition-colors">Terms</a>
-              <a href="#" className="hover:text-primary transition-colors">Contact</a>
-            </div>
+            <p>© {new Date().getFullYear()} WECHub. Not affiliated with FIA or WEC.</p>
+            <p className="text-xs">Fan-made application using mock data. Not an official FIA WEC product.</p>
           </div>
         </div>
       </footer>
