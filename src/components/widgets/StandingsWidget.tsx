@@ -57,7 +57,7 @@ const StandingsWidget = () => {
   const EntryRow = ({ team, index }: { team: typeof teams[0]; index: number }) => (
     <Link to={`/teams/${team.id.replace('-2025', '')}`}>
       <motion.div
-        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors group"
+        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors group tap-highlight"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.1 }}
@@ -100,7 +100,7 @@ const StandingsWidget = () => {
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => (
     <Link to={`/drivers/${driver.id.replace('-2025', '')}`}>
       <motion.div
-        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors"
+        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.1 }}

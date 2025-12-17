@@ -1,16 +1,56 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Factory, Info, Crown, Medal, Award } from 'lucide-react';
+import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { drivers2024, teams2024, races2024 } from '@/data/wecData';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { drivers2024, teams2024, races2024, drivers2025, teams2025, races2025 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
+
+type SeasonYear = 2024 | 2025;
+
+type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
+
+const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: typeof teams2024; races: typeof races2024; status: SeasonStatus }> = {
+  2024: { drivers: drivers2024, teams: teams2024, races: races2024, status: 'completed' },
+  2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
+};
 
 const Standings = () => {
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
+  
+  const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
+  
   // Calculate completed rounds
-  const completedRounds = races2024.filter(r => r.status === 'completed').length;
-  const totalRounds = races2024.length;
+  const completedRounds = races.filter(r => r.status === 'completed').length;
+  const totalRounds = races.length;
+
+  // Get status badge based on season status
+  const getSeasonStatusBadge = () => {
+    switch (status) {
+      case 'completed':
+        return (
+          <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
+            {SEASON_STATUS.COMPLETED}
+          </Badge>
+        );
+      case 'in-progress':
+        return (
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 animate-pulse">
+            {SEASON_STATUS.IN_PROGRESS}
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="outline" className="bg-muted text-muted-foreground">
+            {SEASON_STATUS.UPCOMING}
+          </Badge>
+        );
+    }
+  };
 
   // Get medal icon based on position
   const getMedalIcon = (position: number) => {
@@ -33,7 +73,7 @@ const Standings = () => {
 
   // Calculate Manufacturers Championship (aggregate points by manufacturer for Hypercar only)
   const getManufacturersStandings = () => {
-    const hypercarTeams = teams2024.filter(t => t.class === 'HYPERCAR');
+    const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR');
     const manufacturerPoints: Record<string, { points: number; color: string; country: string; countryFlag: string; wins: number; entries: number }> = {};
     
     hypercarTeams.forEach(team => {
@@ -58,7 +98,7 @@ const Standings = () => {
 
   // Get car entries (teams) for Hypercar World Cup
   const getHypercarEntries = () => {
-    return teams2024
+    return teams
       .filter(t => t.class === 'HYPERCAR')
       .sort((a, b) => b.points - a.points);
   };
@@ -66,9 +106,9 @@ const Standings = () => {
   // Get drivers sorted by points for each class
   const getDriversStandings = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
-    const driverGroups: Record<string, typeof drivers2024> = {};
+    const driverGroups: Record<string, typeof drivers> = {};
     
-    drivers2024.filter(d => d.class === carClass).forEach(driver => {
+    drivers.filter(d => d.class === carClass).forEach(driver => {
       const key = `${driver.teamId}-${driver.points}`;
       if (!driverGroups[key]) {
         driverGroups[key] = [];
@@ -97,7 +137,7 @@ const Standings = () => {
     >
       <Link
         to={`/drivers/${driver.id}`}
-        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group"
+        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
       >
         <div className="flex items-center gap-2 w-12">
           {getMedalIcon(position) || (
@@ -126,7 +166,7 @@ const Standings = () => {
     </motion.div>
   );
 
-  const EntryRow = ({ team, position }: { team: typeof teams2024[0]; position: number }) => (
+  const EntryRow = ({ team, position }: { team: typeof teams[0]; position: number }) => (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
@@ -134,7 +174,7 @@ const Standings = () => {
     >
       <Link
         to={`/teams/${team.id}`}
-        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group"
+        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
       >
         <div className="flex items-center gap-2 w-12">
           {getMedalIcon(position) || (
@@ -189,7 +229,7 @@ const Standings = () => {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: position * 0.03 }}
-      className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all"
+      className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all tap-highlight"
     >
       <div className="flex items-center gap-2 w-12">
         {getMedalIcon(position) || (
@@ -221,6 +261,20 @@ const Standings = () => {
     </motion.div>
   );
 
+  // Empty state component
+  const EmptyState = ({ message }: { message: string }) => (
+    <div className="glass-card p-8 text-center">
+      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+      <p className="text-muted-foreground">{message}</p>
+    </div>
+  );
+
+  const hypercarDrivers = getDriversStandings('HYPERCAR');
+  const lmgt3Drivers = getDriversStandings('LMGT3');
+  const lmp2Drivers = getDriversStandings('LMP2');
+  const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
+  const lmgt3Teams = teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Background effects */}
@@ -231,23 +285,39 @@ const Standings = () => {
 
       <Header />
 
-      <main className="container py-8 relative z-10">
+      <main className="container py-8 px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
-            <span className="text-gradient">Championship Standings</span>
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <h1 className="font-racing text-3xl md:text-4xl font-bold">
+              <span className="text-gradient">Championship Standings</span>
+            </h1>
+            
+            {/* Season Selector */}
+            <Select 
+              value={selectedSeason.toString()} 
+              onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
+            >
+              <SelectTrigger className="w-[140px] bg-card border-border">
+                <Calendar className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2025">2025</SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-            <span>2024 FIA World Endurance Championship</span>
+            <span>{selectedSeason} FIA World Endurance Championship</span>
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-              {completedRounds}/{totalRounds} Rounds Complete
+              {completedRounds}/{totalRounds} Rounds
             </Badge>
-            <Badge variant="outline" className="bg-muted text-muted-foreground">
-              Season Finished
-            </Badge>
+            {getSeasonStatusBadge()}
           </div>
         </motion.div>
 
@@ -257,7 +327,7 @@ const Standings = () => {
             <Trophy className="w-6 h-6 text-wec-gold" />
             <h2 className="font-racing text-2xl font-bold">Hypercar</h2>
             <Badge className="bg-primary/20 text-primary border-primary/30">
-              World Championship
+              {CLASS_BADGES.HYPERCAR}
             </Badge>
           </div>
 
@@ -282,14 +352,18 @@ const Standings = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <Info className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    FIA World Endurance Drivers' Championship • Points shared between co-drivers
+                    {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {getDriversStandings('HYPERCAR').map((driver, index) => (
-                    <DriverRow key={driver.id} driver={driver} position={index + 1} />
-                  ))}
-                </div>
+                {hypercarDrivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarDrivers.map((driver, index) => (
+                      <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                )}
               </div>
             </TabsContent>
 
@@ -298,14 +372,18 @@ const Standings = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <Info className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    FIA World Cup for Hypercar Teams • Each car entry scores independently
+                    {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {hypercarEntries.map((team, index) => (
-                    <EntryRow key={team.id} team={team} position={index + 1} />
-                  ))}
-                </div>
+                {hypercarEntries.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarEntries.map((team, index) => (
+                      <EntryRow key={team.id} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                )}
               </div>
             </TabsContent>
 
@@ -314,14 +392,18 @@ const Standings = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <Info className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    FIA World Endurance Manufacturers' Championship • Combined points from all entries
+                    {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {manufacturersStandings.map((manufacturer, index) => (
-                    <ManufacturerRow key={manufacturer.name} manufacturer={manufacturer} position={index + 1} />
-                  ))}
-                </div>
+                {manufacturersStandings.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {manufacturersStandings.map((manufacturer, index) => (
+                      <ManufacturerRow key={manufacturer.name} manufacturer={manufacturer} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -333,7 +415,7 @@ const Standings = () => {
             <Trophy className="w-6 h-6 text-green-400" />
             <h2 className="font-racing text-2xl font-bold">LMGT3</h2>
             <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-              FIA World Cup
+              {CLASS_BADGES.LMGT3}
             </Badge>
           </div>
 
@@ -354,14 +436,18 @@ const Standings = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <Info className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    FIA Endurance Trophy for LMGT3 Drivers
+                    {CHAMPIONSHIPS.LMGT3_DRIVERS}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {getDriversStandings('LMGT3').map((driver, index) => (
-                    <DriverRow key={driver.id} driver={driver} position={index + 1} />
-                  ))}
-                </div>
+                {lmgt3Drivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Drivers.map((driver, index) => (
+                      <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                )}
               </div>
             </TabsContent>
 
@@ -370,17 +456,18 @@ const Standings = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <Info className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    FIA Endurance Trophy for LMGT3 Teams
+                    {CHAMPIONSHIPS.LMGT3_TEAMS}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {teams2024
-                    .filter(t => t.class === 'LMGT3')
-                    .sort((a, b) => b.points - a.points)
-                    .map((team, index) => (
+                {lmgt3Teams.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Teams.map((team, index) => (
                       <EntryRow key={team.id} team={team} position={index + 1} />
                     ))}
-                </div>
+                  </div>
+                ) : (
+                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -392,7 +479,7 @@ const Standings = () => {
             <Trophy className="w-6 h-6 text-blue-400" />
             <h2 className="font-racing text-2xl font-bold">LMP2</h2>
             <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
-              Le Mans 24h Only
+              {CLASS_BADGES.LMP2}
             </Badge>
           </div>
 
@@ -400,41 +487,50 @@ const Standings = () => {
             <div className="flex items-center gap-2 mb-4">
               <Info className="w-4 h-4 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">
-                LMP2 competes only at the 24 Hours of Le Mans since 2024 • Not a full-season championship
+                {POINTS_INFO.LMP2_NOTE}
               </span>
             </div>
 
-            <Tabs defaultValue="teams" className="w-full">
-              <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
-                <TabsTrigger value="teams" className="font-racing gap-2 text-xs">
-                  <Users className="w-3 h-3" />
-                  Teams
-                </TabsTrigger>
-                <TabsTrigger value="drivers" className="font-racing gap-2 text-xs">
-                  <User className="w-3 h-3" />
-                  Drivers
-                </TabsTrigger>
-              </TabsList>
+            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
+              <Tabs defaultValue="teams" className="w-full">
+                <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
+                  <TabsTrigger value="teams" className="font-racing gap-2 text-xs">
+                    <Users className="w-3 h-3" />
+                    Teams
+                  </TabsTrigger>
+                  <TabsTrigger value="drivers" className="font-racing gap-2 text-xs">
+                    <User className="w-3 h-3" />
+                    Drivers
+                  </TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="teams">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {teams2024
-                    .filter(t => t.class === 'LMP2')
-                    .sort((a, b) => b.points - a.points)
-                    .map((team, index) => (
-                      <EntryRow key={team.id} team={team} position={index + 1} />
-                    ))}
-                </div>
-              </TabsContent>
+                <TabsContent value="teams">
+                  {lmp2Teams.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Teams.map((team, index) => (
+                        <EntryRow key={team.id} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
 
-              <TabsContent value="drivers">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {getDriversStandings('LMP2').map((driver, index) => (
-                    <DriverRow key={driver.id} driver={driver} position={index + 1} />
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
+                <TabsContent value="drivers">
+                  {lmp2Drivers.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Drivers.map((driver, index) => (
+                        <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+            )}
           </div>
         </div>
 
@@ -461,12 +557,6 @@ const Standings = () => {
             <div className="flex items-center gap-2">
               <Award className="w-4 h-4 text-wec-bronze" />
               <span>3rd Place</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded border-2 border-primary flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-              </div>
-              <span>Manufacturer Color</span>
             </div>
           </div>
         </motion.div>

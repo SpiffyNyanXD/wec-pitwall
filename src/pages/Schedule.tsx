@@ -37,7 +37,7 @@ const Schedule = () => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.05 }}
-        className="glass-card p-4 md:p-5 hover:border-primary/50 transition-all duration-300 group cursor-pointer active:scale-[0.98]"
+        className="glass-card p-4 md:p-5 hover:border-primary/50 transition-all duration-300 group cursor-pointer tap-highlight"
       >
         <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
           {/* Round & Flag */}

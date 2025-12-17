@@ -130,4 +130,29 @@
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  /* Mobile tap feedback */
+  .tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s ease, background-color 0.15s ease;
+  }
+
+  .tap-highlight:active {
+    transform: scale(0.98);
+    background-color: hsl(var(--muted) / 0.5);
+  }
+
+  /* Scrollbar styling */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 2px;
+  }
 }
