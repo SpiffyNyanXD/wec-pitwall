@@ -38,7 +38,7 @@ const Index = () => {
         <div className="container py-6 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} WECHub. Not affiliated with FIA or WEC.</p>
-            <p className="text-xs">Fan-made application using mock data. Not an official FIA WEC product.</p>
+            <p className="text-xs">Fan-made application. Not an official FIA WEC product.</p>
           </div>
         </div>
       </footer>

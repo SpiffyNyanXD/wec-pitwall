@@ -37,7 +37,7 @@ const CalendarWidget = () => {
         {races2025.slice(0, 5).map((race, index) => (
           <Link key={race.id} to={`/race/${race.id}`}>
             <motion.div
-              className={`p-3 rounded-lg border transition-all cursor-pointer active:scale-[0.98] ${
+              className={`p-3 rounded-lg border transition-all cursor-pointer tap-highlight ${
                 race.status === 'completed' 
                   ? 'bg-muted/20 border-muted/30 opacity-60' 
                   : 'bg-muted/30 border-glass-border hover:border-primary/30'
@@ -45,7 +45,6 @@ const CalendarWidget = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              whileHover={{ scale: race.status !== 'completed' ? 1.01 : 1 }}
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
