@@ -1,10 +1,17 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award } from 'lucide-react';
-import { teams2024, drivers2024 } from '@/data/wecData';
+import { Trophy, Users, User, Crown, Medal, Award, ChevronDown } from 'lucide-react';
+import { teams2024, drivers2024, teams2025, drivers2025 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 
 const StandingsWidget = () => {
+  const [selectedSeason, setSelectedSeason] = useState<2024 | 2025>(2025);
+  
+  const teams = selectedSeason === 2025 ? teams2025 : teams2024;
+  const drivers = selectedSeason === 2025 ? drivers2025 : drivers2024;
+
   const getMedalIcon = (position: number) => {
     switch (position) {
       case 1: return <Crown className="w-4 h-4 text-wec-gold" />;
@@ -25,7 +32,7 @@ const StandingsWidget = () => {
 
   // Get drivers grouped by crew (shared points)
   const getDriversStandings = () => {
-    const hypercarDrivers = drivers2024.filter(d => d.class === 'HYPERCAR');
+    const hypercarDrivers = drivers.filter(d => d.class === 'HYPERCAR');
     const driverGroups: Record<string, typeof hypercarDrivers> = {};
     
     hypercarDrivers.forEach(driver => {
@@ -44,11 +51,11 @@ const StandingsWidget = () => {
       .sort((a, b) => b.points - a.points);
   };
 
-  const hypercarTeams = teams2024.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
+  const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
   const driversStandings = getDriversStandings();
 
-  const EntryRow = ({ team, index }: { team: typeof teams2024[0]; index: number }) => (
-    <Link to={`/teams/${team.id}`}>
+  const EntryRow = ({ team, index }: { team: typeof teams[0]; index: number }) => (
+    <Link to={`/teams/${team.id.replace('-2025', '')}`}>
       <motion.div
         className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors group"
         initial={{ opacity: 0, x: -20 }}
@@ -91,7 +98,7 @@ const StandingsWidget = () => {
   );
 
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => (
-    <Link to={`/drivers/${driver.id}`}>
+    <Link to={`/drivers/${driver.id.replace('-2025', '')}`}>
       <motion.div
         className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors"
         initial={{ opacity: 0, x: -20 }}
@@ -125,6 +132,36 @@ const StandingsWidget = () => {
             <Trophy className="w-4 h-4 text-wec-gold" />
             <h3 className="font-racing text-lg font-bold">Hypercar</h3>
           </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              <button
+                onClick={() => setSelectedSeason(2024)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  selectedSeason === 2024 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                2024
+              </button>
+              <button
+                onClick={() => setSelectedSeason(2025)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  selectedSeason === 2025 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                2025
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between mb-3">
+          <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400 border-green-500/30">
+            Season Complete
+          </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
           
