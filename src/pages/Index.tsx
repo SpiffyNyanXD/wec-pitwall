@@ -3,7 +3,6 @@ import Header from '@/components/Header';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
 import StandingsWidget from '@/components/widgets/StandingsWidget';
 import CalendarWidget from '@/components/widgets/CalendarWidget';
-import QuickStatsWidget from '@/components/widgets/QuickStatsWidget';
 
 const Index = () => {
   return (
@@ -18,22 +17,19 @@ const Index = () => {
       
       <main className="container py-6 px-4 relative z-10">
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Row 1: Countdown spans 2 cols on large screens */}
-          <CountdownWidget />
+          {/* Row 1: Countdown spans full width */}
+          <div className="col-span-full">
+            <CountdownWidget />
+          </div>
           
           {/* Row 2: Standings and Calendar */}
           <StandingsWidget />
           <CalendarWidget />
-          
-          {/* Row 3: Quick Stats */}
-          <div className="col-span-full lg:col-span-2">
-            <QuickStatsWidget />
-          </div>
         </motion.div>
       </main>
       

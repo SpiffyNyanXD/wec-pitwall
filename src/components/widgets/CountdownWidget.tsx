@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flag, Calendar, Clock, CheckCircle } from 'lucide-react';
+import { Flag, Calendar, Clock, CheckCircle, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { races, getNextRace } from '@/data/wecData';
 
 interface TimeLeft {
@@ -68,7 +69,7 @@ const CountdownWidget = () => {
     
     return (
       <motion.div 
-        className="glass-card p-6 md:p-8 col-span-full lg:col-span-2 relative overflow-hidden"
+        className="glass-card p-6 md:p-8 relative overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -89,7 +90,10 @@ const CountdownWidget = () => {
           </p>
           
           {lastCompletedRace && (
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <Link 
+              to={`/race/${lastCompletedRace.id}`}
+              className="inline-flex items-center gap-4 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+            >
               <span className="flex items-center gap-1.5">
                 <Flag className="w-4 h-4 text-primary" />
                 Last Race: {lastCompletedRace.name}
@@ -99,7 +103,8 @@ const CountdownWidget = () => {
                   Winner: {lastCompletedRace.winner}
                 </span>
               )}
-            </div>
+              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Link>
           )}
         </div>
       </motion.div>
@@ -107,55 +112,58 @@ const CountdownWidget = () => {
   }
 
   return (
-    <motion.div 
-      className="glass-card p-6 md:p-8 col-span-full lg:col-span-2 relative overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Background glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
-      
-      <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-2">
-          <Flag className="w-4 h-4 text-primary" />
-          <span className="text-xs uppercase tracking-widest text-muted-foreground">Next Race</span>
-        </div>
+    <Link to={`/race/${nextRace.id}`}>
+      <motion.div 
+        className="glass-card p-6 md:p-8 relative overflow-hidden group cursor-pointer hover:border-primary/50 transition-colors"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Background glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
         
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h2 className="font-racing text-2xl md:text-3xl font-bold text-foreground mb-2">
-              {nextRace.name}
-            </h2>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <span className="text-lg">{nextRace.flag}</span>
-                {nextRace.circuit}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                {new Date(nextRace.date).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric',
-                  year: 'numeric'
-                })}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
-                {nextRace.duration}
-              </span>
-            </div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2">
+            <Flag className="w-4 h-4 text-primary" />
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">Next Race</span>
+            <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
           </div>
           
-          <div className="flex gap-3 md:gap-4">
-            <TimeBlock value={timeLeft.days} label="Days" />
-            <TimeBlock value={timeLeft.hours} label="Hours" />
-            <TimeBlock value={timeLeft.minutes} label="Mins" />
-            <TimeBlock value={timeLeft.seconds} label="Secs" />
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <h2 className="font-racing text-2xl md:text-3xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                {nextRace.name}
+              </h2>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <span className="text-lg">{nextRace.flag}</span>
+                  {nextRace.circuit}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
+                  {new Date(nextRace.date).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  {nextRace.duration}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex gap-3 md:gap-4">
+              <TimeBlock value={timeLeft.days} label="Days" />
+              <TimeBlock value={timeLeft.hours} label="Hours" />
+              <TimeBlock value={timeLeft.minutes} label="Mins" />
+              <TimeBlock value={timeLeft.seconds} label="Secs" />
+            </div>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 };
 

@@ -979,6 +979,342 @@ export const races2026: Race[] = [
   },
 ];
 
+// ============= 2025 Season Standings (COMPLETED) =============
+
+export const drivers2025: Driver[] = [
+  // HYPERCAR DRIVERS - 2025 Championship
+  {
+    id: 'estre-2025',
+    name: 'Kévin Estre',
+    firstName: 'Kévin',
+    lastName: 'Estre',
+    nationality: 'French',
+    countryFlag: '🇫🇷',
+    team: 'Porsche Penske Motorsport',
+    teamId: 'porsche-6',
+    carNumber: '#6',
+    class: 'HYPERCAR',
+    points: 154,
+    position: 1,
+    dateOfBirth: '1988-07-02',
+    placeOfBirth: 'Martigues, France',
+    biography: 'Kévin Estre claimed the 2025 WEC World Championship with Porsche Penske Motorsport.',
+    careerHighlights: ['2025 WEC World Champion', '24 Hours of Le Mans class winner (2018 GTE Pro)'],
+    facts: ['Won his first WEC Hypercar title in 2025'],
+    championships: 1,
+    leMansWins: 0,
+    wecWins: 5,
+  },
+  {
+    id: 'lotterer-2025',
+    name: 'André Lotterer',
+    firstName: 'André',
+    lastName: 'Lotterer',
+    nationality: 'German',
+    countryFlag: '🇩🇪',
+    team: 'Porsche Penske Motorsport',
+    teamId: 'porsche-6',
+    carNumber: '#6',
+    class: 'HYPERCAR',
+    points: 154,
+    position: 1,
+    dateOfBirth: '1981-11-19',
+    placeOfBirth: 'Duisburg, Germany',
+    biography: 'André Lotterer added another WEC title to his impressive resume in 2025.',
+    careerHighlights: ['2025 WEC World Champion', '3-time 24 Hours of Le Mans winner'],
+    facts: ['Four WEC titles across different eras'],
+    championships: 1,
+    leMansWins: 3,
+    wecWins: 14,
+  },
+  {
+    id: 'vanthoor-2025',
+    name: 'Laurens Vanthoor',
+    firstName: 'Laurens',
+    lastName: 'Vanthoor',
+    nationality: 'Belgian',
+    countryFlag: '🇧🇪',
+    team: 'Porsche Penske Motorsport',
+    teamId: 'porsche-6',
+    carNumber: '#6',
+    class: 'HYPERCAR',
+    points: 154,
+    position: 1,
+    dateOfBirth: '1991-05-08',
+    placeOfBirth: 'Hasselt, Belgium',
+    biography: 'Laurens Vanthoor completed the championship-winning crew for Porsche in 2025.',
+    careerHighlights: ['2025 WEC World Champion', '24 Hours of Spa winner'],
+    facts: ['First Hypercar world championship'],
+    championships: 1,
+    leMansWins: 0,
+    wecWins: 4,
+  },
+  {
+    id: 'buemi-2025',
+    name: 'Sébastien Buemi',
+    firstName: 'Sébastien',
+    lastName: 'Buemi',
+    nationality: 'Swiss',
+    countryFlag: '🇨🇭',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-8',
+    carNumber: '#8',
+    class: 'HYPERCAR',
+    points: 148,
+    position: 4,
+    dateOfBirth: '1988-10-31',
+    placeOfBirth: 'Aigle, Switzerland',
+    biography: 'Sébastien Buemi continued his dominant form with Toyota in 2025.',
+    careerHighlights: ['4-time WEC World Champion', '3-time 24 Hours of Le Mans winner'],
+    facts: ['Holds the record for most WEC race wins'],
+    championships: 4,
+    leMansWins: 3,
+    wecWins: 30,
+  },
+  {
+    id: 'hartley-2025',
+    name: 'Brendon Hartley',
+    firstName: 'Brendon',
+    lastName: 'Hartley',
+    nationality: 'New Zealander',
+    countryFlag: '🇳🇿',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-8',
+    carNumber: '#8',
+    class: 'HYPERCAR',
+    points: 148,
+    position: 4,
+    dateOfBirth: '1989-11-10',
+    placeOfBirth: 'Palmerston North, New Zealand',
+    biography: 'Brendon Hartley finished runner-up in the 2025 championship.',
+    careerHighlights: ['2-time WEC World Champion', '3-time 24 Hours of Le Mans winner'],
+    facts: ['Won Le Mans on his debut in 2017'],
+    championships: 2,
+    leMansWins: 3,
+    wecWins: 17,
+  },
+  {
+    id: 'hirakawa-2025',
+    name: 'Ryo Hirakawa',
+    firstName: 'Ryo',
+    lastName: 'Hirakawa',
+    nationality: 'Japanese',
+    countryFlag: '🇯🇵',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-8',
+    carNumber: '#8',
+    class: 'HYPERCAR',
+    points: 148,
+    position: 4,
+    dateOfBirth: '1994-03-07',
+    placeOfBirth: 'Hiroshima, Japan',
+    biography: 'Ryo Hirakawa continued to impress in 2025.',
+    careerHighlights: ['WEC World Champion (2022)', '24 Hours of Le Mans winner (2022)'],
+    facts: ['First Japanese driver to win Le Mans overall since 1995'],
+    championships: 1,
+    leMansWins: 1,
+    wecWins: 8,
+  },
+  {
+    id: 'kobayashi-2025',
+    name: 'Kamui Kobayashi',
+    firstName: 'Kamui',
+    lastName: 'Kobayashi',
+    nationality: 'Japanese',
+    countryFlag: '🇯🇵',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-7',
+    carNumber: '#7',
+    class: 'HYPERCAR',
+    points: 162,
+    position: 2,
+    dateOfBirth: '1986-09-13',
+    placeOfBirth: 'Amagasaki, Japan',
+    biography: 'Kamui Kobayashi won Le Mans 2025 but narrowly missed the championship.',
+    careerHighlights: ['2025 Le Mans Winner', 'Team Principal of Toyota WEC'],
+    facts: ['Both drives and manages Toyota WEC operations'],
+    championships: 0,
+    leMansWins: 3,
+    wecWins: 12,
+  },
+  {
+    id: 'conway-2025',
+    name: 'Mike Conway',
+    firstName: 'Mike',
+    lastName: 'Conway',
+    nationality: 'British',
+    countryFlag: '🇬🇧',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-7',
+    carNumber: '#7',
+    class: 'HYPERCAR',
+    points: 162,
+    position: 2,
+    dateOfBirth: '1983-08-19',
+    placeOfBirth: 'Bromley, England',
+    biography: 'Mike Conway won Le Mans 2025 with Toyota #7.',
+    careerHighlights: ['2025 Le Mans Winner', '2-time Le Mans winner'],
+    facts: ['Veteran endurance racer'],
+    championships: 0,
+    leMansWins: 2,
+    wecWins: 10,
+  },
+  {
+    id: 'delacruz-2025',
+    name: 'Nyck de Vries',
+    firstName: 'Nyck',
+    lastName: 'de Vries',
+    nationality: 'Dutch',
+    countryFlag: '🇳🇱',
+    team: 'Toyota Gazoo Racing',
+    teamId: 'toyota-7',
+    carNumber: '#7',
+    class: 'HYPERCAR',
+    points: 162,
+    position: 2,
+    dateOfBirth: '1995-02-06',
+    placeOfBirth: 'Sneek, Netherlands',
+    biography: 'Nyck de Vries joined Toyota and won Le Mans in his first season.',
+    careerHighlights: ['2025 Le Mans Winner', 'Formula E Champion (2021)'],
+    facts: ['Former F1 driver'],
+    championships: 0,
+    leMansWins: 1,
+    wecWins: 3,
+  },
+  {
+    id: 'fuoco-2025',
+    name: 'Antonio Fuoco',
+    firstName: 'Antonio',
+    lastName: 'Fuoco',
+    nationality: 'Italian',
+    countryFlag: '🇮🇹',
+    team: 'Ferrari AF Corse',
+    teamId: 'ferrari-50',
+    carNumber: '#50',
+    class: 'HYPERCAR',
+    points: 132,
+    position: 7,
+    dateOfBirth: '1996-03-20',
+    placeOfBirth: 'Cariati, Italy',
+    biography: 'Antonio Fuoco defended Ferrari\'s honor but couldn\'t repeat 2024\'s title success.',
+    careerHighlights: ['2024 WEC Champion', '24 Hours of Le Mans winner (2024)'],
+    facts: ['Back-to-back Le Mans winner (2023-2024)'],
+    championships: 1,
+    leMansWins: 1,
+    wecWins: 6,
+  },
+];
+
+export const teams2025: Team[] = [
+  // HYPERCAR - 2025 Final Standings
+  { 
+    id: 'porsche-6-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', 
+    points: 198, position: 1, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['estre-2025', 'lotterer-2025', 'vanthoor-2025'],
+    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
+    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
+    championships: 1, leMansWins: 0, wecWins: 6, poles: 6, fastestLaps: 7,
+    about: '2025 FIA WEC Hypercar World Champions. Porsche Penske Motorsport finally captured their first WEC title with a dominant second half of the season.',
+    facts: ['2025 World Champions', 'Won 3 of the final 4 races', 'First Hypercar title for Porsche']
+  },
+  { 
+    id: 'toyota-7-2025', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', 
+    points: 192, position: 2, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', 
+    drivers: ['kobayashi-2025', 'conway-2025', 'delacruz-2025'],
+    fullName: 'Toyota Gazoo Racing', chassis: 'Toyota GR010 Hybrid', engine: 'Toyota 3.5L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Kamui Kobayashi', base: 'Cologne, Germany', founded: '1999', wecDebut: '2012',
+    championships: 6, leMansWins: 6, wecWins: 38, poles: 30, fastestLaps: 34,
+    about: 'Le Mans 2025 winners but narrowly missed the championship. Toyota #7 won the biggest race but lost the title by 6 points.',
+    facts: ['2025 Le Mans Winners', 'Nyck de Vries joined the team', 'Kamui Kobayashi serves as driver and team principal']
+  },
+  { 
+    id: 'toyota-8-2025', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', 
+    points: 176, position: 3, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', 
+    drivers: ['buemi-2025', 'hartley-2025', 'hirakawa-2025'],
+    fullName: 'Toyota Gazoo Racing', chassis: 'Toyota GR010 Hybrid', engine: 'Toyota 3.5L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Kamui Kobayashi', base: 'Cologne, Germany', founded: '1999', wecDebut: '2012',
+    championships: 6, leMansWins: 5, wecWins: 37, poles: 28, fastestLaps: 32,
+    about: 'The #8 Toyota had a consistent but not winning season in 2025.',
+    facts: ['Finished P3 in championship', 'Won at Fuji', 'Strong qualifying pace throughout']
+  },
+  { 
+    id: 'porsche-5-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', 
+    points: 168, position: 4, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['campbell', 'christensen', 'makowiecki'],
+    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
+    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 4, poles: 3, fastestLaps: 4,
+    about: 'The #5 Porsche won at Spa 2025 in dominant fashion.',
+    facts: ['Won at Spa-Francorchamps', 'P4 in championship']
+  },
+  { 
+    id: 'ferrari-51-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', 
+    points: 152, position: 5, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['calado', 'pier-guidi', 'giovinazzi'],
+    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 3, poles: 4, fastestLaps: 5,
+    about: 'Ferrari #51 won at COTA in 2025.',
+    facts: ['Won at COTA', 'Strong mid-season form']
+  },
+  { 
+    id: 'ferrari-50-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', 
+    points: 148, position: 6, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['fuoco-2025', 'molina', 'nielsen'],
+    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
+    championships: 1, leMansWins: 1, wecWins: 5, poles: 5, fastestLaps: 6,
+    about: 'The 2024 champions had a difficult 2025 season, unable to defend their title.',
+    facts: ['2024 World Champions', 'Struggled with reliability in 2025']
+  },
+  { id: 'cadillac-2-2025', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 124, position: 7, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: ['bamber', 'lynn', 'westbrook'] },
+  { id: 'peugeot-93-2025', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 108, position: 8, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['jensen', 'vergne', 'muller'] },
+  { id: 'alpine-35-2025', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 92, position: 9, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: ['schumacher', 'lapierre', 'chatin'] },
+  { id: 'peugeot-94-2025', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 86, position: 10, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: ['vandoorne', 'di-resta', 'duval'] },
+  // LMP2 (Le Mans 24h Only)
+  { 
+    id: 'united-22-2025', name: 'United Autosports', manufacturer: 'Oreca', carNumber: '#22', class: 'LMP2', 
+    points: 38, position: 1, color: '#FFD700', country: 'UK', countryFlag: '🇬🇧', 
+    drivers: ['hanson', 'scherer', 'albuquerque'],
+    fullName: 'United Autosports', chassis: 'Oreca 07', engine: 'Gibson GK428 4.2L V8',
+    teamPrincipal: 'Zak Brown', base: 'Leeds, United Kingdom', founded: '2010', wecDebut: '2017',
+    championships: 2, leMansWins: 2, wecWins: 9, poles: 6, fastestLaps: 8,
+    about: 'United Autosports won LMP2 at Le Mans 2025.',
+    facts: ['2025 Le Mans LMP2 Winners']
+  },
+  // LMGT3
+  { 
+    id: 'manthey-91-2025', name: 'Manthey EMA', manufacturer: 'Porsche', carNumber: '#91', class: 'LMGT3', 
+    points: 142, position: 1, color: '#FFA500', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['bachler', 'malykhin', 'sturm'],
+    fullName: 'Manthey EMA', chassis: 'Porsche 911 GT3 R (992)', engine: 'Porsche 4.0L Flat-Six',
+    teamPrincipal: 'Nicolas Raeder', base: 'Meuspath, Germany', founded: '1996', wecDebut: '2024',
+    championships: 1, leMansWins: 1, wecWins: 4, poles: 5, fastestLaps: 4,
+    about: '2025 LMGT3 World Champions. Manthey dominated the GT class.',
+    facts: ['2025 LMGT3 Champions', 'Won at Le Mans']
+  },
+  { 
+    id: 'hor-27-2025', name: 'Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#27', class: 'LMGT3', 
+    points: 128, position: 2, color: '#006400', country: 'USA', countryFlag: '🇺🇸', 
+    drivers: ['sorensen', 'gunn', 'de-angelis'],
+    fullName: 'Heart of Racing Team', chassis: 'Aston Martin Vantage AMR GT3', engine: 'Aston Martin 4.0L Twin-Turbo V8',
+    teamPrincipal: 'Ian James', base: 'Indianapolis, USA', founded: '2020', wecDebut: '2024',
+    championships: 0, leMansWins: 0, wecWins: 3, poles: 3, fastestLaps: 4,
+    about: 'Heart of Racing finished runner-up in 2025 LMGT3.',
+    facts: ['P2 in championship', 'Strong American presence']
+  },
+  { 
+    id: 'afc-55-2025', name: 'AF Corse', manufacturer: 'Ferrari', carNumber: '#55', class: 'LMGT3', 
+    points: 118, position: 3, color: '#DC143C', country: 'Italy', countryFlag: '🇮🇹', 
+    drivers: ['costa', 'ledogar', 'sernagiotto'],
+    fullName: 'AF Corse', chassis: 'Ferrari 296 GT3', engine: 'Ferrari 3.0L Twin-Turbo V6',
+    teamPrincipal: 'Amato Ferrari', base: 'Piacenza, Italy', founded: '1995', wecDebut: '2008',
+    championships: 5, leMansWins: 4, wecWins: 29, poles: 16, fastestLaps: 21,
+    about: 'AF Corse Ferrari finished P3 in LMGT3 2025.',
+    facts: ['P3 in championship', 'Most experienced GT team']
+  },
+];
+
 // Export combined data
 export const drivers = drivers2024;
 export const teams = teams2024;
@@ -996,11 +1332,11 @@ export const weather = {
 
 // Helper functions
 export const getDriverById = (id: string): Driver | undefined => {
-  return drivers2024.find(d => d.id === id);
+  return [...drivers2024, ...drivers2025].find(d => d.id === id);
 };
 
 export const getTeamById = (id: string): Team | undefined => {
-  return teams2024.find(t => t.id === id);
+  return [...teams2024, ...teams2025].find(t => t.id === id);
 };
 
 export const getDriversByClass = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3'): Driver[] => {
@@ -1035,4 +1371,12 @@ export const getCurrentOrNextRaceWeekRace = (): Race | undefined => {
   if (raceWeekRace) return raceWeekRace;
   // Otherwise return next upcoming race
   return races.find(r => new Date(r.date) > now);
+};
+
+export const getDriversBySeason = (season: number): Driver[] => {
+  return season === 2025 ? drivers2025 : drivers2024;
+};
+
+export const getTeamsBySeason = (season: number): Team[] => {
+  return season === 2025 ? teams2025 : teams2024;
 };
