@@ -1,7 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target } from 'lucide-react';
+import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target } from 'lucide-react';
 import Header from '@/components/Header';
+import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getTeamById, getDriverById, Team } from '@/data/wecData';
@@ -18,7 +19,7 @@ const TeamProfile = () => {
         <main className="container py-8">
           <div className="text-center py-20">
             <h1 className="font-racing text-2xl mb-4">Team not found</h1>
-            <Button asChild>
+            <Button asChild className="tap-highlight">
               <Link to="/teams">Back to Teams</Link>
             </Button>
           </div>
@@ -107,12 +108,7 @@ const TeamProfile = () => {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Button variant="ghost" asChild className="gap-2 text-muted-foreground hover:text-foreground">
-            <Link to="/teams">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Teams
-            </Link>
-          </Button>
+          <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
         {/* Hero Section */}
