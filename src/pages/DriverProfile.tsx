@@ -1,7 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
+import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
 import Header from '@/components/Header';
+import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
@@ -18,7 +19,7 @@ const DriverProfile = () => {
         <main className="container py-8">
           <div className="text-center py-20">
             <h1 className="font-racing text-2xl mb-4">Driver not found</h1>
-            <Button asChild>
+            <Button asChild className="tap-highlight">
               <Link to="/drivers">Back to Drivers</Link>
             </Button>
           </div>
@@ -61,12 +62,7 @@ const DriverProfile = () => {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Button variant="ghost" asChild className="gap-2 text-muted-foreground hover:text-foreground">
-            <Link to="/drivers">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Drivers
-            </Link>
-          </Button>
+          <BackButton to="/drivers" label="Back to Drivers" />
         </motion.div>
 
         {/* Hero Section */}

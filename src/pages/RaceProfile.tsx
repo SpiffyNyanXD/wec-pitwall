@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, Calendar, Clock, Trophy, Flag, Gauge, Route, Building, Timer, History } from 'lucide-react';
+import { MapPin, Calendar, Clock, Trophy, Flag, Gauge, Route, Building, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
+import BackButton from '@/components/BackButton';
+import EmptyState from '@/components/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026 } from '@/data/wecData';
@@ -253,13 +255,7 @@ const RaceProfile = () => {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Link 
-            to="/schedule" 
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Schedule</span>
-          </Link>
+          <BackButton to="/schedule" label="Back to Schedule" />
         </motion.div>
 
         {/* Race Header */}

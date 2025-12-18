@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
 import StandingsWidget from '@/components/widgets/StandingsWidget';
 import CalendarWidget from '@/components/widgets/CalendarWidget';
@@ -33,15 +34,7 @@ const Index = () => {
         </motion.div>
       </main>
       
-      {/* Footer */}
-      <footer className="border-t border-border/50 mt-8">
-        <div className="container py-6 px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} WECHub. Not affiliated with FIA or WEC.</p>
-            <p className="text-xs">Fan-made application. Not an official FIA WEC product.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
