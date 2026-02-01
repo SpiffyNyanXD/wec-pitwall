@@ -87,9 +87,9 @@ const FavoritesPage = () => {
 
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
-      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
+      case 'HYPERCAR': return 'bg-wec-red/20 text-wec-red border-wec-red/30';
       case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'LMGT3': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
       default: return 'bg-muted text-muted-foreground';
     }
   };
@@ -187,9 +187,9 @@ const FavoritesPage = () => {
                     ? removeFavorite(favoriteTeams.find(f => f.team_id === team.id)?.id || '')
                     : addFavorite(team)
                   }
-                  className={isFavorite(team.id) ? "racing-gradient" : ""}
+                  className={isFavorite(team.id) ? "bg-transparent hover:bg-transparent border-wec-gold" : ""}
                 >
-                  <Heart className={`w-4 h-4 ${isFavorite(team.id) ? "fill-current" : ""}`} />
+                  <Heart className={`w-4 h-4 transition-colors ${isFavorite(team.id) ? "fill-wec-gold text-wec-gold" : ""}`} />
                 </Button>
               </motion.div>
             ))}
