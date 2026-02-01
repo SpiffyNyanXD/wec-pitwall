@@ -21,11 +21,11 @@ const Schedule = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Done</Badge>;
+        return <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Completed</Badge>;
       case 'live':
         return <Badge variant="outline" className="bg-secondary/20 text-secondary border-secondary/30 animate-pulse">LIVE</Badge>;
       case 'upcoming':
-        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Next</Badge>;
+        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Upcoming</Badge>;
       default:
         return null;
     }

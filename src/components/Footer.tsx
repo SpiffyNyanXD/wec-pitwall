@@ -60,7 +60,7 @@ const Footer = () => {
             </Dialog>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.MOCK_DATA_NOTE}</p>
+        <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.DATA_NOTE}</p>
       </div>
     </footer>
   );

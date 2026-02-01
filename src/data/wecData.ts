@@ -881,14 +881,14 @@ export const races2025: Race[] = [
 export const races2026: Race[] = [
   { 
     id: '2026-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
-    date: '2026-02-27', duration: '10 Hours', status: 'upcoming', flag: '🇶🇦', season: 2026, round: 1,
+    date: '2026-03-28', duration: '1812 km', status: 'upcoming', flag: '🇶🇦', season: 2026, round: 1,
     trackLength: '5.419 km',
     sessions: [
-      { type: 'FP1', date: '2026-02-25', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
-      { type: 'FP2', date: '2026-02-25', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-02-26', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
-      { type: 'Qualifying', date: '2026-02-26', startTime: '17:30', endTime: '18:30', duration: '1h' },
-      { type: 'Race', date: '2026-02-27', startTime: '12:00', endTime: '22:00', duration: '10h' },
+      { type: 'FP1', date: '2026-03-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
+      { type: 'FP2', date: '2026-03-26', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
+      { type: 'FP3', date: '2026-03-27', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
+      { type: 'Qualifying', date: '2026-03-27', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Race', date: '2026-03-28', startTime: '12:00', endTime: '22:00', duration: '~10h' },
     ]
   },
   { 

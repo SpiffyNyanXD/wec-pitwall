@@ -160,7 +160,7 @@ const StandingsWidget = () => {
         
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400 border-green-500/30">
-            Season Complete
+            {selectedSeason} Season Complete
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
@@ -168,7 +168,7 @@ const StandingsWidget = () => {
         <TabsList className="bg-muted/50 mb-4">
           <TabsTrigger value="entries" className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Users className="w-3 h-3 mr-1" />
-            Entries
+            Car Entries
           </TabsTrigger>
           <TabsTrigger value="drivers" className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <User className="w-3 h-3 mr-1" />
@@ -188,6 +188,10 @@ const StandingsWidget = () => {
           ))}
         </TabsContent>
       </Tabs>
+      
+      <p className="text-[10px] text-muted-foreground mt-3 text-center opacity-60">
+        Sample data for demonstration purposes
+      </p>
     </motion.div>
   );
 };

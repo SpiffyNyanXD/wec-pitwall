@@ -16,6 +16,12 @@ export const SEASON_STATUS = {
   NOT_AVAILABLE: 'Standings Not Available',
 } as const;
 
+export const RACE_STATUS = {
+  COMPLETED: 'Race Completed',
+  UPCOMING: 'Upcoming',
+  LIVE: 'Live',
+} as const;
+
 export const CLASS_LABELS = {
   HYPERCAR: 'Hypercar',
   LMP2: 'LMP2',
@@ -44,6 +50,8 @@ export const EMPTY_STATES = {
 
 export const APP_INFO = {
   NAME: 'WECHub',
-  DISCLAIMER: 'Not affiliated with FIA or WEC.',
-  MOCK_DATA_NOTE: 'Fan-made application using mock data. Not an official FIA WEC product.',
+  TAGLINE: 'Fan-Made WEC Companion',
+  DISCLAIMER: 'Fan-made application. Not affiliated with FIA or WEC.',
+  DATA_NOTE: 'All standings and statistics shown are sample data for demonstration purposes only.',
+  COPYRIGHT: '© 2026 WECHub. This is a fan project.',
 } as const;

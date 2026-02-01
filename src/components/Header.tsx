@@ -161,7 +161,7 @@ const Header = () => {
                 WEC<span className="text-primary">Hub</span>
               </h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                World Endurance Championship
+                Fan-Made Companion
               </p>
             </div>
           </Link>
