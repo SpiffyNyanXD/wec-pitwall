@@ -58,15 +58,21 @@ const Header = () => {
             </SheetTrigger>
             <SheetContent side="left" className="w-72 bg-background/95 backdrop-blur-xl">
               <SheetHeader className="pb-6 border-b border-border/50">
-                <SheetTitle className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
-                    <span className="font-racing text-lg font-bold text-primary-foreground">W</span>
-                  </div>
-                  <div>
-                    <span className="font-racing text-xl font-bold text-foreground tracking-wide">
-                      WEC<span className="text-primary">Hub</span>
-                    </span>
-                  </div>
+                <SheetTitle asChild>
+                  <Link 
+                    to="/" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
+                      <span className="font-racing text-lg font-bold text-primary-foreground">W</span>
+                    </div>
+                    <div>
+                      <span className="font-racing text-xl font-bold text-foreground tracking-wide">
+                        WEC<span className="text-primary">Hub</span>
+                      </span>
+                    </div>
+                  </Link>
                 </SheetTitle>
               </SheetHeader>
               

@@ -8,9 +8,9 @@ import { teams2024 } from '@/data/wecData';
 
 const getClassBadge = (carClass: string) => {
   switch (carClass) {
-    case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
+    case 'HYPERCAR': return 'bg-wec-red/20 text-wec-red border-wec-red/30';
     case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-    case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
+    case 'LMGT3': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
     default: return 'bg-muted text-muted-foreground';
   }
 };
@@ -48,7 +48,7 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
                   {team.class}
                 </Badge>
                 {team.class === 'LMP2' && (
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs">
+                  <Badge variant="outline" className="bg-wec-gold/10 text-wec-gold border-wec-gold/30 text-xs">
                     Le Mans 24h
                   </Badge>
                 )}
@@ -108,10 +108,10 @@ const Teams = () => {
         </motion.div>
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
-            <TabsTrigger value="HYPERCAR" className="font-racing">Hypercar</TabsTrigger>
-            <TabsTrigger value="LMP2" className="font-racing">LMP2 (Le Mans)</TabsTrigger>
-            <TabsTrigger value="LMGT3" className="font-racing">LMGT3</TabsTrigger>
+          <TabsList className="grid w-full max-w-lg grid-cols-3 mb-8 h-12">
+            <TabsTrigger value="HYPERCAR" className="font-racing h-10 px-4">Hypercar</TabsTrigger>
+            <TabsTrigger value="LMP2" className="font-racing h-10 px-4">LMP2</TabsTrigger>
+            <TabsTrigger value="LMGT3" className="font-racing h-10 px-4">LMGT3</TabsTrigger>
           </TabsList>
 
           <TabsContent value="HYPERCAR">
