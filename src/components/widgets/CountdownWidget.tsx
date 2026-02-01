@@ -79,14 +79,14 @@ const CountdownWidget = () => {
         <div className="relative z-10 text-center py-4">
           <div className="flex items-center justify-center gap-2 mb-4">
             <CheckCircle className="w-6 h-6 text-primary" />
-            <span className="text-sm uppercase tracking-widest text-muted-foreground">Season Complete</span>
+            <span className="text-sm uppercase tracking-widest text-muted-foreground">2025 Season Complete</span>
           </div>
           
           <h2 className="font-racing text-2xl md:text-3xl font-bold text-foreground mb-2">
-            2025 Season Finished
+            2026 Season Coming Soon
           </h2>
           <p className="text-muted-foreground mb-4">
-            The 2026 season starts in February
+            The 2026 FIA WEC season starts March 28 at Qatar
           </p>
           
           {lastCompletedRace && (
