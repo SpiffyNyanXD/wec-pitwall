@@ -141,11 +141,14 @@ const CountdownWidget = () => {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-4 h-4" />
-                  {new Date(nextRace.date).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+                  {(() => {
+                    const [y, m, d] = nextRace.date.split('-').map(Number);
+                    return new Date(y, m - 1, d).toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      day: 'numeric',
+                      year: 'numeric'
+                    });
+                  })()}
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4" />

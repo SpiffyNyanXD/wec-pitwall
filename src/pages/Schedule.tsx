@@ -8,11 +8,12 @@ import { races2024, races2025, races2026 } from '@/data/wecData';
 
 const Schedule = () => {
   const formatDate = (dateString: string, endDate?: string) => {
-    const start = new Date(dateString);
+    const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+    const start = parseDate(dateString);
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
     
     if (endDate) {
-      const end = new Date(endDate);
+      const end = parseDate(endDate);
       return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}, ${start.getFullYear()}`;
     }
     return `${start.toLocaleDateString('en-US', { ...options, year: 'numeric' })}`;
