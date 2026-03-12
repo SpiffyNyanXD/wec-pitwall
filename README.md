@@ -1,5 +1,8 @@
 # Welcome to your Lovable project
 
+**Note on environment variables:**
+You must copy `.env.example` to `.env` and fill in your own Supabase credentials for authentication and favorites to work.
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID

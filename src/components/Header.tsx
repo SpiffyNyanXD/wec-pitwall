@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart } from 'lucide-react';
+import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -24,11 +25,13 @@ const navItems = [
   { to: '/', label: 'Dashboard', icon: Home },
   { to: '/standings', label: 'Standings', icon: Trophy },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
+  { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/drivers', label: 'Drivers', icon: Users },
   { to: '/teams', label: 'Teams', icon: Car },
 ];
 
 const Header = () => {
+  const { theme, setTheme } = useTheme();
   const { user, signOut, loading } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,7 +41,8 @@ const Header = () => {
     toast.success('Signed out successfully');
   };
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
     <motion.header 
@@ -185,10 +189,20 @@ const Header = () => {
         </nav>
         
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <Moon className="h-5 w-5 text-muted-foreground" />
+            )}
+          </Button>
           <Button variant="ghost" size="icon" className="relative" asChild>
             <Link to="/settings">
               <Bell className="h-5 w-5 text-muted-foreground" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full" />
             </Link>
           </Button>
           <Button variant="ghost" size="icon" asChild className="hidden md:flex">

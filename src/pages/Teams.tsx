@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Users, MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { teams2024 } from '@/data/wecData';
+import { hypercars2026, teams2024 } from '@/data/wecData';
 
 const getClassBadge = (carClass: string) => {
   switch (carClass) {
@@ -80,9 +81,18 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
 };
 
 const Teams = () => {
-  const hypercars = teams2024.filter(t => t.class === 'HYPERCAR');
+  const [activeFilter, setActiveFilter] = useState<string>('All');
+
+  // Use 2026 for Hypercars to match the updated prompt, but keep 2024 for others or combine
+  const hypercars = hypercars2026.filter(t => t.class === 'HYPERCAR');
   const lmp2 = teams2024.filter(t => t.class === 'LMP2');
   const lmgt3 = teams2024.filter(t => t.class === 'LMGT3');
+
+  const manufacturers = ['All', 'Ferrari', 'Toyota', 'BMW', 'Cadillac', 'Alpine', 'Peugeot', 'Aston Martin', 'Genesis'];
+
+  const filteredHypercars = activeFilter === 'All'
+    ? hypercars
+    : hypercars.filter(t => t.manufacturer === activeFilter);
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,7 +113,7 @@ const Teams = () => {
           <h1 className="font-racing text-4xl font-bold mb-2">
             WEC <span className="text-primary">Teams</span>
           </h1>
-          <p className="text-muted-foreground">2024 Season Teams & Manufacturers</p>
+          <p className="text-muted-foreground">Season Teams & Manufacturers</p>
           <p className="text-xs text-muted-foreground mt-1">Note: LMP2 competes only at Le Mans 24h since 2024</p>
         </motion.div>
 
@@ -115,10 +125,31 @@ const Teams = () => {
           </TabsList>
 
           <TabsContent value="HYPERCAR">
+            <div className="flex overflow-x-auto pb-4 mb-4 gap-2 no-scrollbar items-center">
+              {manufacturers.map(mfg => (
+                <button
+                  key={mfg}
+                  onClick={() => setActiveFilter(mfg)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                    activeFilter === mfg
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  }`}
+                >
+                  {mfg}
+                </button>
+              ))}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {hypercars.map((team, index) => (
+              {filteredHypercars.map((team, index) => (
                 <TeamCard key={team.id} team={team} index={index} />
               ))}
+              {filteredHypercars.length === 0 && (
+                <div className="col-span-full py-12 text-center text-muted-foreground">
+                  No {activeFilter} entries found.
+                </div>
+              )}
             </div>
           </TabsContent>
 

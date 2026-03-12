@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { teams, drivers } from '@/data/wecData';
+import { hypercars2026 } from '@/data/wecData';
 
 interface FavoriteTeam {
   id: string;
@@ -44,7 +44,7 @@ const FavoritesPage = () => {
     setLoading(false);
   };
 
-  const addFavorite = async (team: typeof teams[0]) => {
+  const addFavorite = async (team: typeof hypercars2026[0]) => {
     if (!user) {
       toast.error('Please sign in to add favorites');
       return;
@@ -165,7 +165,7 @@ const FavoritesPage = () => {
           {/* All Teams */}
           <h2 className="font-racing text-lg mb-4">All Teams</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {teams.map((team) => (
+            {hypercars2026.map((team) => (
               <motion.div
                 key={team.id}
                 className="glass-card p-4 flex items-center justify-between"

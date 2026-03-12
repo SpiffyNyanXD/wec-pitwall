@@ -4,6 +4,8 @@ import Footer from '@/components/Footer';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
 import StandingsWidget from '@/components/widgets/StandingsWidget';
 import CalendarWidget from '@/components/widgets/CalendarWidget';
+import QuickStatsWidget from '@/components/widgets/QuickStatsWidget';
+import LastRaceWidget from '@/components/widgets/LastRaceWidget';
 
 const Index = () => {
   return (
@@ -31,6 +33,14 @@ const Index = () => {
           {/* Row 2: Standings and Calendar */}
           <StandingsWidget />
           <CalendarWidget />
+
+          {/* Row 3: Quick Stats & Last Race */}
+          <div className="col-span-full md:col-span-1">
+            <QuickStatsWidget />
+          </div>
+          <div className="col-span-full md:col-span-1">
+            <LastRaceWidget />
+          </div>
         </motion.div>
       </main>
       
