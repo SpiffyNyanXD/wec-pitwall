@@ -1,16 +1,88 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getTeamById, getDriverById, Team } from '@/data/wecData';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
   const team = getTeamById(id || '');
   const teamDrivers = team?.drivers.map(dId => getDriverById(dId)).filter(Boolean) || [];
+  const { user } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteId, setFavoriteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user && team) {
+      checkFavorite();
+    }
+  }, [user, team]);
+
+  const checkFavorite = async () => {
+    if (!user || !team) return;
+
+    const { data, error } = await supabase
+      .from('favorite_teams')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('team_id', team.id)
+      .single();
+
+    if (data) {
+      setIsFavorite(true);
+      setFavoriteId(data.id);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    if (!user) {
+      toast.error('Please sign in to add favorites');
+      return;
+    }
+
+    if (!team) return;
+
+    if (isFavorite && favoriteId) {
+      const { error } = await supabase
+        .from('favorite_teams')
+        .delete()
+        .eq('id', favoriteId);
+
+      if (error) {
+        toast.error('Failed to remove favorite');
+      } else {
+        toast.success('Removed from favorites');
+        setIsFavorite(false);
+        setFavoriteId(null);
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('favorite_teams')
+        .insert({
+          user_id: user.id,
+          team_id: team.id,
+          team_name: team.name,
+          car_class: team.class,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        toast.error('Failed to add favorite');
+      } else {
+        toast.success(`Added ${team.name} to favorites`);
+        setIsFavorite(true);
+        if (data) setFavoriteId(data.id);
+      }
+    }
+  };
 
   if (!team) {
     return (
@@ -136,16 +208,28 @@ const TeamProfile = () => {
               </div>
 
               <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-3 mb-3">
-                  <Badge variant="outline" className={getClassBadge(team.class)}>
-                    {team.class}
-                  </Badge>
-                  {team.class === 'LMP2' && (
-                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
-                      Le Mans 24h Only
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge variant="outline" className={getClassBadge(team.class)}>
+                      {team.class}
                     </Badge>
-                  )}
-                  <span className="text-2xl">{team.countryFlag}</span>
+                    {team.class === 'LMP2' && (
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
+                        Le Mans 24h Only
+                      </Badge>
+                    )}
+                    <span className="text-2xl">{team.countryFlag}</span>
+                  </div>
+
+                  <Button
+                    variant={isFavorite ? "default" : "outline"}
+                    size="sm"
+                    onClick={toggleFavorite}
+                    className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
+                  >
+                    <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
+                    {isFavorite ? 'Favorited' : 'Add to Favorites'}
+                  </Button>
                 </div>
 
                 <h1 className="font-racing text-4xl md:text-5xl font-bold text-foreground mb-2">

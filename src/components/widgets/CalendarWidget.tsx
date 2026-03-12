@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
-import { races2025 } from '@/data/wecData';
+import { races2025, races2026 } from '@/data/wecData';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +18,10 @@ const CalendarWidget = () => {
     }
   };
 
+  // Determine which season to show based on current date or status
+  const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
+  const currentYear = currentSeasonRaces[0]?.season || 2026;
+
   return (
     <motion.div 
       className="glass-card p-4 md:p-5 col-span-full md:col-span-1"
@@ -28,13 +32,13 @@ const CalendarWidget = () => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-primary" />
-          <h3 className="font-racing text-lg font-bold">2025 Calendar</h3>
+          <h3 className="font-racing text-lg font-bold">{currentYear} Calendar</h3>
         </div>
         <Link to="/schedule" className="text-xs text-primary hover:underline">View All</Link>
       </div>
       
       <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin">
-        {races2025.slice(0, 5).map((race, index) => (
+        {currentSeasonRaces.slice(0, 5).map((race, index) => (
           <Link key={race.id} to={`/race/${race.id}`}>
             <motion.div
               className={`p-3 rounded-lg border transition-all cursor-pointer tap-highlight ${

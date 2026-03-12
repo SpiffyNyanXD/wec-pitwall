@@ -25,9 +25,14 @@ const CountdownWidget = () => {
     }
     
     const calculateTimeLeft = () => {
-      const raceDate = new Date(nextRace.date);
+      const raceSession = nextRace.sessions?.find(s => s.type === 'Race');
+      const targetStr = raceSession
+        ? `${raceSession.date}T${raceSession.startTime}:00`
+        : `${nextRace.date}T11:00:00`;
+      const target = new Date(targetStr);
+
       const now = new Date();
-      const difference = raceDate.getTime() - now.getTime();
+      const difference = target.getTime() - now.getTime();
       
       if (difference > 0) {
         setHasUpcomingRace(true);
@@ -164,7 +169,31 @@ const CountdownWidget = () => {
               <TimeBlock value={timeLeft.seconds} label="Secs" />
             </div>
           </div>
+
+          <div className="mt-4 text-xs text-muted-foreground/70 text-right">
+            Times shown in your local time zone.
+          </div>
         </div>
+
+        {/* Feature 2: Session breakdown */}
+        {nextRace.sessions && nextRace.sessions.length > 0 && (
+          <div className="relative z-10 mt-6 pt-4 border-t border-border/50">
+            <h3 className="text-sm font-medium text-foreground mb-3">Session Schedule</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              {nextRace.sessions.map((session, index) => (
+                <div key={index} className="bg-muted/30 rounded p-2 text-xs border border-border/30">
+                  <div className="font-medium text-primary mb-1">{session.type}</div>
+                  <div className="text-muted-foreground">
+                    {new Date(session.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                  </div>
+                  <div className="text-muted-foreground font-mono">
+                    {session.startTime} - {session.endTime}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
     </Link>
   );

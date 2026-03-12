@@ -74,7 +74,7 @@ export interface Race {
   date: string;
   endDate?: string;
   duration: string;
-  status: 'upcoming' | 'live' | 'completed';
+  status: 'upcoming' | 'live' | 'completed' | 'postponed';
   flag: string;
   season: number;
   round: number;
@@ -682,8 +682,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-02-29', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2024-02-29', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-03-01', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2024-03-01', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-03-01', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2024-03-02', startTime: '12:00', endTime: '22:00', duration: '10h' },
     ]
   },
@@ -694,8 +694,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-04-19', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2024-04-19', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-04-20', startTime: '10:00', endTime: '11:00', duration: '1h' },
       { type: 'Qualifying', date: '2024-04-20', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-04-20', startTime: '15:50', endTime: '16:05', duration: '15m' },
       { type: 'Race', date: '2024-04-21', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -706,8 +706,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-05-09', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
       { type: 'FP2', date: '2024-05-09', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-05-10', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2024-05-10', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-05-10', startTime: '18:20', endTime: '18:35', duration: '15m' },
       { type: 'Race', date: '2024-05-11', startTime: '13:00', endTime: '19:00', duration: '6h' },
     ]
   },
@@ -719,7 +719,6 @@ export const races2024: Race[] = [
       { type: 'FP1', date: '2024-06-12', startTime: '14:00', endTime: '17:00', duration: '3h' },
       { type: 'Qualifying', date: '2024-06-12', startTime: '19:00', endTime: '20:00', duration: '1h' },
       { type: 'FP2', date: '2024-06-12', startTime: '22:00', endTime: '00:00', duration: '2h' },
-      { type: 'FP3', date: '2024-06-13', startTime: '15:00', endTime: '18:00', duration: '3h' },
       { type: 'Hyperpole', date: '2024-06-13', startTime: '20:00', endTime: '20:30', duration: '30m' },
       { type: 'Warm Up', date: '2024-06-15', startTime: '10:30', endTime: '10:45', duration: '15m' },
       { type: 'Race', date: '2024-06-15', startTime: '16:00', endTime: '16:00', duration: '24h' },
@@ -732,8 +731,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-07-12', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
       { type: 'FP2', date: '2024-07-12', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-07-13', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2024-07-13', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-07-13', startTime: '16:00', endTime: '16:15', duration: '15m' },
       { type: 'Race', date: '2024-07-14', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -744,8 +743,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-08-30', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2024-08-30', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-08-31', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2024-08-31', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-08-31', startTime: '13:55', endTime: '14:10', duration: '15m' },
       { type: 'Race', date: '2024-09-01', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -756,8 +755,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-09-13', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
       { type: 'FP2', date: '2024-09-13', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-09-14', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2024-09-14', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-09-14', startTime: '14:20', endTime: '14:35', duration: '15m' },
       { type: 'Race', date: '2024-09-15', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -768,8 +767,8 @@ export const races2024: Race[] = [
     sessions: [
       { type: 'FP1', date: '2024-10-31', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2024-10-31', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2024-11-01', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2024-11-01', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2024-11-01', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2024-11-02', startTime: '14:00', endTime: '22:00', duration: '8h' },
     ]
   },
@@ -784,8 +783,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-02-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2025-02-26', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-02-27', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2025-02-27', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-02-27', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2025-02-28', startTime: '12:00', endTime: '22:00', duration: '10h' },
     ]
   },
@@ -796,8 +795,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-04-18', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2025-04-18', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-04-19', startTime: '10:00', endTime: '11:00', duration: '1h' },
       { type: 'Qualifying', date: '2025-04-19', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-04-19', startTime: '15:50', endTime: '16:05', duration: '15m' },
       { type: 'Race', date: '2025-04-20', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -808,8 +807,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-05-08', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
       { type: 'FP2', date: '2025-05-08', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-05-09', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2025-05-09', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-05-09', startTime: '18:20', endTime: '18:35', duration: '15m' },
       { type: 'Race', date: '2025-05-10', startTime: '13:00', endTime: '19:00', duration: '6h' },
     ]
   },
@@ -821,7 +820,6 @@ export const races2025: Race[] = [
       { type: 'FP1', date: '2025-06-11', startTime: '14:00', endTime: '17:00', duration: '3h' },
       { type: 'Qualifying', date: '2025-06-11', startTime: '19:00', endTime: '20:00', duration: '1h' },
       { type: 'FP2', date: '2025-06-11', startTime: '22:00', endTime: '00:00', duration: '2h' },
-      { type: 'FP3', date: '2025-06-12', startTime: '15:00', endTime: '18:00', duration: '3h' },
       { type: 'Hyperpole', date: '2025-06-12', startTime: '20:00', endTime: '20:30', duration: '30m' },
       { type: 'Warm Up', date: '2025-06-14', startTime: '10:30', endTime: '10:45', duration: '15m' },
       { type: 'Race', date: '2025-06-14', startTime: '16:00', endTime: '16:00', duration: '24h' },
@@ -834,8 +832,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-07-11', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
       { type: 'FP2', date: '2025-07-11', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-07-12', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2025-07-12', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-07-12', startTime: '16:00', endTime: '16:15', duration: '15m' },
       { type: 'Race', date: '2025-07-13', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -846,8 +844,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-08-29', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2025-08-29', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-08-30', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2025-08-30', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-08-30', startTime: '13:55', endTime: '14:10', duration: '15m' },
       { type: 'Race', date: '2025-08-31', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -858,8 +856,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-09-12', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
       { type: 'FP2', date: '2025-09-12', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-09-13', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2025-09-13', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-09-13', startTime: '14:20', endTime: '14:35', duration: '15m' },
       { type: 'Race', date: '2025-09-14', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -870,8 +868,8 @@ export const races2025: Race[] = [
     sessions: [
       { type: 'FP1', date: '2025-11-06', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2025-11-06', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2025-11-07', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2025-11-07', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2025-11-07', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2025-11-08', startTime: '14:00', endTime: '22:00', duration: '8h' },
     ]
   },
@@ -881,13 +879,13 @@ export const races2025: Race[] = [
 export const races2026: Race[] = [
   { 
     id: '2026-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
-    date: '2026-03-28', duration: '1812 km', status: 'upcoming', flag: '🇶🇦', season: 2026, round: 1,
+    date: '2026-03-28', duration: '1812 km', status: 'postponed', flag: '🇶🇦', season: 2026, round: 1,
     trackLength: '5.419 km',
     sessions: [
       { type: 'FP1', date: '2026-03-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2026-03-26', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-03-27', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2026-03-27', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-03-27', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2026-03-28', startTime: '12:00', endTime: '22:00', duration: '~10h' },
     ]
   },
@@ -898,8 +896,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-04-17', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2026-04-17', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-04-18', startTime: '10:00', endTime: '11:00', duration: '1h' },
       { type: 'Qualifying', date: '2026-04-18', startTime: '14:40', endTime: '15:40', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-04-18', startTime: '15:50', endTime: '16:05', duration: '15m' },
       { type: 'Race', date: '2026-04-19', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -910,8 +908,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-05-07', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
       { type: 'FP2', date: '2026-05-07', startTime: '19:00', endTime: '20:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-05-08', startTime: '11:30', endTime: '13:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2026-05-08', startTime: '17:10', endTime: '18:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-05-08', startTime: '18:20', endTime: '18:35', duration: '15m' },
       { type: 'Race', date: '2026-05-09', startTime: '13:00', endTime: '19:00', duration: '6h' },
     ]
   },
@@ -923,7 +921,6 @@ export const races2026: Race[] = [
       { type: 'FP1', date: '2026-06-10', startTime: '14:00', endTime: '17:00', duration: '3h' },
       { type: 'Qualifying', date: '2026-06-10', startTime: '19:00', endTime: '20:00', duration: '1h' },
       { type: 'FP2', date: '2026-06-10', startTime: '22:00', endTime: '00:00', duration: '2h' },
-      { type: 'FP3', date: '2026-06-11', startTime: '15:00', endTime: '18:00', duration: '3h' },
       { type: 'Hyperpole', date: '2026-06-11', startTime: '20:00', endTime: '20:30', duration: '30m' },
       { type: 'Warm Up', date: '2026-06-13', startTime: '10:30', endTime: '10:45', duration: '15m' },
       { type: 'Race', date: '2026-06-13', startTime: '16:00', endTime: '16:00', duration: '24h' },
@@ -936,8 +933,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-07-10', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
       { type: 'FP2', date: '2026-07-10', startTime: '15:25', endTime: '16:55', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-07-11', startTime: '09:30', endTime: '11:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2026-07-11', startTime: '14:50', endTime: '15:50', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-07-11', startTime: '16:00', endTime: '16:15', duration: '15m' },
       { type: 'Race', date: '2026-07-12', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -948,8 +945,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-08-28', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2026-08-28', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-08-29', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2026-08-29', startTime: '12:45', endTime: '13:45', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-08-29', startTime: '13:55', endTime: '14:10', duration: '15m' },
       { type: 'Race', date: '2026-08-30', startTime: '12:00', endTime: '18:00', duration: '6h' },
     ]
   },
@@ -960,8 +957,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-09-11', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
       { type: 'FP2', date: '2026-09-11', startTime: '14:30', endTime: '16:00', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-09-12', startTime: '09:00', endTime: '10:00', duration: '1h' },
       { type: 'Qualifying', date: '2026-09-12', startTime: '13:10', endTime: '14:10', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-09-12', startTime: '14:20', endTime: '14:35', duration: '15m' },
       { type: 'Race', date: '2026-09-13', startTime: '11:00', endTime: '17:00', duration: '6h' },
     ]
   },
@@ -972,8 +969,8 @@ export const races2026: Race[] = [
     sessions: [
       { type: 'FP1', date: '2026-11-05', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2026-11-05', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
-      { type: 'FP3', date: '2026-11-06', startTime: '12:30', endTime: '14:00', duration: '1h 30m' },
       { type: 'Qualifying', date: '2026-11-06', startTime: '17:30', endTime: '18:30', duration: '1h' },
+      { type: 'Hyperpole', date: '2026-11-06', startTime: '18:40', endTime: '18:55', duration: '15m' },
       { type: 'Race', date: '2026-11-07', startTime: '14:00', endTime: '22:00', duration: '8h' },
     ]
   },
@@ -983,6 +980,72 @@ export const races2026: Race[] = [
 
 export const drivers2025: Driver[] = [
   // HYPERCAR DRIVERS - 2025 Championship
+  {
+    id: 'calado-2025',
+    name: 'James Calado',
+    firstName: 'James',
+    lastName: 'Calado',
+    nationality: 'British',
+    countryFlag: '🇬🇧',
+    team: 'Ferrari AF Corse',
+    teamId: 'ferrari-51',
+    carNumber: '#51',
+    class: 'HYPERCAR',
+    points: 228,
+    position: 1,
+    dateOfBirth: '1989-06-13',
+    placeOfBirth: 'Cropthorne, UK',
+    biography: 'James Calado claimed the 2025 WEC World Championship with Ferrari AF Corse.',
+    careerHighlights: ['2025 WEC World Champion', 'Le Mans 24h Winner'],
+    facts: ['Won his first WEC Hypercar title in 2025'],
+    championships: 1,
+    leMansWins: 1,
+    wecWins: 4,
+  },
+  {
+    id: 'pier-guidi-2025',
+    name: 'Alessandro Pier Guidi',
+    firstName: 'Alessandro',
+    lastName: 'Pier Guidi',
+    nationality: 'Italian',
+    countryFlag: '🇮🇹',
+    team: 'Ferrari AF Corse',
+    teamId: 'ferrari-51',
+    carNumber: '#51',
+    class: 'HYPERCAR',
+    points: 228,
+    position: 1,
+    dateOfBirth: '1983-12-18',
+    placeOfBirth: 'Tortona, Italy',
+    biography: 'Alessandro Pier Guidi added another WEC title to his impressive resume in 2025.',
+    careerHighlights: ['2025 WEC World Champion', 'Le Mans 24h Winner'],
+    facts: ['Key development driver for the 499P'],
+    championships: 1,
+    leMansWins: 1,
+    wecWins: 4,
+  },
+  {
+    id: 'giovinazzi-2025',
+    name: 'Antonio Giovinazzi',
+    firstName: 'Antonio',
+    lastName: 'Giovinazzi',
+    nationality: 'Italian',
+    countryFlag: '🇮🇹',
+    team: 'Ferrari AF Corse',
+    teamId: 'ferrari-51',
+    carNumber: '#51',
+    class: 'HYPERCAR',
+    points: 228,
+    position: 1,
+    dateOfBirth: '1993-12-14',
+    placeOfBirth: 'Martina Franca, Italy',
+    biography: 'Antonio Giovinazzi completed the championship-winning crew for Ferrari in 2025.',
+    careerHighlights: ['2025 WEC World Champion', 'Le Mans 24h Winner'],
+    facts: ['Former Formula 1 driver'],
+    championships: 1,
+    leMansWins: 1,
+    wecWins: 4,
+  },
   {
     id: 'estre-2025',
     name: 'Kévin Estre',
@@ -995,12 +1058,12 @@ export const drivers2025: Driver[] = [
     carNumber: '#6',
     class: 'HYPERCAR',
     points: 154,
-    position: 1,
+    position: 4,
     dateOfBirth: '1988-07-02',
     placeOfBirth: 'Martigues, France',
-    biography: 'Kévin Estre claimed the 2025 WEC World Championship with Porsche Penske Motorsport.',
-    careerHighlights: ['2025 WEC World Champion', '24 Hours of Le Mans class winner (2018 GTE Pro)'],
-    facts: ['Won his first WEC Hypercar title in 2025'],
+    biography: 'Kévin Estre completed the 2025 WEC season with Porsche Penske Motorsport.',
+    careerHighlights: ['24 Hours of Le Mans class winner (2018 GTE Pro)'],
+    facts: ['Strong performance in 2025'],
     championships: 1,
     leMansWins: 0,
     wecWins: 5,
@@ -1017,12 +1080,12 @@ export const drivers2025: Driver[] = [
     carNumber: '#6',
     class: 'HYPERCAR',
     points: 154,
-    position: 1,
+    position: 4,
     dateOfBirth: '1981-11-19',
     placeOfBirth: 'Duisburg, Germany',
-    biography: 'André Lotterer added another WEC title to his impressive resume in 2025.',
-    careerHighlights: ['2025 WEC World Champion', '3-time 24 Hours of Le Mans winner'],
-    facts: ['Four WEC titles across different eras'],
+    biography: 'André Lotterer added another WEC season to his impressive resume in 2025.',
+    careerHighlights: ['3-time 24 Hours of Le Mans winner'],
+    facts: ['Multiple WEC titles across different eras'],
     championships: 1,
     leMansWins: 3,
     wecWins: 14,
@@ -1039,12 +1102,12 @@ export const drivers2025: Driver[] = [
     carNumber: '#6',
     class: 'HYPERCAR',
     points: 154,
-    position: 1,
+    position: 4,
     dateOfBirth: '1991-05-08',
     placeOfBirth: 'Hasselt, Belgium',
-    biography: 'Laurens Vanthoor completed the championship-winning crew for Porsche in 2025.',
-    careerHighlights: ['2025 WEC World Champion', '24 Hours of Spa winner'],
-    facts: ['First Hypercar world championship'],
+    biography: 'Laurens Vanthoor completed the 2025 crew for Porsche.',
+    careerHighlights: ['24 Hours of Spa winner'],
+    facts: ['Strong pace throughout the season'],
     championships: 1,
     leMansWins: 0,
     wecWins: 4,
@@ -1208,14 +1271,14 @@ export const drivers2025: Driver[] = [
 export const teams2025: Team[] = [
   // HYPERCAR - 2025 Final Standings
   { 
-    id: 'porsche-6-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', 
-    points: 198, position: 1, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
-    drivers: ['estre-2025', 'lotterer-2025', 'vanthoor-2025'],
-    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
-    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
-    championships: 1, leMansWins: 0, wecWins: 6, poles: 6, fastestLaps: 7,
-    about: '2025 FIA WEC Hypercar World Champions. Porsche Penske Motorsport finally captured their first WEC title with a dominant second half of the season.',
-    facts: ['2025 World Champions', 'Won 3 of the final 4 races', 'First Hypercar title for Porsche']
+    id: 'ferrari-51-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR',
+    points: 228, position: 1, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹',
+    drivers: ['calado', 'pier-guidi', 'giovinazzi'],
+    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
+    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
+    championships: 1, leMansWins: 1, wecWins: 3, poles: 4, fastestLaps: 5,
+    about: '2025 FIA WEC Hypercar World Champions. Ferrari AF Corse clinched the title after a dramatic season, proving the 499P to be the class of the field.',
+    facts: ['2025 World Champions', 'Won at COTA', 'Strong mid-season form']
   },
   { 
     id: 'toyota-7-2025', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', 
@@ -1224,7 +1287,7 @@ export const teams2025: Team[] = [
     fullName: 'Toyota Gazoo Racing', chassis: 'Toyota GR010 Hybrid', engine: 'Toyota 3.5L Twin-Turbo V6 Hybrid',
     teamPrincipal: 'Kamui Kobayashi', base: 'Cologne, Germany', founded: '1999', wecDebut: '2012',
     championships: 6, leMansWins: 6, wecWins: 38, poles: 30, fastestLaps: 34,
-    about: 'Le Mans 2025 winners but narrowly missed the championship. Toyota #7 won the biggest race but lost the title by 6 points.',
+    about: 'Le Mans 2025 winners but narrowly missed the championship. Toyota #7 won the biggest race but lost the title.',
     facts: ['2025 Le Mans Winners', 'Nyck de Vries joined the team', 'Kamui Kobayashi serves as driver and team principal']
   },
   { 
@@ -1238,24 +1301,24 @@ export const teams2025: Team[] = [
     facts: ['Finished P3 in championship', 'Won at Fuji', 'Strong qualifying pace throughout']
   },
   { 
-    id: 'porsche-5-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', 
+    id: 'porsche-6-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR',
     points: 168, position: 4, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', 
+    drivers: ['estre-2025', 'lotterer-2025', 'vanthoor-2025'],
+    fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
+    teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
+    championships: 0, leMansWins: 0, wecWins: 6, poles: 6, fastestLaps: 7,
+    about: 'Porsche Penske Motorsport #6 had a solid 2025 season.',
+    facts: ['Won 3 races', 'Strong early season']
+  },
+  {
+    id: 'porsche-5-2025', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR',
+    points: 152, position: 5, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪',
     drivers: ['campbell', 'christensen', 'makowiecki'],
     fullName: 'Porsche Penske Motorsport', chassis: 'Porsche 963', engine: 'Porsche 4.6L Twin-Turbo V8 Hybrid',
     teamPrincipal: 'Urs Kuratle', base: 'Mooresville, USA', founded: '2022', wecDebut: '2023',
     championships: 0, leMansWins: 0, wecWins: 4, poles: 3, fastestLaps: 4,
     about: 'The #5 Porsche won at Spa 2025 in dominant fashion.',
-    facts: ['Won at Spa-Francorchamps', 'P4 in championship']
-  },
-  { 
-    id: 'ferrari-51-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', 
-    points: 152, position: 5, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', 
-    drivers: ['calado', 'pier-guidi', 'giovinazzi'],
-    fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
-    teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
-    championships: 0, leMansWins: 0, wecWins: 3, poles: 4, fastestLaps: 5,
-    about: 'Ferrari #51 won at COTA in 2025.',
-    facts: ['Won at COTA', 'Strong mid-season form']
+    facts: ['Won at Spa-Francorchamps', 'P5 in championship']
   },
   { 
     id: 'ferrari-50-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', 
@@ -1332,11 +1395,11 @@ export const weather = {
 
 // Helper functions
 export const getDriverById = (id: string): Driver | undefined => {
-  return [...drivers2024, ...drivers2025].find(d => d.id === id);
+  return [...drivers2024, ...drivers2025, ...drivers2026].find(d => d.id === id);
 };
 
 export const getTeamById = (id: string): Team | undefined => {
-  return [...teams2024, ...teams2025].find(t => t.id === id);
+  return [...teams2024, ...teams2025, ...hypercars2026, ...lmgt3Teams2026].find(t => t.id === id);
 };
 
 export const getDriversByClass = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3'): Driver[] => {
@@ -1380,3 +1443,72 @@ export const getDriversBySeason = (season: number): Driver[] => {
 export const getTeamsBySeason = (season: number): Team[] => {
   return season === 2025 ? teams2025 : teams2024;
 };
+export const hypercars2026: Team[] = [
+  { id: 'ferrari-50', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', points: 0, position: 0, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
+  { id: 'ferrari-51', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', points: 0, position: 0, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
+  { id: 'toyota-7', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', points: 0, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
+  { id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', points: 0, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
+  { id: 'porsche-5', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'porsche-6', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'cadillac-2', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 0, position: 0, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'cadillac-3', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#3', class: 'HYPERCAR', points: 0, position: 0, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 0, position: 0, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 0, position: 0, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 0, position: 0, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'alpine-36', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#36', class: 'HYPERCAR', points: 0, position: 0, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'bmw-15', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#15', class: 'HYPERCAR', points: 0, position: 0, color: '#1E90FF', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'bmw-20', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#20', class: 'HYPERCAR', points: 0, position: 0, color: '#1E90FF', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'aston-007', name: 'Aston Martin Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#007', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
+  { id: 'aston-009', name: 'Aston Martin Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#009', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
+  { id: 'genesis-1', name: 'Genesis Magma Racing', manufacturer: 'Genesis', carNumber: '#1', class: 'HYPERCAR', points: 0, position: 0, color: '#FF4500', country: 'South Korea', countryFlag: '🇰🇷', drivers: [] },
+];
+
+export const circuits = [
+  { id: 'qatar', name: 'Lusail International Circuit', location: 'Lusail', country: 'Qatar', flag: '🇶🇦', length: '5.419 km', turns: 16, lapRecord: '1:46.783', firstWEC: 2024, description: 'Lusail International Circuit is a motorsport venue in Lusail, Qatar. Originally built for MotoGP, it was upgraded for Formula 1 and WEC racing with extensive lighting for night races.' },
+  { id: 'imola', name: 'Autodromo Enzo e Dino Ferrari', location: 'Imola', country: 'Italy', flag: '🇮🇹', length: '4.909 km', turns: 19, lapRecord: '1:30.140', firstWEC: 2024, description: 'Autodromo Enzo e Dino Ferrari is a historic Italian circuit named after Ferrari founder Enzo Ferrari and his son Dino. Known for its challenging, old-school layout with elevation changes.' },
+  { id: 'spa', name: 'Circuit de Spa-Francorchamps', location: 'Stavelot', country: 'Belgium', flag: '🇧🇪', length: '7.004 km', turns: 19, lapRecord: '2:01.540', firstWEC: 2012, description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single race.' },
+  { id: 'le-mans', name: 'Circuit de la Sarthe', location: 'Le Mans', country: 'France', flag: '🇫🇷', length: '13.626 km', turns: 38, lapRecord: '3:23.550', firstWEC: 2012, description: "Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world's oldest active sports car endurance race. The circuit combines permanent sections with public roads closed for the event." },
+  { id: 'sao-paulo', name: 'Interlagos', location: 'São Paulo', country: 'Brazil', flag: '🇧🇷', length: '4.309 km', turns: 15, lapRecord: '1:25.789', firstWEC: 2012, description: 'Autódromo José Carlos Pace (Interlagos) is a challenging circuit with significant elevation changes and passionate local fans. Known for unpredictable weather and dramatic racing.' },
+  { id: 'cota', name: 'Circuit of the Americas', location: 'Austin, Texas', country: 'USA', flag: '🇺🇸', length: '5.513 km', turns: 20, lapRecord: '1:48.123', firstWEC: 2013, description: 'Circuit of the Americas features a mix of high-speed straights and technical sections inspired by classic circuits. The iconic Turn 1 hill provides spectacular racing action.' },
+  { id: 'fuji', name: 'Fuji Speedway', location: 'Oyama', country: 'Japan', flag: '🇯🇵', length: '4.563 km', turns: 16, lapRecord: '1:28.234', firstWEC: 2012, description: 'Fuji Speedway sits at the base of Mount Fuji, offering stunning views and challenging racing conditions. The 1.475km start/finish straight is one of the longest in motorsport.' },
+  { id: 'bahrain', name: 'Bahrain International Circuit', location: 'Sakhir', country: 'Bahrain', flag: '🇧🇭', length: '5.412 km', turns: 15, lapRecord: '1:46.567', firstWEC: 2012, description: 'Bahrain International Circuit hosts the season finale under dramatic floodlights in the desert. The abrasive surface and high temperatures create unique challenges for teams.' }
+];
+
+export const drivers2026: Driver[] = [
+  {
+    id: 'kevin-magnussen',
+    name: 'Kevin Magnussen',
+    firstName: 'Kevin',
+    lastName: 'Magnussen',
+    nationality: 'Danish',
+    countryFlag: '🇩🇰',
+    team: 'BMW M Team WRT',
+    teamId: 'bmw-20',
+    carNumber: '#20',
+    class: 'HYPERCAR',
+    points: 0,
+    position: 0,
+    dateOfBirth: '1992-10-05',
+    placeOfBirth: 'Roskilde, Denmark',
+    biography: 'Kevin Magnussen is a Danish racing driver with extensive Formula 1 experience. After a decade in F1, he transitioned to endurance racing, joining BMWs factory WEC effort for the 2026 season.',
+    careerHighlights: [
+      'Formula 1 Podium Finisher',
+      'IMSA SportsCar Championship race winner',
+      'Formula Renault 3.5 Champion (2013)'
+    ],
+    facts: [
+      'Son of former F1 driver and Le Mans class winner Jan Magnussen',
+      'Scored a podium on his F1 debut in 2014',
+      'Raced alongside his father at Le Mans in 2021'
+    ],
+    championships: 0,
+    leMansWins: 0,
+    wecWins: 0,
+  }
+];
+
+export const lmgt3Teams2026: Team[] = [
+  { id: 'manthey-92', name: 'Manthey 1st Phorm', manufacturer: 'Porsche', carNumber: '#92', class: 'LMGT3', points: 0, position: 0, color: '#000000', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'hor-27', name: 'Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#27', class: 'LMGT3', points: 0, position: 0, color: '#006400', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'iron-85', name: 'Iron Dames', manufacturer: 'Lamborghini', carNumber: '#85', class: 'LMGT3', points: 0, position: 0, color: '#FF1493', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
+];

@@ -5,18 +5,19 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { drivers2024, teams2024, races2024, drivers2025, teams2025, races2025 } from '@/data/wecData';
+import { drivers2024, teams2024, races2024, drivers2025, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 
-type SeasonYear = 2024 | 2025;
+type SeasonYear = 2024 | 2025 | 2026;
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
 const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: typeof teams2024; races: typeof races2024; status: SeasonStatus }> = {
   2024: { drivers: drivers2024, teams: teams2024, races: races2024, status: 'completed' },
   2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
+  2026: { drivers: [], teams: [...hypercars2026, ...lmgt3Teams2026], races: races2026, status: 'in-progress' },
 };
 
 const Standings = () => {
@@ -262,9 +263,9 @@ const Standings = () => {
   );
 
   // Empty state component
-  const EmptyState = ({ message }: { message: string }) => (
-    <div className="glass-card p-8 text-center">
-      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+  const StandingsEmptyState = ({ message }: { message: string }) => (
+    <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
+      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
       <p className="text-muted-foreground">{message}</p>
     </div>
   );
@@ -306,6 +307,7 @@ const Standings = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="2026">2026</SelectItem>
                 <SelectItem value="2025">2025</SelectItem>
                 <SelectItem value="2024">2024</SelectItem>
               </SelectContent>
@@ -355,14 +357,16 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                   </span>
                 </div>
-                {hypercarDrivers.length > 0 ? (
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                ) : hypercarDrivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarDrivers.map((driver, index) => (
                       <DriverRow key={driver.id} driver={driver} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -375,14 +379,23 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
                   </span>
                 </div>
-                {hypercarEntries.length > 0 ? (
+                {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026.</p>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {hypercarEntries.map((team, index) => (
+                        <EntryRow key={team.id} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  </>
+                ) : hypercarEntries.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarEntries.map((team, index) => (
                       <EntryRow key={team.id} team={team} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -395,14 +408,16 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
                   </span>
                 </div>
-                {manufacturersStandings.length > 0 ? (
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                ) : manufacturersStandings.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {manufacturersStandings.map((manufacturer, index) => (
                       <ManufacturerRow key={manufacturer.name} manufacturer={manufacturer} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -439,14 +454,16 @@ const Standings = () => {
                     {CHAMPIONSHIPS.LMGT3_DRIVERS}
                   </span>
                 </div>
-                {lmgt3Drivers.length > 0 ? (
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                ) : lmgt3Drivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Drivers.map((driver, index) => (
                       <DriverRow key={driver.id} driver={driver} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -459,14 +476,16 @@ const Standings = () => {
                     {CHAMPIONSHIPS.LMGT3_TEAMS}
                   </span>
                 </div>
-                {lmgt3Teams.length > 0 ? (
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                ) : lmgt3Teams.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Teams.map((team, index) => (
                       <EntryRow key={team.id} team={team} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -512,7 +531,7 @@ const Standings = () => {
                       ))}
                     </div>
                   ) : (
-                    <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                    <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                   )}
                 </TabsContent>
 
@@ -524,12 +543,12 @@ const Standings = () => {
                       ))}
                     </div>
                   ) : (
-                    <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                    <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                   )}
                 </TabsContent>
               </Tabs>
             ) : (
-              <EmptyState message={EMPTY_STATES.NO_STANDINGS} />
+              <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
             )}
           </div>
         </div>

@@ -235,8 +235,25 @@ const RaceProfile = () => {
     return null;
   };
 
+  const getUtcOffset = (circuitKey: string | null) => {
+    switch (circuitKey) {
+      case 'qatar': return 'UTC+3';
+      case 'imola': return 'UTC+2 (CEST)';
+      case 'spa': return 'UTC+2 (CEST)';
+      case 'le-mans': return 'UTC+2 (CEST)';
+      case 'sao-paulo': return 'UTC-3';
+      case 'cota': return 'UTC-5 (CDT)';
+      case 'fuji': return 'UTC+9';
+      case 'bahrain': return 'UTC+3';
+      case 'portimao': return 'UTC+1 (WEST)';
+      case 'monza': return 'UTC+2 (CEST)';
+      default: return '';
+    }
+  };
+
   const circuitKey = getCircuitKey(race.id);
   const circuit = circuitKey ? circuitDetails[circuitKey] : null;
+  const utcOffset = getUtcOffset(circuitKey);
 
   return (
     <div className="min-h-screen bg-background">
@@ -503,6 +520,11 @@ const RaceProfile = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
+                  {utcOffset && (
+                    <p className="text-xs text-muted-foreground mb-4">
+                      All times are local circuit time ({utcOffset})
+                    </p>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {race.sessions.map((session, index) => (
                       <div 
@@ -514,7 +536,7 @@ const RaceProfile = () => {
                           {new Date(session.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {session.startTime} - {session.endTime}
+                          {session.startTime} - {session.endTime} {utcOffset && <span className="text-xs opacity-70">({utcOffset})</span>}
                         </p>
                       </div>
                     ))}

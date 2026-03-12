@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Trophy, Flag, Medal, ChevronRight } from 'lucide-react';
+import { Trophy, Flag, Medal, ChevronRight, Search } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
-import { drivers2024, getDriversByClass } from '@/data/wecData';
+import { Input } from '@/components/ui/input';
+import { drivers2024, drivers2026, getDriversByClass } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Drivers = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
       case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
@@ -23,7 +26,7 @@ const Drivers = () => {
       transition={{ delay: index * 0.05 }}
     >
       <Link 
-        to={`/drivers/${driver.id}`}
+        to={`/drivers/${driver.name.toLowerCase().replace(/\s+/g, '-')}`}
         className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300"
       >
         <div className="flex items-start justify-between">
@@ -93,12 +96,24 @@ const Drivers = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
         >
-          <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
-            <span className="text-gradient">Drivers</span>
-          </h1>
-          <p className="text-muted-foreground">2024 FIA World Endurance Championship drivers</p>
+          <div>
+            <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
+              <span className="text-gradient">Drivers</span>
+            </h1>
+            <p className="text-muted-foreground">FIA World Endurance Championship drivers</p>
+          </div>
+
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search driver or team..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-card border-border"
+            />
+          </div>
         </motion.div>
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
@@ -108,15 +123,32 @@ const Drivers = () => {
             <TabsTrigger value="LMGT3" className="font-racing">LMGT3</TabsTrigger>
           </TabsList>
 
-          {(['HYPERCAR', 'LMP2', 'LMGT3'] as const).map((carClass) => (
-            <TabsContent key={carClass} value={carClass}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getDriversByClass(carClass).map((driver, index) => (
-                  <DriverCard key={driver.id} driver={driver} index={index} />
-                ))}
-              </div>
-            </TabsContent>
-          ))}
+          {(['HYPERCAR', 'LMP2', 'LMGT3'] as const).map((carClass) => {
+            // Use 2026 drivers for hypercar to show new entries
+            const allClassDrivers = carClass === 'HYPERCAR'
+              ? [...getDriversByClass('HYPERCAR'), ...drivers2026]
+              : getDriversByClass(carClass);
+
+            const filteredDrivers = allClassDrivers.filter(driver =>
+              driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              driver.team.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            return (
+              <TabsContent key={carClass} value={carClass}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredDrivers.map((driver, index) => (
+                    <DriverCard key={driver.id} driver={driver} index={index} />
+                  ))}
+                  {filteredDrivers.length === 0 && (
+                    <div className="col-span-full py-12 text-center text-muted-foreground">
+                      No drivers found matching "{searchQuery}".
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+            );
+          })}
         </Tabs>
       </main>
     </div>
