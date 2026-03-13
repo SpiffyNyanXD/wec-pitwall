@@ -56,13 +56,18 @@ const DriverProfile = () => {
       <Header />
 
       <main className="container py-8 relative z-10">
-        {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-6"
+          className="mb-6 flex justify-between items-center"
         >
           <BackButton to="/drivers" label="Back to Drivers" />
+          <Button asChild variant="outline" className="gap-2 border-primary/30 hover:bg-primary/10 transition-colors">
+            <Link to={`/compare?a=${driver.id}`}>
+              <span className="text-base">⚔️</span>
+              Compare
+            </Link>
+          </Button>
         </motion.div>
 
         {/* Hero Section */}

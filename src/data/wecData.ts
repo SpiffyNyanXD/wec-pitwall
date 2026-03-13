@@ -21,6 +21,9 @@ export interface Driver {
   championships: number;
   leMansWins: number;
   wecWins: number;
+  podiums?: number;
+  poles?: number;
+  fastestLaps?: number;
   imageUrl?: string;
   socialLinks?: {
     twitter?: string;

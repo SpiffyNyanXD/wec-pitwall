@@ -27,6 +27,7 @@ const navItems = [
   { to: '/schedule', label: 'Schedule', icon: Calendar },
   { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/drivers', label: 'Drivers', icon: Users },
+  { to: '/compare', label: 'Compare', icon: () => <span className="text-base w-5 h-5 flex items-center justify-center">⚔️</span> },
   { to: '/teams', label: 'Teams', icon: Car },
 ];
 

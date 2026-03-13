@@ -26,6 +26,7 @@ const RaceProfile = lazy(() => import("./pages/RaceProfile"));
 const Standings = lazy(() => import("./pages/Standings"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Favorites = lazy(() => import("./pages/Favorites"));
+const Compare = lazy(() => import("./pages/Compare"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/standings" element={<Standings />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route path="/compare" element={<Compare />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
