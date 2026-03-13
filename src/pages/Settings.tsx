@@ -31,7 +31,10 @@ const SettingsPage = () => {
   }, [user]);
 
   const loadNotificationSettings = async () => {
-    if (!user) return;
+    if (!user || !supabase) {
+      setLoading(false);
+      return;
+    }
     
     const { data, error } = await supabase
       .from('notification_subscriptions')
@@ -52,6 +55,10 @@ const SettingsPage = () => {
   const updateNotificationSetting = async (key: string, value: boolean) => {
     if (!user) {
       toast.error('Please sign in to update settings');
+      return;
+    }
+    if (!supabase) {
+      toast.error('Supabase is not configured');
       return;
     }
 

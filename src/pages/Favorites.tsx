@@ -31,7 +31,10 @@ const FavoritesPage = () => {
   }, [user]);
 
   const loadFavorites = async () => {
-    if (!user) return;
+    if (!user || !supabase) {
+      setLoading(false);
+      return;
+    }
     
     const { data, error } = await supabase
       .from('favorite_teams')
@@ -47,6 +50,10 @@ const FavoritesPage = () => {
   const addFavorite = async (team: typeof hypercars2026[0]) => {
     if (!user) {
       toast.error('Please sign in to add favorites');
+      return;
+    }
+    if (!supabase) {
+      toast.error('Supabase is not configured');
       return;
     }
 
