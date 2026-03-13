@@ -10,34 +10,27 @@
 @tailwind utilities;
 
 @layer base {
-  .dark {
+  :root {
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;
-
     --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222 47% 8%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 217 91% 60%;
     --primary-foreground: 222 47% 6%;
-
     --secondary: 0 84% 60%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 222 30% 15%;
     --muted-foreground: 215 20% 65%;
-
     --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 222 30% 18%;
     --input: 222 30% 18%;
     --ring: 217 91% 60%;
+    --radius: 0.75rem;
 
     /* Custom WEC tokens */
     --wec-blue: 217 91% 60%;
@@ -51,9 +44,13 @@
     
     --gradient-card: linear-gradient(180deg, hsl(222 47% 12%) 0%, hsl(222 47% 8%) 100%);
     --gradient-glow: radial-gradient(ellipse at center, hsl(var(--wec-blue) / 0.3) 0%, transparent 70%);
+    --gradient-racing: linear-gradient(135deg, hsl(var(--wec-blue)) 0%, hsl(var(--wec-red)) 100%);
 
     --shadow-glow: 0 0 40px hsl(var(--wec-blue) / 0.2);
     --shadow-card: 0 8px 32px hsl(222 47% 4% / 0.5);
+
+    --font-racing: 'Orbitron', sans-serif;
+    --font-body: 'Inter', sans-serif;
 
     --sidebar-background: 222 47% 8%;
     --sidebar-foreground: 210 40% 98%;
@@ -65,56 +62,46 @@
     --sidebar-ring: 217 91% 60%;
   }
 
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 6%;
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --muted: 222 30% 15%;
+    --muted-foreground: 215 20% 65%;
+    --border: 222 30% 18%;
+    --glass: 222 47% 10%;
+    --glass-border: 222 30% 20%;
+  }
 
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 222 47% 6%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 6%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 6%;
-
-    --primary: 217 91% 60%;
+    --primary: 217 91% 50%;
     --primary-foreground: 0 0% 100%;
+    --muted: 210 40% 93%;
+    --muted-foreground: 215 20% 40%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --glass: 0 0% 97%;
+    --glass-border: 214 32% 88%;
 
-    --secondary: 0 84% 60%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
-
-    --radius: 0.75rem;
-
-    /* Custom WEC tokens - adapted for light mode */
+    /* Light mode specific tokens overrides */
     --wec-blue: 217 91% 50%;
     --wec-red: 0 84% 50%;
     --wec-gold: 45 93% 45%;
     --wec-silver: 210 10% 50%;
     --wec-bronze: 30 60% 40%;
 
-    --glass: 0 0% 100%;
-    --glass-border: 214.3 31.8% 91.4%;
-
-    --gradient-racing: linear-gradient(135deg, hsl(var(--wec-blue)) 0%, hsl(var(--wec-red)) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --gradient-glow: radial-gradient(ellipse at center, hsl(var(--wec-blue) / 0.1) 0%, transparent 70%);
 
     --shadow-glow: 0 0 40px hsl(var(--wec-blue) / 0.1);
     --shadow-card: 0 8px 32px hsl(222 47% 4% / 0.05);
-
-    --font-racing: 'Orbitron', sans-serif;
-    --font-body: 'Inter', sans-serif;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 47% 6%;
