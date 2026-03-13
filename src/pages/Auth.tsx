@@ -111,7 +111,7 @@ const Auth = () => {
             </div>
             <div className="absolute -inset-1 rounded-lg racing-gradient opacity-30 blur-md -z-10" />
           </div>
-          <span className="text-2xl font-racing font-bold text-gradient">WECHub</span>
+          <span className="text-2xl font-racing font-bold text-gradient">WEC Pitwall</span>
         </div>
 
         {/* Auth Card */}

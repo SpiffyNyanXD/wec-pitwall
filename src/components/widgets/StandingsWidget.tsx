@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, ChevronDown } from 'lucide-react';
-import { teams2024, drivers2024, teams2025, drivers2025 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, standings2025 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,7 @@ const StandingsWidget = () => {
   const [selectedSeason, setSelectedSeason] = useState<2024 | 2025>(2025);
   
   const teams = selectedSeason === 2025 ? teams2025 : teams2024;
-  const drivers = selectedSeason === 2025 ? drivers2025 : drivers2024;
+  const drivers = selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024;
 
   const getMedalIcon = (position: number) => {
     switch (position) {

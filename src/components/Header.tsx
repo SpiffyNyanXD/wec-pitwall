@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun } from 'lucide-react';
+import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,6 +32,16 @@ const navItems = [
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
+
+  const handleThemeToggle = () => {
+    if (theme === 'dark') {
+      setTheme('light');
+    } else if (theme === 'light') {
+      setTheme('system');
+    } else {
+      setTheme('dark');
+    }
+  };
   const { user, signOut, loading } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -192,12 +202,15 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={handleThemeToggle}
+            title={`Current theme: ${theme}. Click to change.`}
           >
             {theme === 'dark' ? (
+              <Moon className="h-5 w-5 text-muted-foreground" />
+            ) : theme === 'light' ? (
               <Sun className="h-5 w-5 text-muted-foreground" />
             ) : (
-              <Moon className="h-5 w-5 text-muted-foreground" />
+              <Monitor className="h-5 w-5 text-muted-foreground" />
             )}
           </Button>
           <Button variant="ghost" size="icon" className="relative" asChild>

@@ -7,6 +7,7 @@ import EmptyState from '@/components/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026 } from '@/data/wecData';
+import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 
 interface CircuitFacts {
   lapLength: string;
@@ -26,6 +27,7 @@ interface CircuitFacts {
 
 const RaceProfile = () => {
   const { id } = useParams();
+  const { convertTime, timezone } = useTimezone();
   
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
@@ -535,9 +537,15 @@ const RaceProfile = () => {
                         <p className="text-sm text-muted-foreground">
                           {new Date(session.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         </p>
-                        <p className="text-sm text-muted-foreground">
-                          {session.startTime} - {session.endTime} {utcOffset && <span className="text-xs opacity-70">({utcOffset})</span>}
-                        </p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+                          <Clock className="w-4 h-4" />
+                          {convertTime(session.date, session.startTime, race.circuit)} - {convertTime(session.date, session.endTime, race.circuit)}
+                          {timezone !== 'auto' && CIRCUIT_TIMEZONES[race.circuit] && (
+                            <span className="text-xs opacity-70 block w-full mt-1 ml-6">
+                              {session.startTime} - {session.endTime} ({TIMEZONE_OPTIONS.find(t => t.value === timezone)?.label || 'Local'})
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

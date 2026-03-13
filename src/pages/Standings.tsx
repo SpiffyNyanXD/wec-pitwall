@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { drivers2024, teams2024, races2024, drivers2025, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
+import { drivers2024, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
@@ -365,6 +365,13 @@ const Standings = () => {
                       <DriverRow key={driver.id} driver={driver} position={index + 1} />
                     ))}
                   </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                   <div className="glass-card p-6 flex flex-col items-center justify-center text-center border-primary/20">
+                     <Trophy className="w-12 h-12 text-green-400 mb-4" />
+                     <h3 className="text-xl font-racing font-bold mb-2">LMGT3 Champions</h3>
+                     <p className="text-muted-foreground">{selectedSeason === 2025 ? standings2025.lmgt3.champion.drivers : standings2024.lmgt3.champion.drivers}</p>
+                     <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.team : standings2024.lmgt3.champion.team}</p>
+                   </div>
                 ) : (
                   <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}
@@ -394,6 +401,13 @@ const Standings = () => {
                       <EntryRow key={team.id} team={team} position={index + 1} />
                     ))}
                   </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                   <div className="glass-card p-6 flex flex-col items-center justify-center text-center border-primary/20">
+                     <Trophy className="w-12 h-12 text-green-400 mb-4" />
+                     <h3 className="text-xl font-racing font-bold mb-2">LMGT3 Champions</h3>
+                     <p className="text-muted-foreground">{selectedSeason === 2025 ? standings2025.lmgt3.champion.team : standings2024.lmgt3.champion.team}</p>
+                     <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.manufacturer : standings2024.lmgt3.champion.manufacturer}</p>
+                   </div>
                 ) : (
                   <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
                 )}

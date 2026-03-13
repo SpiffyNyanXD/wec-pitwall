@@ -202,7 +202,13 @@ const TeamProfile = () => {
                 className="w-32 h-32 md:w-40 md:h-40 rounded-2xl flex items-center justify-center shrink-0"
                 style={{ background: `${team.color}30`, border: `2px solid ${team.color}` }}
               >
-                <span className="font-racing text-5xl md:text-6xl font-bold" style={{ color: team.color }}>
+                <span
+                  className="font-racing font-bold"
+                  style={{
+                    color: team.color,
+                    fontSize: team.carNumber.length > 3 ? '2.5rem' : '3.75rem'
+                  }}
+                >
                   {team.carNumber}
                 </span>
               </div>
