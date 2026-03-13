@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun, Monitor } from 'lucide-react';
@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { races2026 } from '@/data/wecData';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +46,67 @@ const Header = () => {
   const { user, signOut, loading } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hasReminders, setHasReminders] = useState(false);
+
+  useEffect(() => {
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+
+    const checkReminders = () => {
+      try {
+        const saved = localStorage.getItem('wec-notifications');
+        const parsed = saved ? JSON.parse(saved) : [];
+        setHasReminders(parsed.length > 0);
+
+        // Clear existing timeouts
+        timeouts.forEach((t) => clearTimeout(t));
+        timeouts.length = 0;
+
+        if (parsed.length > 0 && 'Notification' in window && window.Notification.permission === 'granted') {
+          const timingOffsetStr = localStorage.getItem('wec-notif-timing');
+          const timingOffset = timingOffsetStr ? parseInt(timingOffsetStr, 10) : 60;
+
+          const allRaces = races2026.filter((r) => r.status === 'upcoming');
+          allRaces.forEach((race) => {
+            race.sessions?.forEach((session) => {
+              const reminderId = `${race.id}-${session.type}`;
+              if (parsed.includes(reminderId)) {
+                // Parse session start time
+                const sessionDateTimeStr = `${session.date}T${session.startTime}:00`;
+                const sessionTime = new Date(sessionDateTimeStr).getTime();
+                const now = Date.now();
+
+                const timeUntilReminder = sessionTime - now - (timingOffset * 60 * 1000);
+
+                // Max timeout for 32-bit signed int is 2147483647 (approx 24.8 days)
+                // If it's more than 24 days away, don't set a timeout now.
+                const MAX_TIMEOUT = 2147483647;
+
+                if (timeUntilReminder > 0 && timeUntilReminder <= MAX_TIMEOUT) {
+                  const timeout = setTimeout(() => {
+                    if ('Notification' in window && window.Notification.permission === 'granted') {
+                      new window.Notification('WEC Session Starting Soon', {
+                        body: `${session.type} starts in ${timingOffset} ${timingOffset === 1 ? 'hour' : 'mins'} — ${race.name}`
+                      });
+                    }
+                  }, timeUntilReminder);
+                  timeouts.push(timeout);
+                }
+              }
+            });
+          });
+        }
+      } catch {
+        setHasReminders(false);
+      }
+    };
+
+    checkReminders();
+    window.addEventListener('wec-notifications-updated', checkReminders);
+    return () => {
+      window.removeEventListener('wec-notifications-updated', checkReminders);
+      timeouts.forEach((t) => clearTimeout(t));
+    };
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -214,8 +276,11 @@ const Header = () => {
             )}
           </Button>
           <Button variant="ghost" size="icon" className="relative" asChild>
-            <Link to="/settings">
+            <Link to="/notifications">
               <Bell className="h-5 w-5 text-muted-foreground" />
+              {hasReminders && (
+                <span className="w-2 h-2 rounded-full bg-secondary absolute top-1 right-1" />
+              )}
             </Link>
           </Button>
           <Button variant="ghost" size="icon" asChild className="hidden md:flex">
