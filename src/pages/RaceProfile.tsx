@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { MapPin, Calendar, Clock, Trophy, Flag, Gauge, Route, Building, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
-import EmptyState from '@/components/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026 } from '@/data/wecData';
