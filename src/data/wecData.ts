@@ -1355,7 +1355,7 @@ export const weather = {
 
 // Helper functions
 export const getDriverById = (id: string): Driver | undefined => {
-  return [...drivers2024, ...drivers2026].find(d => d.id === id);
+  return [...drivers2024, ...drivers2025, ...drivers2026].find(d => d.id === id);
 };
 
 export const getTeamById = (id: string): Team | undefined => {

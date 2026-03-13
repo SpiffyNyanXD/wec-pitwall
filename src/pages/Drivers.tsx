@@ -26,7 +26,7 @@ const Drivers = () => {
       transition={{ delay: index * 0.05 }}
     >
       <Link 
-        to={`/drivers/${driver.name.toLowerCase().replace(/\s+/g, '-')}`}
+        to={`/drivers/${driver.id}`}
         className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300"
       >
         <div className="flex items-start justify-between">
