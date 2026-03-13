@@ -66,6 +66,32 @@ export interface Session {
   duration: string;
 }
 
+export interface RaceResult {
+  position: number;
+  carNumber: string;
+  team: string;
+  manufacturer: string;
+  drivers: string[];
+  class: 'HYPERCAR' | 'LMP2' | 'LMGT3';
+  laps: number;
+  gap: string; // '+1:23.456' or 'Leader' or '+1 Lap'
+  fastestLap?: string; // '1:34.567'
+  isFastestLap?: boolean;
+  status: 'Finished' | 'DNF' | 'DSQ';
+  color: string;
+  flag: string;
+}
+
+export interface RaceResultSet {
+  raceId: string;
+  polePosition: string;
+  poleTime: string;
+  fastestLap: string;
+  fastestLapTime: string;
+  fastestLapDriver: string;
+  results: RaceResult[];
+}
+
 export interface Race {
   id: string;
   name: string;
@@ -1485,6 +1511,218 @@ export const standings2025 = {
     },
   },
 };
+
+export const raceResults: RaceResultSet[] = [
+  // ─── 2024 Season ───────────────────────────────────────────────
+
+  {
+    raceId: '2024-1',
+    polePosition: 'Toyota #8',
+    poleTime: '1:46.783',
+    fastestLap: 'Toyota #8',
+    fastestLapTime: '1:47.234',
+    fastestLapDriver: 'Sébastien Buemi',
+    results: [
+      { position: 1, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 334, gap: 'Leader', fastestLap: '1:47.234', isFastestLap: true, status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 2, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 334, gap: '+0:35.123', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 3, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 334, gap: '+1:12.456', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 4, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 334, gap: '+1:45.789', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 5, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 333, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 6, carNumber: '#5', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['M. Campbell', 'F. Makowiecki', 'N. Tandy'], class: 'HYPERCAR', laps: 333, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 7, carNumber: '#2', team: 'Cadillac Racing', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'A. Lynn', 'R. Westbrook'], class: 'HYPERCAR', laps: 332, gap: '+2 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+      { position: 8, carNumber: '#93', team: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', drivers: ['P-L. Chatin', 'M. Jensen', 'J-E. Vergne'], class: 'HYPERCAR', laps: 331, gap: '+3 Laps', status: 'Finished', color: '#0066B1', flag: '🇫🇷' },
+    ],
+  },
+
+  {
+    raceId: '2024-2',
+    polePosition: 'Ferrari #50',
+    poleTime: '1:30.140',
+    fastestLap: 'Ferrari #51',
+    fastestLapTime: '1:30.456',
+    fastestLapDriver: 'Antonio Pier Guidi',
+    results: [
+      { position: 1, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 212, gap: 'Leader', fastestLap: '1:30.456', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 212, gap: '+0:08.234', isFastestLap: true, status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 3, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 212, gap: '+0:45.678', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 4, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 211, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 5, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 211, gap: '+1 Lap', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 6, carNumber: '#2', team: 'Cadillac Racing', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'A. Lynn', 'R. Westbrook'], class: 'HYPERCAR', laps: 210, gap: '+2 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+    ],
+  },
+
+  {
+    raceId: '2024-3',
+    polePosition: 'Porsche #6',
+    poleTime: '2:01.540',
+    fastestLap: 'Porsche #6',
+    fastestLapTime: '2:02.123',
+    fastestLapDriver: 'Kevin Estre',
+    results: [
+      { position: 1, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 166, gap: 'Leader', fastestLap: '2:02.123', isFastestLap: true, status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 2, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 166, gap: '+0:12.345', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 3, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 166, gap: '+0:28.901', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 165, gap: '+1 Lap', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 5, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 165, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 6, carNumber: '#5', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['M. Campbell', 'F. Makowiecki', 'N. Tandy'], class: 'HYPERCAR', laps: 165, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+    ],
+  },
+
+  {
+    raceId: '2024-4',
+    polePosition: 'Ferrari #50',
+    poleTime: '3:22.982',
+    fastestLap: 'Toyota #8',
+    fastestLapTime: '3:23.550',
+    fastestLapDriver: 'Brendon Hartley',
+    results: [
+      { position: 1, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 311, gap: 'Leader', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 311, gap: '+0:47.234', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 3, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 310, gap: '+1 Lap', fastestLap: '3:23.550', isFastestLap: true, status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 4, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 310, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 5, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 309, gap: '+2 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 6, carNumber: '#2', team: 'Cadillac Racing', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'A. Lynn', 'R. Westbrook'], class: 'HYPERCAR', laps: 308, gap: '+3 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+      { position: 7, carNumber: '#5', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['M. Campbell', 'F. Makowiecki', 'N. Tandy'], class: 'HYPERCAR', laps: 307, gap: '+4 Laps', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 8, carNumber: '#15', team: 'BMW M Team WRT', manufacturer: 'BMW', drivers: ['D. Vanthoor', 'R. Marciello', 'K. Magnussen'], class: 'HYPERCAR', laps: 305, gap: '+6 Laps', status: 'Finished', color: '#1C69D4', flag: '🇩🇪' },
+    ],
+  },
+
+  {
+    raceId: '2024-5',
+    polePosition: 'Toyota #8',
+    poleTime: '1:25.789',
+    fastestLap: 'Toyota #8',
+    fastestLapTime: '1:26.012',
+    fastestLapDriver: 'Ryo Hirakawa',
+    results: [
+      { position: 1, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 227, gap: 'Leader', fastestLap: '1:26.012', isFastestLap: true, status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 2, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 227, gap: '+0:22.567', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 3, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 226, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 226, gap: '+1 Lap', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 5, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 225, gap: '+2 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+    ],
+  },
+
+  {
+    raceId: '2024-6',
+    polePosition: 'Porsche #5',
+    poleTime: '1:48.123',
+    fastestLap: 'Porsche #5',
+    fastestLapTime: '1:48.567',
+    fastestLapDriver: 'Matt Campbell',
+    results: [
+      { position: 1, carNumber: '#5', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['M. Campbell', 'F. Makowiecki', 'N. Tandy'], class: 'HYPERCAR', laps: 185, gap: 'Leader', fastestLap: '1:48.567', isFastestLap: true, status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 2, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 185, gap: '+0:14.789', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 3, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 184, gap: '+1 Lap', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 4, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 184, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 5, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 183, gap: '+2 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+    ],
+  },
+
+  {
+    raceId: '2024-7',
+    polePosition: 'Toyota #7',
+    poleTime: '1:28.234',
+    fastestLap: 'Toyota #7',
+    fastestLapTime: '1:28.567',
+    fastestLapDriver: 'Mike Conway',
+    results: [
+      { position: 1, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 214, gap: 'Leader', fastestLap: '1:28.567', isFastestLap: true, status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 2, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 214, gap: '+0:05.234', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 3, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 213, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 213, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 5, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 212, gap: '+2 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+    ],
+  },
+
+  {
+    raceId: '2024-8',
+    polePosition: 'Ferrari #50',
+    poleTime: '1:46.567',
+    fastestLap: 'Ferrari #50',
+    fastestLapTime: '1:46.890',
+    fastestLapDriver: 'Antonio Fuoco',
+    results: [
+      { position: 1, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 270, gap: 'Leader', fastestLap: '1:46.890', isFastestLap: true, status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 270, gap: '+0:28.456', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 3, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 269, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 268, gap: '+2 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 5, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'J.M. López'], class: 'HYPERCAR', laps: 268, gap: '+2 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 6, carNumber: '#2', team: 'Cadillac Racing', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'A. Lynn', 'R. Westbrook'], class: 'HYPERCAR', laps: 267, gap: '+3 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+    ],
+  },
+
+  // ─── 2025 Season ───────────────────────────────────────────────
+
+  {
+    raceId: '2025-1',
+    polePosition: 'Ferrari #51',
+    poleTime: '1:46.234',
+    fastestLap: 'Ferrari #51',
+    fastestLapTime: '1:46.890',
+    fastestLapDriver: 'Antonio Pier Guidi',
+    results: [
+      { position: 1, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 338, gap: 'Leader', fastestLap: '1:46.890', isFastestLap: true, status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 338, gap: '+0:18.234', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 3, carNumber: '#83', team: 'AF Corse', manufacturer: 'Ferrari', drivers: ['R. Kubica', 'P. Hanson', 'Y. Ye'], class: 'HYPERCAR', laps: 337, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 336, gap: '+2 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 5, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'N. de Vries'], class: 'HYPERCAR', laps: 335, gap: '+3 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 6, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 334, gap: '+4 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+    ],
+  },
+
+  {
+    raceId: '2025-2',
+    polePosition: 'Ferrari #51',
+    poleTime: '1:29.876',
+    fastestLap: 'Ferrari #51',
+    fastestLapTime: '1:30.123',
+    fastestLapDriver: 'James Calado',
+    results: [
+      { position: 1, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 214, gap: 'Leader', fastestLap: '1:30.123', isFastestLap: true, status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#83', team: 'AF Corse', manufacturer: 'Ferrari', drivers: ['R. Kubica', 'P. Hanson', 'Y. Ye'], class: 'HYPERCAR', laps: 214, gap: '+0:11.456', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 3, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'N. de Vries'], class: 'HYPERCAR', laps: 213, gap: '+1 Lap', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 4, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 213, gap: '+1 Lap', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 5, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 212, gap: '+2 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 6, carNumber: '#38', team: 'Cadillac JOTA', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'J. Button', 'S. Bourdais'], class: 'HYPERCAR', laps: 211, gap: '+3 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+    ],
+  },
+
+  {
+    raceId: '2025-3',
+    polePosition: 'Porsche #5',
+    poleTime: '2:00.890',
+    fastestLap: 'Porsche #5',
+    fastestLapTime: '2:01.345',
+    fastestLapDriver: 'Matt Campbell',
+    results: [
+      { position: 1, carNumber: '#5', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['M. Campbell', 'M. Christensen', 'F. Makowiecki'], class: 'HYPERCAR', laps: 168, gap: 'Leader', fastestLap: '2:01.345', isFastestLap: true, status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 2, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 168, gap: '+0:09.123', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 3, carNumber: '#83', team: 'AF Corse', manufacturer: 'Ferrari', drivers: ['R. Kubica', 'P. Hanson', 'Y. Ye'], class: 'HYPERCAR', laps: 167, gap: '+1 Lap', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#38', team: 'Cadillac JOTA', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'J. Button', 'S. Bourdais'], class: 'HYPERCAR', laps: 167, gap: '+1 Lap', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+      { position: 5, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 166, gap: '+2 Laps', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+    ],
+  },
+
+  {
+    raceId: '2025-4',
+    polePosition: 'Ferrari #83',
+    poleTime: '3:22.456',
+    fastestLap: 'Toyota #7',
+    fastestLapTime: '3:24.123',
+    fastestLapDriver: 'Nyck de Vries',
+    results: [
+      { position: 1, carNumber: '#83', team: 'AF Corse', manufacturer: 'Ferrari', drivers: ['R. Kubica', 'P. Hanson', 'Y. Ye'], class: 'HYPERCAR', laps: 384, gap: 'Leader', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 2, carNumber: '#7', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['M. Conway', 'K. Kobayashi', 'N. de Vries'], class: 'HYPERCAR', laps: 383, gap: '+1 Lap', fastestLap: '3:24.123', isFastestLap: true, status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 3, carNumber: '#51', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Pier Guidi', 'J. Calado', 'A. Giovinazzi'], class: 'HYPERCAR', laps: 382, gap: '+2 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 4, carNumber: '#6', team: 'Porsche Penske Motorsport', manufacturer: 'Porsche', drivers: ['K. Estre', 'A. Lotterer', 'L. Vanthoor'], class: 'HYPERCAR', laps: 381, gap: '+3 Laps', status: 'Finished', color: '#C4A747', flag: '🇩🇪' },
+      { position: 5, carNumber: '#8', team: 'Toyota Gazoo Racing', manufacturer: 'Toyota', drivers: ['S. Buemi', 'B. Hartley', 'R. Hirakawa'], class: 'HYPERCAR', laps: 380, gap: '+4 Laps', status: 'Finished', color: '#E60012', flag: '🇯🇵' },
+      { position: 6, carNumber: '#50', team: 'Ferrari AF Corse', manufacturer: 'Ferrari', drivers: ['A. Fuoco', 'M. Molina', 'N. Nielsen'], class: 'HYPERCAR', laps: 379, gap: '+5 Laps', status: 'Finished', color: '#DC0000', flag: '🇮🇹' },
+      { position: 7, carNumber: '#38', team: 'Cadillac JOTA', manufacturer: 'Cadillac', drivers: ['E. Bamber', 'J. Button', 'S. Bourdais'], class: 'HYPERCAR', laps: 378, gap: '+6 Laps', status: 'Finished', color: '#1E3A5F', flag: '🇺🇸' },
+      { position: 8, carNumber: '#15', team: 'BMW M Team WRT', manufacturer: 'BMW', drivers: ['D. Vanthoor', 'R. Marciello', 'K. Magnussen'], class: 'HYPERCAR', laps: 376, gap: '+8 Laps', status: 'Finished', color: '#1C69D4', flag: '🇩🇪' },
+    ],
+  },
+];
 
 export const standings2024 = {
   hypercars: {

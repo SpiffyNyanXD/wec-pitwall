@@ -1,12 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Clock, Trophy, Flag, Gauge, Route, Building, Timer, History } from 'lucide-react';
+import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import EmptyState from '@/components/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { races2024, races2025, races2026 } from '@/data/wecData';
+import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
 import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 
 interface CircuitFacts {
@@ -32,6 +32,7 @@ const RaceProfile = () => {
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
   const race = allRaces.find(r => r.id === id);
+  const resultSet = raceResults.find(r => r.raceId === id);
 
   if (!race) {
     return (
@@ -404,13 +405,23 @@ const RaceProfile = () => {
                     <span className="font-medium">{race.winningTeam}</span>
                   </div>
                 )}
-                {race.polePosition && (
+                {resultSet?.polePosition ? (
+                  <div className="flex justify-between items-center py-2 border-b border-glass-border">
+                    <span className="text-muted-foreground">Pole Position</span>
+                    <span className="font-medium">{resultSet.polePosition} — {resultSet.poleTime}</span>
+                  </div>
+                ) : race.polePosition && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Pole Position</span>
                     <span className="font-medium">{race.polePosition}</span>
                   </div>
                 )}
-                {race.fastestLap && (
+                {resultSet?.fastestLap ? (
+                  <div className="flex justify-between items-center py-2 border-b border-glass-border">
+                    <span className="text-muted-foreground">Fastest Lap</span>
+                    <span className="font-medium text-wec-gold">{resultSet.fastestLapTime}</span>
+                  </div>
+                ) : race.fastestLap && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Fastest Lap</span>
                     <span className="font-medium">{race.fastestLap}</span>
@@ -424,6 +435,120 @@ const RaceProfile = () => {
               </CardContent>
             </Card>
           </motion.div>
+
+          {/* Full Results Table */}
+          {resultSet && race.status === 'completed' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="md:col-span-2"
+            >
+              <Card className="glass-card border-glass-border">
+                <CardHeader>
+                  <CardTitle className="font-racing flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-wec-gold" />
+                    Full Race Results — Hypercar Class
+                  </CardTitle>
+                  {/* Pole + Fastest Lap summary */}
+                  <div className="flex flex-wrap gap-4 mt-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-2 h-2 rounded-full bg-primary" />
+                      <span className="text-muted-foreground">Pole:</span>
+                      <span className="font-medium">{resultSet.polePosition}</span>
+                      <span className="font-racing text-primary">{resultSet.poleTime}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-2 h-2 rounded-full bg-wec-gold" />
+                      <span className="text-muted-foreground">Fastest Lap:</span>
+                      <span className="font-medium">{resultSet.fastestLap}</span>
+                      <span className="font-racing text-wec-gold">{resultSet.fastestLapTime}</span>
+                      <span className="text-muted-foreground text-xs">({resultSet.fastestLapDriver})</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-glass-border text-xs text-muted-foreground uppercase tracking-wider">
+                          <th className="text-left py-2 px-4 w-10">Pos</th>
+                          <th className="text-left py-2 px-2 w-12">Car</th>
+                          <th className="text-left py-2 px-2">Team / Drivers</th>
+                          <th className="text-right py-2 px-4 hidden sm:table-cell">Laps</th>
+                          <th className="text-right py-2 px-4">Gap</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {resultSet.results.map((result, i) => (
+                          <tr
+                            key={result.position}
+                            className={`border-b border-glass-border/50 transition-colors hover:bg-muted/20 ${
+                              result.position === 1 ? 'bg-wec-gold/5' : ''
+                            }`}
+                          >
+                            {/* Position */}
+                            <td className="py-3 px-4">
+                              <span className={`font-racing font-bold text-base ${
+                                result.position === 1 ? 'text-wec-gold' :
+                                result.position === 2 ? 'text-muted-foreground' :
+                                result.position === 3 ? 'text-wec-bronze' :
+                                'text-foreground'
+                              }`}>
+                                {result.position}
+                              </span>
+                            </td>
+
+                            {/* Car number */}
+                            <td className="py-3 px-2">
+                              <span
+                                className="text-xs font-bold px-2 py-1 rounded"
+                                style={{ backgroundColor: `${result.color}25`, color: result.color }}
+                              >
+                                {result.carNumber}
+                              </span>
+                            </td>
+
+                            {/* Team + Drivers */}
+                            <td className="py-3 px-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">{result.flag}</span>
+                                <div>
+                                  <p className="font-medium text-foreground text-sm leading-tight">
+                                    {result.manufacturer}
+                                    {result.isFastestLap && (
+                                      <span className="ml-2 text-wec-gold text-xs font-bold">⚡ FL</span>
+                                    )}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground leading-tight">
+                                    {result.drivers.join(' · ')}
+                                  </p>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Laps */}
+                            <td className="py-3 px-4 text-right hidden sm:table-cell">
+                              <span className="text-muted-foreground">{result.laps}</span>
+                            </td>
+
+                            {/* Gap */}
+                            <td className="py-3 px-4 text-right">
+                              <span className={`font-racing text-sm ${
+                                result.gap === 'Leader' ? 'text-wec-gold font-bold' : 'text-muted-foreground'
+                              }`}>
+                                {result.gap}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Lap Records */}
           {circuit?.lapRecords && (
