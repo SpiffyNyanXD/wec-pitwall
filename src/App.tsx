@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SeasonProvider } from "@/contexts/SeasonContext";
 import { SkeletonBox } from "@/components/PageSkeleton";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Keep Index as eager (it's the first page)
 import Index from "./pages/Index";
@@ -74,6 +75,7 @@ const App = () => (
         </SeasonProvider>
       </AuthProvider>
     </ThemeProvider>
+    <SpeedInsights />
   </QueryClientProvider>
 );
 
