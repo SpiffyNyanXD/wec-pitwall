@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flag, Users, MapPin } from 'lucide-react';
+import { Trophy, Flag, Users, MapPin, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -105,6 +105,15 @@ const Teams = () => {
       <Header />
 
       <main className="container py-8 relative z-10">
+        <Link to="/manufacturers">
+          <div className="glass-card p-3 flex items-center justify-between gap-3 mb-4 hover:border-primary/40 transition-colors">
+            <div className="flex items-center gap-2">
+              <Flag className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">View Manufacturer Stats & Comparison</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </div>
+        </Link>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
