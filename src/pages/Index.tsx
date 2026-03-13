@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Trophy, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
@@ -30,6 +32,28 @@ const Index = () => {
             <CountdownWidget />
           </div>
           
+          {/* Le Mans Feature Card */}
+          <div className="col-span-full">
+            <Link to="/le-mans">
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                className="glass-card p-4 flex items-center justify-between gap-4 border-wec-gold/20 hover:border-wec-gold/40 transition-colors cursor-pointer"
+              >
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-wec-gold/0 via-wec-gold/60 to-wec-gold/0 rounded-t-xl" />
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-wec-gold/10 flex items-center justify-center shrink-0">
+                    <Trophy className="w-5 h-5 text-wec-gold" />
+                  </div>
+                  <div>
+                    <p className="font-racing font-bold text-sm text-foreground">24 Hours of Le Mans</p>
+                    <p className="text-xs text-muted-foreground">June 13–14, 2026 · Round 3</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+              </motion.div>
+            </Link>
+          </div>
+
           {/* Row 2: Standings and Calendar */}
           <StandingsWidget />
           <CalendarWidget />

@@ -19,6 +19,7 @@ import RaceProfile from "./pages/RaceProfile";
 import Standings from "./pages/Standings";
 import Settings from "./pages/Settings";
 import Favorites from "./pages/Favorites";
+import LeMans from "./pages/LeMans";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/standings" element={<Standings />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/le-mans" element={<LeMans />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1370,7 +1370,7 @@ export const getCurrentOrNextRaceWeekRace = (): Race | undefined => {
   return races.find(r => new Date(r.date) > now);
 };
 
-export const getDriversBySeason = (season: number): any[] => {
+export const getDriversBySeason = (season: number): Driver[] | {position: number, drivers: string, team: string, points: number}[] => {
   return season === 2025 ? standings2025.hypercars.drivers : drivers2024;
 };
 
@@ -1520,4 +1520,125 @@ export const standings2024 = {
       manufacturer: 'Porsche',
     },
   },
+};
+
+export const leMansData = {
+  circuit: {
+    name: 'Circuit de la Sarthe',
+    location: 'Le Mans, Sarthe, France',
+    flag: '🇫🇷',
+    length: '13.626 km',
+    turns: 38,
+    longestStraight: 'Mulsanne Straight — 6km (now with chicanes)',
+    lapRecord: '3:23.550',
+    lapRecordHolder: 'Kamui Kobayashi (Toyota, 2017)',
+    capacity: '250,000+',
+    firstRace: 1923,
+    firstWECRace: 2012,
+    description: 'The Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance race. Combining permanent track sections with closed public roads — including the iconic Mulsanne Straight — it is unlike any other circuit on earth.',
+  },
+
+  race2026: {
+    id: '2026-3',
+    round: 3,
+    date: '2026-06-13',
+    endDate: '2026-06-14',
+    sessions: [
+      { type: 'FP1', date: '2026-06-08', startTime: '14:00', endTime: '19:00', duration: '5 Hours' },
+      { type: 'FP2', date: '2026-06-09', startTime: '14:00', endTime: '19:00', duration: '5 Hours' },
+      { type: 'Qualifying', date: '2026-06-10', startTime: '20:00', endTime: '23:00', duration: '3 Hours (Night)' },
+      { type: 'Hyperpole', date: '2026-06-11', startTime: '21:00', endTime: '22:00', duration: '1 Hour (Night)' },
+      { type: 'Warm Up', date: '2026-06-13', startTime: '10:30', endTime: '11:00', duration: '30 Minutes' },
+      { type: 'Race', date: '2026-06-13', startTime: '16:00', endTime: '16:00', duration: '24 Hours' },
+    ],
+  },
+
+  recentWinners: [
+    {
+      year: 2025,
+      team: 'AF Corse',
+      car: 'Ferrari 499P',
+      carNumber: '#83',
+      drivers: ['Robert Kubica', 'Philip Hanson', 'Yifei Ye'],
+      flag: '🇮🇹',
+      lapsCompleted: 384,
+      distanceCovered: '5,232 km',
+    },
+    {
+      year: 2024,
+      team: 'Ferrari AF Corse',
+      car: 'Ferrari 499P',
+      carNumber: '#50',
+      drivers: ['Antonio Fuoco', 'Miguel Molina', 'Nicklas Nielsen'],
+      flag: '🇮🇹',
+      lapsCompleted: 342,
+      distanceCovered: '4,657 km',
+    },
+    {
+      year: 2023,
+      team: 'Ferrari AF Corse',
+      car: 'Ferrari 499P',
+      carNumber: '#51',
+      drivers: ['Alessandro Pier Guidi', 'James Calado', 'Antonio Giovinazzi'],
+      flag: '🇮🇹',
+      lapsCompleted: 311,
+      distanceCovered: '4,237 km',
+    },
+    {
+      year: 2022,
+      team: 'Toyota Gazoo Racing',
+      car: 'Toyota GR010 Hybrid',
+      carNumber: '#8',
+      drivers: ['Sébastien Buemi', 'Brendon Hartley', 'Ryo Hirakawa'],
+      flag: '🇯🇵',
+      lapsCompleted: 380,
+      distanceCovered: '5,174 km',
+    },
+    {
+      year: 2021,
+      team: 'Toyota Gazoo Racing',
+      car: 'Toyota GR010 Hybrid',
+      carNumber: '#7',
+      drivers: ['Mike Conway', 'Kamui Kobayashi', 'José María López'],
+      flag: '🇯🇵',
+      lapsCompleted: 371,
+      distanceCovered: '5,054 km',
+    },
+  ],
+
+  fastFacts: [
+    { label: 'First Held', value: '1923', icon: 'calendar' },
+    { label: 'Race Duration', value: '24 Hours', icon: 'clock' },
+    { label: 'Circuit Length', value: '13.626 km', icon: 'map' },
+    { label: 'Average Distance', value: '~5,000 km', icon: 'flag' },
+    { label: 'Capacity', value: '250,000+', icon: 'users' },
+    { label: 'Most Wins (Team)', value: 'Porsche — 19', icon: 'trophy' },
+  ],
+
+  uniqueFeatures: [
+    {
+      title: 'The Mulsanne Straight',
+      description: 'Originally 6km of flat-out speed where cars reached over 400 km/h. Now broken by two chicanes for safety, it remains the most iconic section of any circuit.',
+    },
+    {
+      title: '24 Hours of Racing',
+      description: 'Cars race through day and night, in rain and shine, with three drivers sharing each car. Strategy, reliability, and speed all matter equally.',
+    },
+    {
+      title: 'Public Roads',
+      description: 'Large sections of the Circuit de la Sarthe are actual public roads — the D139 and surrounding routes — that get closed for race week only.',
+    },
+    {
+      title: 'Night Racing',
+      description: 'Qualifying and Hyperpole are held at night, adding a unique spectacle. Racing through Le Mans at night under floodlights is unlike anything else in motorsport.',
+    },
+    {
+      title: 'Three-Driver Format',
+      description: 'Each car is shared by three drivers who swap throughout the 24 hours, making driver management and pit strategy as crucial as outright pace.',
+    },
+    {
+      title: 'The Dunlop Chicane',
+      description: 'The twisty Dunlop chicane under the iconic orange Dunlop bridge is one of the most photographed corners in motorsport history.',
+    },
+  ],
 };
