@@ -24,6 +24,7 @@ const TeamProfile = lazy(() => import("./pages/TeamProfile"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const RaceProfile = lazy(() => import("./pages/RaceProfile"));
 const Standings = lazy(() => import("./pages/Standings"));
+const Championship = lazy(() => import("./pages/Championship"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/race/:id" element={<RaceProfile />} />
               <Route path="/standings" element={<Standings />} />
+              <Route path="/championship" element={<Championship />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/favorites" element={<Favorites />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
