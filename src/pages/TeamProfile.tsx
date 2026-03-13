@@ -26,7 +26,7 @@ const TeamProfile = () => {
   }, [user, team]);
 
   const checkFavorite = async () => {
-    if (!user || !team) return;
+    if (!user || !supabase) return;
 
     const { data, error } = await supabase
       .from('favorite_teams')
@@ -48,6 +48,11 @@ const TeamProfile = () => {
     }
 
     if (!team) return;
+
+    if (!supabase) {
+      toast.error('Supabase is not configured');
+      return;
+    }
 
     if (isFavorite && favoriteId) {
       const { error } = await supabase
