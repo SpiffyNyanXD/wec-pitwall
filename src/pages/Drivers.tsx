@@ -129,9 +129,12 @@ const Drivers = () => {
               ? [...getDriversByClass('HYPERCAR'), ...drivers2026]
               : getDriversByClass(carClass);
 
+            const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            const normalizedSearch = normalize(searchQuery);
+
             const filteredDrivers = allClassDrivers.filter(driver =>
-              driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              driver.team.toLowerCase().includes(searchQuery.toLowerCase())
+              normalize(driver.name).includes(normalizedSearch) ||
+              normalize(driver.team).includes(normalizedSearch)
             );
 
             return (

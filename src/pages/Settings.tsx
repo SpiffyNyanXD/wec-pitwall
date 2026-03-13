@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTimezone, TIMEZONE_OPTIONS } from '@/hooks/useTimezone';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -12,6 +14,7 @@ import { toast } from 'sonner';
 const SettingsPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { timezone, setTimezone } = useTimezone();
   const [notifications, setNotifications] = useState({
     raceStartAlerts: true,
     favoriteTeamAlerts: true,
@@ -107,6 +110,33 @@ const SettingsPage = () => {
           className="max-w-2xl mx-auto"
         >
           <h1 className="font-racing text-3xl font-bold mb-6">Settings</h1>
+
+          {/* Preferences */}
+          <div className="glass-card p-6 mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Settings className="w-5 h-5 text-primary" />
+              <h2 className="font-racing text-lg">Preferences</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Timezone</p>
+                  <p className="text-sm text-muted-foreground">Select how session times are displayed</p>
+                </div>
+                <Select value={timezone} onValueChange={(val: any) => setTimezone(val)}>
+                  <SelectTrigger className="w-[180px] bg-background/50 border-border/50">
+                    <SelectValue placeholder="Select Timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONE_OPTIONS.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
 
           {/* Notification Settings */}
           <div className="glass-card p-6 mb-6">

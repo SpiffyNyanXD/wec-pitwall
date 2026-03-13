@@ -77,7 +77,8 @@ export interface Race {
   status: 'upcoming' | 'live' | 'completed' | 'postponed';
   flag: string;
   season: number;
-  round: number;
+  round: number | null;
+  roundNote?: string;
   winner?: string;
   winningTeam?: string;
   polePosition?: string;
@@ -817,7 +818,7 @@ export const races2025: Race[] = [
   { 
     id: '2025-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
     date: '2025-06-14', endDate: '2025-06-15', duration: '24 Hours', status: 'completed', flag: '🇫🇷', season: 2025, round: 4,
-    winner: 'Toyota #7', winningTeam: 'Toyota Gazoo Racing', trackLength: '13.626 km', laps: 315,
+    winner: 'AF Corse #83', winningTeam: 'AF Corse', trackLength: '13.626 km', laps: 315,
     sessions: [
                   { type: 'FP1', date: '2025-06-11', startTime: '14:00', endTime: '19:00', duration: '5h' },
       { type: 'FP2', date: '2025-06-12', startTime: '14:00', endTime: '19:00', duration: '5h' },
@@ -1216,7 +1217,7 @@ export const teams = teams2024;
 export const races2026: Race[] = [
   {
     id: '2026-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar',
-    date: '2026-03-28', duration: '1812 km', status: 'postponed', flag: '🇶🇦', season: 2026, round: 1,
+    date: '2026-03-28', duration: '1812 km', status: 'postponed', flag: '🇶🇦', season: 2026, round: null, roundNote: 'Postponed — rescheduled date TBC',
     trackLength: '5.419 km',
     sessions: [
       { type: 'FP1', date: '2026-03-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -1228,7 +1229,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy',
-    date: '2026-04-19', duration: '6 Hours', status: 'upcoming', flag: '🇮🇹', season: 2026, round: 2,
+    date: '2026-04-19', duration: '6 Hours', status: 'upcoming', flag: '🇮🇹', season: 2026, round: 1,
     trackLength: '4.909 km',
     sessions: [
       { type: 'FP1', date: '2026-04-17', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
@@ -1240,7 +1241,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium',
-    date: '2026-05-10', duration: '6 Hours', status: 'upcoming', flag: '🇧🇪', season: 2026, round: 3,
+    date: '2026-05-10', duration: '6 Hours', status: 'upcoming', flag: '🇧🇪', season: 2026, round: 2,
     trackLength: '7.004 km',
     sessions: [
       { type: 'FP1', date: '2026-05-08', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
@@ -1252,7 +1253,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France',
-    date: '2026-06-13', endDate: '2026-06-14', duration: '24 Hours', status: 'upcoming', flag: '🇫🇷', season: 2026, round: 4,
+    date: '2026-06-13', endDate: '2026-06-14', duration: '24 Hours', status: 'upcoming', flag: '🇫🇷', season: 2026, round: 3,
     trackLength: '13.626 km',
     sessions: [
             { type: 'FP1', date: '2026-06-08', startTime: '14:00', endTime: '19:00', duration: '5h' },
@@ -1266,7 +1267,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil',
-    date: '2026-07-12', duration: '6 Hours', status: 'upcoming', flag: '🇧🇷', season: 2026, round: 5,
+    date: '2026-07-12', duration: '6 Hours', status: 'upcoming', flag: '🇧🇷', season: 2026, round: 4,
     trackLength: '4.309 km',
     sessions: [
       { type: 'FP1', date: '2026-07-10', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
@@ -1278,7 +1279,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-6', name: 'Lone Star Le Mans', circuit: 'Circuit of the Americas', country: 'USA',
-    date: '2026-09-06', duration: '6 Hours', status: 'upcoming', flag: '🇺🇸', season: 2026, round: 6,
+    date: '2026-09-06', duration: '6 Hours', status: 'upcoming', flag: '🇺🇸', season: 2026, round: 5,
     trackLength: '5.513 km',
     sessions: [
       { type: 'FP1', date: '2026-09-04', startTime: '12:40', endTime: '14:10', duration: '1h 30m' },
@@ -1290,7 +1291,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan',
-    date: '2026-09-27', duration: '6 Hours', status: 'upcoming', flag: '🇯🇵', season: 2026, round: 7,
+    date: '2026-09-27', duration: '6 Hours', status: 'upcoming', flag: '🇯🇵', season: 2026, round: 6,
     trackLength: '4.563 km',
     sessions: [
       { type: 'FP1', date: '2026-09-25', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -1302,7 +1303,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain',
-    date: '2026-11-07', duration: '8 Hours', status: 'upcoming', flag: '🇧🇭', season: 2026, round: 8,
+    date: '2026-11-07', duration: '8 Hours', status: 'upcoming', flag: '🇧🇭', season: 2026, round: 7,
     trackLength: '5.412 km',
     sessions: [
       { type: 'FP1', date: '2026-11-05', startTime: '12:15', endTime: '13:45', duration: '1h 30m' },

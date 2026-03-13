@@ -32,7 +32,7 @@ const Schedule = () => {
     }
   };
 
-  const RaceCard = ({ race, index }: { race: typeof races2024[0]; index: number }) => (
+  const RaceCard = ({ race, index }: { race: any; index: number }) => (
     <Link to={`/race/${race.id}`}>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -47,7 +47,9 @@ const Schedule = () => {
               <span className="text-2xl">{race.flag}</span>
             </div>
             <div className="md:hidden flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">R{race.round}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                {race.round !== null ? `R${race.round}` : 'Postponed'}
+              </p>
               <p className="font-racing text-base font-bold truncate">{race.name}</p>
             </div>
             <div className="md:hidden">
@@ -58,7 +60,9 @@ const Schedule = () => {
           {/* Race Info */}
           <div className="flex-1 min-w-0">
             <div className="hidden md:block">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Round {race.round}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                {race.round !== null ? `Round ${race.round}` : 'Postponed — TBC'}
+              </p>
               <h3 className="font-racing text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
                 {race.name}
               </h3>
@@ -138,9 +142,16 @@ const Schedule = () => {
 
           <TabsContent value="2026">
             <div className="space-y-3 md:space-y-4">
-              {races2026.map((race, index) => (
-                <RaceCard key={race.id} race={race} index={index} />
-              ))}
+              {races2026
+                .slice()
+                .sort((a, b) => {
+                  if (a.round === null) return 1;
+                  if (b.round === null) return -1;
+                  return a.round - b.round;
+                })
+                .map((race, index) => (
+                  <RaceCard key={race.id} race={race} index={index} />
+                ))}
             </div>
           </TabsContent>
 

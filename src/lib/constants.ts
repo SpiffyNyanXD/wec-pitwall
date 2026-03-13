@@ -49,9 +49,9 @@ export const EMPTY_STATES = {
 } as const;
 
 export const APP_INFO = {
-  NAME: 'WECHub',
+  NAME: 'WEC Pitwall',
   TAGLINE: 'Fan-Made WEC Companion',
   DISCLAIMER: 'Fan-made application. Not affiliated with FIA or WEC.',
   DATA_NOTE: 'All standings and statistics shown are sample data for demonstration purposes only.',
-  COPYRIGHT: '© 2026 WECHub. This is a fan project.',
+  COPYRIGHT: '© 2026 WEC Pitwall. This is a fan project.',
 } as const;

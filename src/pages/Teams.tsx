@@ -114,7 +114,6 @@ const Teams = () => {
             WEC <span className="text-primary">Teams</span>
           </h1>
           <p className="text-muted-foreground">Season Teams & Manufacturers</p>
-          <p className="text-xs text-muted-foreground mt-1">Note: LMP2 competes only at Le Mans 24h since 2024</p>
         </motion.div>
 
         <Tabs defaultValue="HYPERCAR" className="w-full">

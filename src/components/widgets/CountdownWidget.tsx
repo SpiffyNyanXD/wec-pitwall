@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Flag, Calendar, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { races, getNextRace } from '@/data/wecData';
+import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 
 interface TimeLeft {
   days: number;
@@ -14,6 +15,7 @@ interface TimeLeft {
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
+  const { convertTime, timezone } = useTimezone();
   
   // Find next upcoming race
   const nextRace = getNextRace();
@@ -187,8 +189,13 @@ const CountdownWidget = () => {
                     {new Date(session.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                   </div>
                   <div className="text-muted-foreground font-mono">
-                    {session.startTime} - {session.endTime}
+                    {convertTime(session.date, session.startTime, nextRace.circuit)} - {convertTime(session.date, session.endTime, nextRace.circuit)}
                   </div>
+                  {timezone !== 'auto' && CIRCUIT_TIMEZONES[nextRace.circuit] && (
+                    <div className="text-[9px] text-muted-foreground/50 font-mono mt-0.5">
+                      {session.startTime}-{session.endTime} local
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
