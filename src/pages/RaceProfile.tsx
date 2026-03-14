@@ -568,33 +568,39 @@ const RaceProfile = () => {
                     <div className="py-2 border-b border-glass-border">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-muted-foreground text-sm">Hypercar</span>
-                        <span className="font-racing font-bold text-primary">{circuit.lapRecords.hypercar.time}</span>
+                        <div className="flex flex-col items-end">
+                          <span className="font-racing font-bold text-primary">{circuit.lapRecords.hypercar.time}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {circuit.lapRecords.hypercar.driver} ({circuit.lapRecords.hypercar.year})
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {circuit.lapRecords.hypercar.driver} ({circuit.lapRecords.hypercar.year})
-                      </p>
                     </div>
                   )}
                   {circuit.lapRecords.lmp2 && (
                     <div className="py-2 border-b border-glass-border">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-muted-foreground text-sm">LMP2</span>
-                        <span className="font-racing font-bold">{circuit.lapRecords.lmp2.time}</span>
+                        <div className="flex flex-col items-end">
+                          <span className="font-racing font-bold">{circuit.lapRecords.lmp2.time}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {circuit.lapRecords.lmp2.driver} ({circuit.lapRecords.lmp2.year})
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {circuit.lapRecords.lmp2.driver} ({circuit.lapRecords.lmp2.year})
-                      </p>
                     </div>
                   )}
                   {circuit.lapRecords.gt3 && (
                     <div className="py-2">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-muted-foreground text-sm">LMGT3</span>
-                        <span className="font-racing font-bold">{circuit.lapRecords.gt3.time}</span>
+                        <div className="flex flex-col items-end">
+                          <span className="font-racing font-bold">{circuit.lapRecords.gt3.time}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {circuit.lapRecords.gt3.driver} ({circuit.lapRecords.gt3.year})
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {circuit.lapRecords.gt3.driver} ({circuit.lapRecords.gt3.year})
-                      </p>
                     </div>
                   )}
                 </CardContent>

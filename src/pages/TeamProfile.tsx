@@ -196,8 +196,8 @@ const TeamProfile = () => {
         >
           {/* Team Color Gradient */}
           <div 
-            className="absolute top-0 right-0 w-1/2 h-full opacity-15"
-            style={{ background: `linear-gradient(135deg, ${team.color} 0%, transparent 100%)` }}
+            className="absolute top-0 right-0 w-1/2 h-full"
+            style={{ background: `linear-gradient(135deg, ${team.color}26 0%, transparent 70%)` }}
           />
           
           <div className="relative">

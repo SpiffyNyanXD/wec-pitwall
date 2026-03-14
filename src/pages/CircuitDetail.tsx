@@ -112,7 +112,16 @@ const CircuitDetail = () => {
                     <span className="text-muted-foreground flex items-center gap-2">
                       <Timer className="w-4 h-4" /> Lap Record
                     </span>
-                    <span className="font-medium text-secondary">{circuit.lapRecord}</span>
+                    {circuit.lapRecords?.hypercar ? (
+                      <div className="flex flex-col items-end">
+                        <span className="font-racing text-primary font-bold">{circuit.lapRecords.hypercar.time}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {circuit.lapRecords.hypercar.driver} ({circuit.lapRecords.hypercar.year})
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="font-medium text-secondary">{circuit.lapRecord}</span>
+                    )}
                   </div>
                 </div>
               </CardContent>
