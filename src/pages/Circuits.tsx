@@ -6,6 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { circuits } from '@/data/wecData';
 
 const Circuits = () => {
+  useEffect(() => {
+    document.title = "Circuits | WEC Pitwall";
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

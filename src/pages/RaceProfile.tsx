@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -32,6 +33,12 @@ const RaceProfile = () => {
   const allRaces = [...races2026, ...races2025, ...races2024];
   const race = allRaces.find(r => r.id === id);
   const resultSet = raceResults.find(r => r.raceId === id);
+
+  useEffect(() => {
+    if (race) {
+      document.title = `${race.name} | Races | WEC Pitwall`;
+    }
+  }, [race]);
 
   if (!race) {
     return (

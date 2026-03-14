@@ -144,8 +144,13 @@ const Drivers = () => {
                     <DriverCard key={driver.id} driver={driver} index={index} />
                   ))}
                   {filteredDrivers.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-muted-foreground">
-                      No drivers found matching "{searchQuery}".
+                    <div className="col-span-full">
+                      <EmptyState
+                        icon={Users}
+                        title="No drivers found"
+                        description={`No drivers found matching "${searchQuery}".`}
+                        action={searchQuery ? { label: "Clear search", onClick: () => setSearchQuery('') } : undefined}
+                      />
                     </div>
                   )}
                 </div>

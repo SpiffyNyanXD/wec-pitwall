@@ -7,6 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 
 const Schedule = () => {
+  useEffect(() => {
+    document.title = "Schedule | WEC Pitwall";
+  }, []);
+
   const formatDate = (dateString: string, endDate?: string) => {
     const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
     const start = parseDate(dateString);
