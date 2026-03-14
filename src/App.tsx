@@ -29,6 +29,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Timeline = lazy(() => import("./pages/Timeline"));
 const LeMans = lazy(() => import("./pages/LeMans"));
+const Manufacturers = lazy(() => import("./pages/Manufacturers"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => (
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/timeline" element={<Timeline />} />
               <Route path="/le-mans" element={<LeMans />} />
+              <Route path="/manufacturers" element={<Manufacturers />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
