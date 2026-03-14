@@ -61,7 +61,8 @@ const TeamProfile = () => {
       const { error } = await supabase
         .from('favorite_teams')
         .delete()
-        .eq('id', favoriteId);
+        .eq('id', favoriteId)
+        .eq('user_id', user.id);
 
       if (error) {
         toast.error('Failed to remove favorite');
