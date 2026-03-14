@@ -26,6 +26,7 @@ const navItems = [
   { to: '/standings', label: 'Standings', icon: Trophy },
   { to: '/championship', label: 'Championship 🏆', icon: Trophy },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
+  { to: '/le-mans', label: '🏁 Le Mans', icon: MapPin },
   { to: '/timeline', label: 'Timeline', icon: Milestone },
   { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/drivers', label: 'Drivers', icon: Users },
