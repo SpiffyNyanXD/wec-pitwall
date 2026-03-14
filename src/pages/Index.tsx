@@ -51,7 +51,9 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <span>WEC Pitwall is in beta — found something? Share feedback:</span>
                 <a
-                  href="mailto:?subject=WEC Pitwall Feedback"
+                  href="https://forms.gle/YHTZtoX59xzVsoUP9"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-primary hover:underline font-medium"
                 >
                   Give Feedback
