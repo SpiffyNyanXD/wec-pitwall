@@ -24,6 +24,7 @@ import {
 const navItems = [
   { to: '/', label: 'Dashboard', icon: Home },
   { to: '/standings', label: 'Standings', icon: Trophy },
+  { to: '/championship', label: 'Championship 🏆', icon: Trophy },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
   { to: '/timeline', label: 'Timeline', icon: Milestone },
   { to: '/circuits', label: 'Circuits', icon: MapPin },
