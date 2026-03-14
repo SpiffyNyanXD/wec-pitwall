@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -9,6 +10,12 @@ import { circuits, allSeasons } from '@/data/wecData';
 const CircuitDetail = () => {
   const { id } = useParams<{ id: string }>();
   const circuit = circuits.find(c => c.id === id);
+
+  useEffect(() => {
+    if (circuit) {
+      document.title = `${circuit.name} | Circuits | WEC Pitwall`;
+    }
+  }, [circuit]);
 
   if (!circuit) {
     return (

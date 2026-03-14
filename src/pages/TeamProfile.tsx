@@ -20,6 +20,9 @@ const TeamProfile = () => {
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (team) {
+      document.title = `${team.name} | Teams | WEC Pitwall`;
+    }
     if (user && team) {
       checkFavorite();
     }

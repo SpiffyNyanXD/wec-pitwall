@@ -145,8 +145,13 @@ const Teams = () => {
                 <TeamCard key={team.id} team={team} index={index} />
               ))}
               {filteredHypercars.length === 0 && (
-                <div className="col-span-full py-12 text-center text-muted-foreground">
-                  No {activeFilter} entries found.
+                <div className="col-span-full">
+                  <EmptyState
+                    icon={Car}
+                    title="No teams found"
+                    description={`No ${activeFilter} entries found.`}
+                    action={activeFilter !== 'All' ? { label: "View all teams", onClick: () => setActiveFilter('All') } : undefined}
+                  />
                 </div>
               )}
             </div>

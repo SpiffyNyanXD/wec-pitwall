@@ -11,6 +11,10 @@ const quickLinks = [
 ];
 
 const NotFound = () => {
+  useEffect(() => {
+    document.title = "Page Not Found | WEC Pitwall";
+  }, []);
+
   const location = useLocation();
 
   return (
