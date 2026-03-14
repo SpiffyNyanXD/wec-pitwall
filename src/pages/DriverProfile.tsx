@@ -60,9 +60,14 @@ const DriverProfile = () => {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-6"
+          className="mb-6 flex items-center justify-between"
         >
           <BackButton to="/drivers" label="Back to Drivers" />
+          <Button asChild variant="outline" className="gap-2">
+            <Link to={`/compare?a=${driver.id}`}>
+              Compare ⚔️
+            </Link>
+          </Button>
         </motion.div>
 
         {/* Hero Section */}

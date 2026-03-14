@@ -30,6 +30,7 @@ const navItems = [
   { to: '/timeline', label: 'Timeline', icon: Milestone },
   { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/drivers', label: 'Drivers', icon: Users },
+  { to: '/compare', label: 'Compare ⚔️', icon: Users },
   { to: '/teams', label: 'Teams', icon: Car },
 ];
 
