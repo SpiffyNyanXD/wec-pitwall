@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun, Monitor, Milestone, Factory } from 'lucide-react';
+import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun, Monitor, Milestone, Factory, ChevronDown } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,17 +21,20 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-const navItems = [
+const primaryNav = [
   { to: '/', label: 'Dashboard', icon: Home },
   { to: '/standings', label: 'Standings', icon: Trophy },
-  { to: '/championship', label: 'Championship 🏆', icon: Trophy },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
-  { to: '/le-mans', label: '🏁 Le Mans', icon: MapPin },
-  { to: '/timeline', label: 'Timeline', icon: Milestone },
-  { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/drivers', label: 'Drivers', icon: Users },
   { to: '/teams', label: 'Teams', icon: Car },
-  { to: '/manufacturers', label: '🏭 Manufacturers', icon: Factory },
+];
+
+const secondaryNav = [
+  { to: '/championship', label: 'Championship', icon: Trophy },
+  { to: '/le-mans', label: 'Le Mans', icon: MapPin },
+  { to: '/timeline', label: 'Timeline', icon: Milestone },
+  { to: '/circuits', label: 'Circuits', icon: MapPin },
+  { to: '/manufacturers', label: 'Manufacturers', icon: Factory },
 ];
 
 const Header = () => {
@@ -87,7 +90,7 @@ const Header = () => {
                     </div>
                     <div>
                       <span className="font-racing text-xl font-bold text-foreground tracking-wide">
-                        WEC<span className="text-primary">Hub</span>
+                        WEC<span className="text-primary">Pitwall</span>
                       </span>
                     </div>
                   </Link>
@@ -95,7 +98,7 @@ const Header = () => {
               </SheetHeader>
               
               <nav className="flex flex-col gap-2 mt-6">
-                {navItems.map((item) => (
+                {[...primaryNav, ...secondaryNav].map((item) => (
                   <Link
                     key={item.to}
                     to={item.to}
@@ -176,7 +179,7 @@ const Header = () => {
             </div>
             <div className="hidden sm:block">
               <h1 className="font-racing text-xl font-bold text-foreground tracking-wide">
-                WEC<span className="text-primary">Hub</span>
+                WEC<span className="text-primary">Pitwall</span>
               </h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
                 Fan-Made Companion
@@ -186,20 +189,38 @@ const Header = () => {
         </div>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
-            <Link 
+        <nav className="hidden md:flex items-center gap-1">
+          {primaryNav.map((item) => (
+            <Link
               key={item.to}
-              to={item.to} 
-              className={`text-sm font-medium transition-colors ${
-                isActive(item.to) 
-                  ? 'text-primary' 
-                  : 'text-muted-foreground hover:text-primary'
+              to={item.to}
+              className={`text-sm font-medium px-3 py-2 rounded-md transition-colors ${
+                isActive(item.to)
+                  ? 'text-primary bg-primary/10'
+                  : 'text-muted-foreground hover:text-primary hover:bg-muted/50'
               }`}
             >
               {item.label}
             </Link>
           ))}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-sm font-medium text-muted-foreground">
+                More <ChevronDown className="ml-1 h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {secondaryNav.map((item) => (
+                <DropdownMenuItem key={item.to} asChild>
+                  <Link to={item.to} className="flex items-center gap-2 cursor-pointer">
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
         
         <div className="flex items-center gap-2">
