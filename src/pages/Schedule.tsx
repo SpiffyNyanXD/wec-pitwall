@@ -53,7 +53,7 @@ const Schedule = () => {
             </div>
             <div className="md:hidden flex-1 min-w-0">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                {race.round !== null ? `R${race.round}` : 'Postponed'}
+                {race.round !== null ? `Round ${race.round}` : 'Postponed'}
               </p>
               <p className="font-racing text-base font-bold truncate">{race.name}</p>
             </div>
