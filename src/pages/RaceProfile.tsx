@@ -677,11 +677,6 @@ const RaceProfile = () => {
                         <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                           <Clock className="w-4 h-4" />
                           {convertTime(session.date, session.startTime, race.circuit)} - {convertTime(session.date, session.endTime, race.circuit)}
-                          {timezone !== 'auto' && CIRCUIT_TIMEZONES[race.circuit] && (
-                            <span className="text-xs opacity-70 block w-full mt-1 ml-6">
-                              {session.startTime} - {session.endTime} ({TIMEZONE_OPTIONS.find(t => t.value === timezone)?.label || 'Local'})
-                            </span>
-                          )}
                         </div>
                       </div>
                     ))}

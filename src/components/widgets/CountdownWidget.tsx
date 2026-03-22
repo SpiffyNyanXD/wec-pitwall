@@ -187,11 +187,6 @@ const CountdownWidget = () => {
                   <div className="text-muted-foreground font-mono">
                     {convertTime(session.date, session.startTime, nextRace.circuit)} - {convertTime(session.date, session.endTime, nextRace.circuit)}
                   </div>
-                  {timezone !== 'auto' && CIRCUIT_TIMEZONES[nextRace.circuit] && (
-                    <div className="text-[9px] text-muted-foreground/50 font-mono mt-0.5">
-                      {session.startTime}-{session.endTime} local
-                    </div>
-                  )}
                 </div>
               ))}
             </div>

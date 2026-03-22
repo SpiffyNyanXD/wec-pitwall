@@ -808,7 +808,7 @@ export const races2025: Race[] = [
   { 
     id: '2025-1', name: '1812 km of Qatar', circuit: 'Lusail International Circuit', country: 'Qatar', 
     date: '2025-02-28', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2025, round: 1,
-    winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 336,
+    winner: 'Ferrari #51', winningTeam: 'Ferrari AF Corse', trackLength: '5.419 km', laps: 336,
     sessions: [
       { type: 'FP1', date: '2025-02-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
       { type: 'FP2', date: '2025-02-26', startTime: '16:00', endTime: '17:30', duration: '1h 30m' },
@@ -820,7 +820,7 @@ export const races2025: Race[] = [
   { 
     id: '2025-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
     date: '2025-04-20', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2025, round: 2,
-    winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 210,
+    winner: 'Ferrari #51', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 210,
     sessions: [
       { type: 'FP1', date: '2025-04-18', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
       { type: 'FP2', date: '2025-04-18', startTime: '15:30', endTime: '17:00', duration: '1h 30m' },
@@ -854,12 +854,11 @@ export const races2025: Race[] = [
       { type: 'Race', date: '2025-06-14', startTime: '16:00', endTime: '16:00', duration: '24h' }
 
 
-    ],
-    facts: ['Won his first WEC Hypercar title in 2025'],
-    championships: 1,
-    leMansWins: 1,
-    wecWins: 4,
-  },
+    ]
+  }
+];
+
+export const drivers2025: Driver[] = [
   {
     id: 'pier-guidi-2025',
     name: 'Alessandro Pier Guidi',
@@ -1410,14 +1409,14 @@ export const hypercars2026: Team[] = [
   { id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', points: 0, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
   { id: 'porsche-5', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
   { id: 'porsche-6', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
-  { id: 'cadillac-2', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 0, position: 0, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
-  { id: 'cadillac-3', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#3', class: 'HYPERCAR', points: 0, position: 0, color: '#1E1E1E', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
-  { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 0, position: 0, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: [] },
-  { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 0, position: 0, color: '#0066B1', country: 'France', countryFlag: '🇫🇷', drivers: [] },
-  { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 0, position: 0, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: [] },
-  { id: 'alpine-36', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#36', class: 'HYPERCAR', points: 0, position: 0, color: '#0090FF', country: 'France', countryFlag: '🇫🇷', drivers: [] },
-  { id: 'bmw-15', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#15', class: 'HYPERCAR', points: 0, position: 0, color: '#1E90FF', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
-  { id: 'bmw-20', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#20', class: 'HYPERCAR', points: 0, position: 0, color: '#1E90FF', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'cadillac-2', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'cadillac-3', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#3', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 0, position: 0, color: '#E8C840', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 0, position: 0, color: '#E8C840', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 0, position: 0, color: '#0039A6', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'alpine-36', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#36', class: 'HYPERCAR', points: 0, position: 0, color: '#0039A6', country: 'France', countryFlag: '🇫🇷', drivers: [] },
+  { id: 'bmw-15', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#15', class: 'HYPERCAR', points: 0, position: 0, color: '#1C69D4', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'bmw-20', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#20', class: 'HYPERCAR', points: 0, position: 0, color: '#1C69D4', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
   { id: 'aston-007', name: 'Aston Martin Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#007', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
   { id: 'aston-009', name: 'Aston Martin Heart of Racing', manufacturer: 'Aston Martin', carNumber: '#009', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
   { id: 'genesis-1', name: 'Genesis Magma Racing', manufacturer: 'Genesis', carNumber: '#1', class: 'HYPERCAR', points: 0, position: 0, color: '#FF4500', country: 'South Korea', countryFlag: '🇰🇷', drivers: [] },

@@ -4,6 +4,7 @@ import { Trophy, Calendar, Car, Shield, Milestone, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { standings2024, standings2025, hypercars2026 } from '@/data/wecData';
 
@@ -11,11 +12,12 @@ const manufacturerColors: Record<string, string> = {
   'Ferrari': '#DC0000',
   'Toyota': '#E60012',
   'Porsche': '#C4A747',
-  'Cadillac': '#1E3A5F',
+  'Cadillac': '#6B9FD4',
   'BMW': '#1C69D4',
-  'Peugeot': '#0066B1',
-  'Alpine': '#0052CC',
+  'Peugeot': '#E8C840',
+  'Alpine': '#0039A6',
   'Aston Martin': '#005140',
+  'Genesis': '#FF4500',
 };
 
 const getPositionColor = (position: number) => {
@@ -48,12 +50,15 @@ const Manufacturers = () => {
   }, {} as Record<string, typeof hypercars2026>);
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-background">
+      <Header />
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
+      </div>
+
       {/* Hero Section */}
-      <div className="relative pt-8 pb-8 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
-        </div>
+      <div className="relative pt-8 pb-8 overflow-hidden z-10">
         <div className="container relative z-10 px-4">
           <BackButton to="/standings" label="Back to Standings" />
           <motion.div
@@ -65,7 +70,7 @@ const Manufacturers = () => {
               <Car className="w-3 h-3 mr-2" />
               World Endurance Championship
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-racing font-bold mb-4 tracking-wider text-gradient">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-racing font-bold mb-4 tracking-wide text-gradient break-words">
               MANUFACTURERS
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl">
