@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Calendar, Car, Shield, Milestone, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +26,10 @@ const getPositionColor = (position: number) => {
 };
 
 const Manufacturers = () => {
+  useEffect(() => {
+    document.title = "Manufacturers | WEC Pitwall";
+  }, []);
+
   const [activeSeason, setActiveSeason] = useState('2025');
 
   const standingsData = activeSeason === '2025'
@@ -46,7 +50,7 @@ const Manufacturers = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero Section */}
-      <div className="relative pt-24 pb-12 overflow-hidden">
+      <div className="relative pt-8 pb-8 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
         </div>

@@ -6,7 +6,8 @@ import Header from '@/components/Header';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTimezone, TIMEZONE_OPTIONS } from '@/hooks/useTimezone';
+import { useTimezone, TIMEZONE_OPTIONS, useTimeFormat } from '@/hooks/useTimezone';
+import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -15,6 +16,8 @@ const SettingsPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { timezone, setTimezone } = useTimezone();
+  const { timeFormat, setTimeFormat } = useTimeFormat();
+  const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState({
     raceStartAlerts: true,
     favoriteTeamAlerts: true,
@@ -142,6 +145,52 @@ const SettingsPage = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Time Format</p>
+                  <p className="text-sm text-muted-foreground">12-hour or 24-hour clock</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={timeFormat === '24h' ? 'default' : 'outline'}
+                    onClick={() => setTimeFormat('24h')}
+                    size="sm"
+                    className="w-16"
+                  >
+                    24h
+                  </Button>
+                  <Button
+                    variant={timeFormat === '12h' ? 'default' : 'outline'}
+                    onClick={() => setTimeFormat('12h')}
+                    size="sm"
+                    className="w-16"
+                  >
+                    12h
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Theme */}
+          <div className="glass-card p-6 mb-6">
+            <h3 className="font-racing text-lg font-bold mb-4">Theme</h3>
+            <div className="flex gap-3">
+              <Button
+                variant={theme === 'dark' ? 'default' : 'outline'}
+                onClick={() => setTheme('dark')}
+                className="flex-1"
+              >
+                Dark
+              </Button>
+              <Button
+                variant={theme === 'light' ? 'default' : 'outline'}
+                onClick={() => setTheme('light')}
+                className="flex-1"
+              >
+                Light
+              </Button>
             </div>
           </div>
 

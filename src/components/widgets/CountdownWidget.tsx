@@ -171,10 +171,6 @@ const CountdownWidget = () => {
               <TimeBlock value={timeLeft.seconds} label="Secs" />
             </div>
           </div>
-
-          <div className="mt-4 text-xs text-muted-foreground/70 text-right">
-            Times shown in your local time zone.
-          </div>
         </div>
 
         {/* Feature 2: Session breakdown */}

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Moon, Sun, Monitor, Milestone, Factory, ChevronDown } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -38,17 +37,6 @@ const secondaryNav = [
 ];
 
 const Header = () => {
-  const { theme, setTheme } = useTheme();
-
-  const handleThemeToggle = () => {
-    if (theme === 'dark') {
-      setTheme('light');
-    } else if (theme === 'light') {
-      setTheme('system');
-    } else {
-      setTheme('dark');
-    }
-  };
   const { user, signOut, loading } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -90,7 +78,7 @@ const Header = () => {
                     </div>
                     <div>
                       <span className="font-racing text-xl font-bold text-foreground tracking-wide">
-                        WEC<span className="text-primary">Pitwall</span>
+                        WEC <span className="text-primary">Pitwall</span>
                       </span>
                     </div>
                   </Link>
@@ -179,7 +167,7 @@ const Header = () => {
             </div>
             <div className="hidden sm:block">
               <h1 className="font-racing text-xl font-bold text-foreground tracking-wide">
-                WEC<span className="text-primary">Pitwall</span>
+                WEC <span className="text-primary">Pitwall</span>
               </h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
                 Fan-Made Companion
@@ -224,22 +212,8 @@ const Header = () => {
         </nav>
         
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleThemeToggle}
-            title={`Current theme: ${theme}. Click to change.`}
-          >
-            {theme === 'dark' ? (
-              <Moon className="h-5 w-5 text-muted-foreground" />
-            ) : theme === 'light' ? (
-              <Sun className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <Monitor className="h-5 w-5 text-muted-foreground" />
-            )}
-          </Button>
           <Button variant="ghost" size="icon" className="relative" asChild>
-            <Link to="/settings">
+            <Link to="/notifications">
               <Bell className="h-5 w-5 text-muted-foreground" />
             </Link>
           </Button>

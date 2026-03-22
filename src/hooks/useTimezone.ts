@@ -3,6 +3,21 @@ import { formatInTimeZone, toDate } from 'date-fns-tz';
 
 export type TimezonePreference = 'auto' | 'UTC' | 'Europe/Paris' | 'Asia/Kolkata' | 'Asia/Tokyo' | 'America/Sao_Paulo' | 'America/Chicago' | 'Asia/Riyadh';
 
+export type TimeFormat = '24h' | '12h';
+
+export const useTimeFormat = () => {
+  const [timeFormat, setTimeFormat] = useState<TimeFormat>(
+    () => (localStorage.getItem('wec-time-format') as TimeFormat) || '24h'
+  );
+
+  const updateTimeFormat = (format: TimeFormat) => {
+    setTimeFormat(format);
+    localStorage.setItem('wec-time-format', format);
+  };
+
+  return { timeFormat, setTimeFormat: updateTimeFormat };
+};
+
 export const TIMEZONE_OPTIONS: { value: TimezonePreference; label: string }[] = [
   { value: 'auto', label: 'Local Time (Auto)' },
   { value: 'UTC', label: 'UTC' },
@@ -42,6 +57,8 @@ export const useTimezone = () => {
     return timezone;
   };
 
+  const { timeFormat } = useTimeFormat();
+
   const convertTime = (dateStr: string, timeStr: string, circuitName: string) => {
     if (!dateStr || !timeStr || !circuitName) return timeStr;
     try {
@@ -60,7 +77,8 @@ export const useTimezone = () => {
       const dateInSourceTZ = toDate(dateTimeString, { timeZone: sourceTimezone });
 
       // Now format this absolute time into the target timezone
-      const formattedTime = formatInTimeZone(dateInSourceTZ, targetTimezone, 'HH:mm');
+      const formatString = timeFormat === '12h' ? 'hh:mm a' : 'HH:mm';
+      const formattedTime = formatInTimeZone(dateInSourceTZ, targetTimezone, formatString);
 
       return formattedTime;
     } catch (e) {
