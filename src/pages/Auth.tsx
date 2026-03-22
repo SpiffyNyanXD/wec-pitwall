@@ -104,7 +104,7 @@ const Auth = () => {
         className="w-full max-w-md relative z-10"
       >
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
           <div className="relative">
             <div className="w-12 h-12 rounded-lg racing-gradient flex items-center justify-center">
               <Flag className="w-6 h-6 text-primary-foreground" />
@@ -112,6 +112,31 @@ const Auth = () => {
             <div className="absolute -inset-1 rounded-lg racing-gradient opacity-30 blur-md -z-10" />
           </div>
           <span className="text-2xl font-racing font-bold text-gradient">WEC Pitwall</span>
+        </div>
+
+        {/* Subtitle */}
+        <p className="text-center text-sm text-muted-foreground mb-6 -mt-4">
+          Your fan-made companion for the FIA World Endurance Championship.
+          Track races, standings, drivers and teams — all in one place.
+        </p>
+
+        {/* Feature highlights */}
+        <div className="mb-6 grid grid-cols-3 gap-3 text-center">
+          <div className="glass-card p-3 rounded-xl">
+            <p className="text-xl mb-1">🏁</p>
+            <p className="text-xs font-medium text-foreground">Race Results</p>
+            <p className="text-xs text-muted-foreground">Full WEC coverage</p>
+          </div>
+          <div className="glass-card p-3 rounded-xl">
+            <p className="text-xl mb-1">🏆</p>
+            <p className="text-xs font-medium text-foreground">Standings</p>
+            <p className="text-xs text-muted-foreground">Live championship</p>
+          </div>
+          <div className="glass-card p-3 rounded-xl">
+            <p className="text-xl mb-1">⭐</p>
+            <p className="text-xs font-medium text-foreground">Favourites</p>
+            <p className="text-xs text-muted-foreground">Track your teams</p>
+          </div>
         </div>
 
         {/* Auth Card */}

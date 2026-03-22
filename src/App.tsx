@@ -2,10 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { SeasonProvider } from "@/contexts/SeasonContext";
 import { SkeletonBox } from "@/components/PageSkeleton";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -34,6 +34,26 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
+const FirstVisitGuard = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (loading) return;
+    if (location.pathname === '/auth') return;
+    if (user) return;
+
+    const hasVisited = localStorage.getItem('wec-has-visited');
+    if (!hasVisited) {
+      localStorage.setItem('wec-has-visited', '1');
+      navigate('/auth');
+    }
+  }, [user, loading, location.pathname, navigate]);
+
+  return <>{children}</>;
+};
+
 const PageLoader = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
     <div className="space-y-3 w-full max-w-md px-4">
@@ -56,9 +76,10 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
+            <FirstVisitGuard>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
               <Route path="/drivers" element={<Drivers />} />
               <Route path="/drivers/:id" element={<DriverProfile />} />
               <Route path="/teams" element={<Teams />} />
@@ -74,9 +95,10 @@ const App = () => (
               <Route path="/timeline" element={<Timeline />} />
               <Route path="/le-mans" element={<LeMans />} />
               <Route path="/manufacturers" element={<Manufacturers />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </FirstVisitGuard>
           </Suspense>
         </BrowserRouter>
         </TooltipProvider>
