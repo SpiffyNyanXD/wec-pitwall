@@ -65,8 +65,8 @@ export default function Championship() {
 
             <Tabs value={season} onValueChange={(v) => setSeason(v as '2025' | '2024')} className="w-[200px]">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="2024">2024</TabsTrigger>
                 <TabsTrigger value="2025">2025</TabsTrigger>
+                <TabsTrigger value="2024">2024</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>

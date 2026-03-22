@@ -304,7 +304,6 @@ const LeMans = () => {
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-2">
                     <Flag className="w-4 h-4 text-wec-gold" />
-                    <span className="text-xs uppercase tracking-widest text-muted-foreground">Next Edition</span>
                     <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-wec-gold" />
                   </div>
 
@@ -346,10 +345,6 @@ const LeMans = () => {
                     ) : (
                       <div className="text-xl font-bold text-wec-gold">Race Started</div>
                     )}
-                  </div>
-
-                  <div className="mt-4 text-xs text-muted-foreground/70 text-right">
-                    Times shown in your local time zone.
                   </div>
                 </div>
 

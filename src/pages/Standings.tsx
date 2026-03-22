@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -21,6 +21,10 @@ const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: type
 };
 
 const Standings = () => {
+  useEffect(() => {
+    document.title = "Standings | WEC Pitwall";
+  }, []);
+
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
