@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { drivers2024, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
+import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';

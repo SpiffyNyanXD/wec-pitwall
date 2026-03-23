@@ -5,7 +5,7 @@ import { Trophy, Flag, Users, MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { hypercars2026, teams2024 } from '@/data/wecData';
+import { teams2025, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
 
 const getClassBadge = (carClass: string) => {
   switch (carClass) {
@@ -17,7 +17,7 @@ const getClassBadge = (carClass: string) => {
 };
 
 interface TeamCardProps {
-  team: typeof teams2024[0];
+  team: typeof teams2025[0];
   index: number;
 }
 
@@ -83,10 +83,10 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
 const Teams = () => {
   const [activeFilter, setActiveFilter] = useState<string>('All');
 
-  // Use 2026 for Hypercars to match the updated prompt, but keep 2024 for others or combine
-  const hypercars = hypercars2026.filter(t => t.class === 'HYPERCAR');
-  const lmp2 = teams2024.filter(t => t.class === 'LMP2');
-  const lmgt3 = teams2024.filter(t => t.class === 'LMGT3');
+  // Use 2025 data to match active season
+  const hypercars = teams2025.filter(t => t.class === 'HYPERCAR');
+  const lmp2 = teams2025.filter(t => t.class === 'LMP2');
+  const lmgt3 = teams2025.filter(t => t.class === 'LMGT3');
 
   const manufacturers = ['All', 'Ferrari', 'Toyota', 'BMW', 'Cadillac', 'Alpine', 'Peugeot', 'Aston Martin', 'Genesis'];
 
