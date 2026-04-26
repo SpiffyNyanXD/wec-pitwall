@@ -24,6 +24,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Provides authentication state, profile data, and auth actions to descendant components.
+ *
+ * The provider tracks `user`, `session`, `loading`, `profile`, and `profileLoading`, registers
+ * a Supabase auth state listener, fetches the current session on mount, and exposes methods
+ * to `signUp`, `signIn`, `signOut`, and `refreshProfile`.
+ *
+ * @param children - React nodes to render within the provider
+ * @returns A React element rendering `AuthContext.Provider` that supplies auth state (user, session, loading, profile, profileLoading) and auth methods (signUp, signIn, signOut, refreshProfile) to its descendants
+ */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
