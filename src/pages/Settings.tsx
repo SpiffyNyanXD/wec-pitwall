@@ -51,6 +51,9 @@ const SettingsPage = () => {
     const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
     setEditUsername(cleaned);
 
+    // Always clear any pending timer first to cancel stale in-flight checks
+    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+
     if (cleaned === profile?.username) {
       setUsernameStatus('unchanged');
       return;
@@ -65,7 +68,6 @@ const SettingsPage = () => {
     }
 
     setUsernameStatus('checking');
-    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
     usernameCheckTimer.current = setTimeout(async () => {
       const { data } = await supabase.rpc('is_username_available', { uname: cleaned });
       setUsernameStatus(data ? 'available' : 'taken');

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Flag, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
@@ -28,20 +29,20 @@ const Auth = () => {
     const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
     setUsername(cleaned);
 
+    // Always clear any pending timer first to cancel stale in-flight checks
+    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+
     if (cleaned.length < 3) {
       setUsernameStatus('idle');
       return;
     }
 
-    // Format check
     if (!/^[a-z0-9_]+$/.test(cleaned)) {
       setUsernameStatus('invalid');
       return;
     }
 
-    // Debounced availability check
     setUsernameStatus('checking');
-    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
     usernameCheckTimer.current = setTimeout(async () => {
       const { data, error } = await supabase.rpc('is_username_available', { uname: cleaned });
       if (!error) {
