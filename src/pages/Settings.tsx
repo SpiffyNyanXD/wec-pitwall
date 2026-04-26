@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Bell, Heart, User, ChevronRight, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTimezone, TIMEZONE_OPTIONS, useTimeFormat } from '@/hooks/useTimezone';
 import { useTheme } from 'next-themes';
@@ -13,9 +15,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const SettingsPage = () => {
-  const { user } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { timezone, setTimezone } = useTimezone();
+  const [editUsername, setEditUsername] = useState('');
+  const [editDisplayName, setEditDisplayName] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid' | 'unchanged'>('idle');
+  const [savingProfile, setSavingProfile] = useState(false);
+  const usernameCheckTimer = useRef<NodeJS.Timeout | null>(null);
   const { timeFormat, setTimeFormat } = useTimeFormat();
   const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState({
@@ -32,6 +39,68 @@ const SettingsPage = () => {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (profile) {
+      setEditUsername(profile.username ?? '');
+      setEditDisplayName(profile.display_name ?? '');
+    }
+  }, [profile]);
+
+  const handleUsernameEdit = (value: string) => {
+    const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+    setEditUsername(cleaned);
+
+    if (cleaned === profile?.username) {
+      setUsernameStatus('unchanged');
+      return;
+    }
+    if (cleaned.length < 3) {
+      setUsernameStatus('idle');
+      return;
+    }
+    if (!/^[a-z0-9_]+$/.test(cleaned)) {
+      setUsernameStatus('invalid');
+      return;
+    }
+
+    setUsernameStatus('checking');
+    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+    usernameCheckTimer.current = setTimeout(async () => {
+      const { data } = await supabase.rpc('is_username_available', { uname: cleaned });
+      setUsernameStatus(data ? 'available' : 'taken');
+    }, 500);
+  };
+
+  const saveProfile = async () => {
+    if (!user || !supabase) return;
+    if (usernameStatus === 'taken' || usernameStatus === 'invalid' || usernameStatus === 'checking') {
+      toast.error('Fix username issues before saving');
+      return;
+    }
+    if (editUsername.length > 0 && editUsername.length < 3) {
+      toast.error('Username must be at least 3 characters');
+      return;
+    }
+
+    setSavingProfile(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        username: editUsername || null,
+        display_name: editDisplayName || null,
+      })
+      .eq('user_id', user.id);
+
+    if (error) {
+      toast.error('Failed to save profile');
+    } else {
+      toast.success('Profile updated');
+      await refreshProfile();
+      setUsernameStatus('idle');
+    }
+    setSavingProfile(false);
+  };
 
   const loadNotificationSettings = async () => {
     if (!user || !supabase) {
@@ -120,6 +189,79 @@ const SettingsPage = () => {
           className="max-w-2xl mx-auto"
         >
           <h1 className="font-racing text-3xl font-bold mb-6">Settings</h1>
+
+          {/* Account */}
+          {user && (
+            <div className="glass-card p-6 mb-6">
+              <h3 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+                <User className="w-5 h-5 text-primary" />
+                Account
+              </h3>
+
+              <div className="space-y-4">
+                {/* Email — read only */}
+                <div>
+                  <Label className="text-muted-foreground text-xs uppercase tracking-wide">Email</Label>
+                  <p className="text-foreground mt-1 text-sm">{user.email}</p>
+                </div>
+
+                {/* Username */}
+                <div>
+                  <Label htmlFor="settings-username" className="text-muted-foreground text-xs uppercase tracking-wide">
+                    Username
+                  </Label>
+                  <div className="relative mt-1.5">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                    <Input
+                      id="settings-username"
+                      value={editUsername}
+                      onChange={(e) => handleUsernameEdit(e.target.value)}
+                      className="pl-7 bg-muted/30 border-border"
+                      placeholder="yourname"
+                      maxLength={20}
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                    />
+                  </div>
+                  {editUsername.length >= 3 && usernameStatus !== 'unchanged' && (
+                    <p className={`text-xs mt-1 ${
+                      usernameStatus === 'available' ? 'text-green-500' :
+                      usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'text-destructive' :
+                      'text-muted-foreground'
+                    }`}>
+                      {usernameStatus === 'available' && `✓ @${editUsername} is available`}
+                      {usernameStatus === 'taken' && `✗ @${editUsername} is already taken`}
+                      {usernameStatus === 'invalid' && '✗ Invalid characters'}
+                      {usernameStatus === 'checking' && 'Checking...'}
+                    </p>
+                  )}
+                </div>
+
+                {/* Display Name */}
+                <div>
+                  <Label htmlFor="settings-displayname" className="text-muted-foreground text-xs uppercase tracking-wide">
+                    Display Name
+                  </Label>
+                  <Input
+                    id="settings-displayname"
+                    value={editDisplayName}
+                    onChange={(e) => setEditDisplayName(e.target.value)}
+                    className="mt-1.5 bg-muted/30 border-border"
+                    placeholder="Your Name"
+                    maxLength={50}
+                  />
+                </div>
+
+                <Button
+                  onClick={saveProfile}
+                  disabled={savingProfile || usernameStatus === 'taken' || usernameStatus === 'invalid' || usernameStatus === 'checking'}
+                  className="w-full racing-gradient text-white"
+                >
+                  {savingProfile ? 'Saving...' : 'Save Profile'}
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Preferences */}
           <div className="glass-card p-6 mb-6">
