@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
@@ -17,9 +17,38 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
+  const usernameCheckTimer = useRef<NodeJS.Timeout | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn, signUp, user, loading } = useAuth();
+  const { signIn, signUp, session, user, loading } = useAuth();
   const navigate = useNavigate();
+
+  const handleUsernameChange = (value: string) => {
+    const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+    setUsername(cleaned);
+
+    if (cleaned.length < 3) {
+      setUsernameStatus('idle');
+      return;
+    }
+
+    // Format check
+    if (!/^[a-z0-9_]+$/.test(cleaned)) {
+      setUsernameStatus('invalid');
+      return;
+    }
+
+    // Debounced availability check
+    setUsernameStatus('checking');
+    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+    usernameCheckTimer.current = setTimeout(async () => {
+      const { data, error } = await supabase.rpc('is_username_available', { uname: cleaned });
+      if (!error) {
+        setUsernameStatus(data ? 'available' : 'taken');
+      }
+    }, 500);
+  };
 
   useEffect(() => {
     if (!loading && user) {
@@ -48,6 +77,25 @@ const Auth = () => {
     
     if (!validateForm()) return;
     
+    if (!isLogin) {
+      if (!username || username.length < 3) {
+        toast.error('Username must be at least 3 characters');
+        return;
+      }
+      if (usernameStatus === 'taken') {
+        toast.error('That username is already taken');
+        return;
+      }
+      if (usernameStatus === 'invalid') {
+        toast.error('Username can only contain letters, numbers, and underscores');
+        return;
+      }
+      if (usernameStatus === 'checking') {
+        toast.error('Please wait while we check username availability');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -72,7 +120,15 @@ const Auth = () => {
             toast.error(error.message);
           }
         } else {
-          toast.success('Account created successfully!');
+          // Save username to profile
+          if (username) {
+            await supabase
+              .from('profiles')
+              .update({ username, display_name: displayName || null })
+              .eq('user_id', session?.user?.id || '');
+            // Note: profile row is auto-created by trigger, we just update it
+          }
+          toast.success('Account created! Please check your email to verify.');
           navigate('/');
         }
       }
@@ -162,6 +218,44 @@ const Auth = () => {
                     className="pl-10 bg-muted/50 border-border focus:border-primary"
                   />
                 </div>
+              </div>
+            )}
+
+            {/* Username field — signup only */}
+            {!isLogin && (
+              <div className="space-y-1.5">
+                <Label htmlFor="username" className="text-muted-foreground">
+                  Username
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="yourname"
+                    value={username}
+                    onChange={(e) => handleUsernameChange(e.target.value)}
+                    className="pl-7 bg-muted/30 border-border"
+                    maxLength={20}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                  />
+                </div>
+                {/* Availability indicator */}
+                {username.length >= 3 && (
+                  <p className={`text-xs mt-1 ${
+                    usernameStatus === 'available' ? 'text-green-500' :
+                    usernameStatus === 'taken' ? 'text-destructive' :
+                    usernameStatus === 'invalid' ? 'text-destructive' :
+                    'text-muted-foreground'
+                  }`}>
+                    {usernameStatus === 'available' && `✓ @${username} is available`}
+                    {usernameStatus === 'taken' && `✗ @${username} is already taken`}
+                    {usernameStatus === 'invalid' && '✗ Only letters, numbers, and underscores allowed'}
+                    {usernameStatus === 'checking' && 'Checking...'}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">3–20 characters. Letters, numbers, underscores only.</p>
               </div>
             )}
 

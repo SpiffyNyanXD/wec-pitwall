@@ -37,7 +37,7 @@ const secondaryNav = [
 ];
 
 const Header = () => {
-  const { user, signOut, loading } = useAuth();
+  const { user, profile, signOut, loading } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -228,15 +228,25 @@ const Header = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="ml-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                        <User className="h-4 w-4 text-primary" />
+                    <Button variant="ghost" className="ml-2 flex items-center gap-2 p-1.5 px-3">
+                      <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-primary">
+                          {profile?.username
+                            ? profile.username[0].toUpperCase()
+                            : profile?.display_name
+                              ? profile.display_name[0].toUpperCase()
+                              : user?.email?.[0].toUpperCase() ?? 'U'}
+                        </span>
                       </div>
+                      <span className="hidden md:block text-sm text-muted-foreground">
+                        {profile?.username ? `@${profile.username}` : profile?.display_name ?? 'Account'}
+                      </span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <div className="px-2 py-1.5 text-sm">
-                      <p className="font-medium truncate">{user.email}</p>
+                      <p className="font-medium truncate">{profile?.username ? `@${profile.username}` : profile?.display_name ?? user.email}</p>
+                      {(profile?.username || profile?.display_name) && <p className="text-xs text-muted-foreground truncate">{user.email}</p>}
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
