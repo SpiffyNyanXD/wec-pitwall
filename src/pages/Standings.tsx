@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -132,7 +132,10 @@ const Standings = () => {
   };
 
   const manufacturersStandings = getManufacturersStandings();
-  const hypercarEntries = getHypercarEntries();
+  const hypercarEntries = useMemo(
+    () => getHypercarEntries(),
+    [teams]
+  );
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
     <motion.div
@@ -274,9 +277,18 @@ const Standings = () => {
     </div>
   );
 
-  const hypercarDrivers = getDriversStandings('HYPERCAR');
-  const lmgt3Drivers = getDriversStandings('LMGT3');
-  const lmp2Drivers = getDriversStandings('LMP2');
+  const hypercarDrivers = useMemo(
+    () => getDriversStandings('HYPERCAR'),
+    [drivers]
+  );
+  const lmgt3Drivers = useMemo(
+    () => getDriversStandings('LMGT3'),
+    [drivers]
+  );
+  const lmp2Drivers = useMemo(
+    () => getDriversStandings('LMP2'),
+    [drivers]
+  );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
   const lmgt3Teams = teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
 

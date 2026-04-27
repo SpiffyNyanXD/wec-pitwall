@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -14,7 +14,10 @@ import { toast } from 'sonner';
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
   const team = getTeamById(id || '');
-  const teamDrivers = team?.drivers.map(dId => getDriverById(dId)).filter(Boolean) || [];
+  const teamDrivers = useMemo(
+    () => team?.drivers.map(dId => getDriverById(dId)).filter(Boolean) || [],
+    [team]
+  );
   const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState<string | null>(null);

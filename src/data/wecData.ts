@@ -1362,13 +1362,19 @@ export const weather = {
 };
 
 // Helper functions
-export const getDriverById = (id: string): Driver | undefined => {
-  return [...drivers2024, ...drivers2025, ...drivers2026].find(d => d.id === id);
-};
+// Pre-built lookup Maps — created once at module load time, O(1) lookups
+// Avoids allocating a new merged array on every single call
+const _driverMap = new Map<string, Driver>(
+  [...drivers2024, ...drivers2025, ...drivers2026].map(d => [d.id, d])
+);
 
-export const getTeamById = (id: string): Team | undefined => {
-  return [...teams2024, ...teams2025, ...hypercars2026, ...lmgt3Teams2026].find(t => t.id === id);
-};
+const _teamMap = new Map<string, Team>(
+  [...teams2024, ...teams2025, ...hypercars2026, ...lmgt3Teams2026].map(t => [t.id, t])
+);
+
+export const getDriverById = (id: string): Driver | undefined => _driverMap.get(id);
+
+export const getTeamById = (id: string): Team | undefined => _teamMap.get(id);
 
 export const getDriversByClass = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3'): Driver[] => {
   return drivers2024.filter(d => d.class === carClass);
