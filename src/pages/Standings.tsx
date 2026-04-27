@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -102,14 +102,14 @@ const Standings = () => {
   };
 
   // Get car entries (teams) for Hypercar World Cup
-  const getHypercarEntries = () => {
+  const getHypercarEntries = useCallback(() => {
     return teams
       .filter(t => t.class === 'HYPERCAR')
       .sort((a, b) => b.points - a.points);
-  };
+  }, [teams]);
 
   // Get drivers sorted by points for each class
-  const getDriversStandings = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
+  const getDriversStandings = useCallback((carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
     const driverGroups: Record<string, typeof drivers> = {};
     
@@ -129,12 +129,12 @@ const Standings = () => {
     }));
 
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
-  };
+  }, [drivers]);
 
   const manufacturersStandings = getManufacturersStandings();
   const hypercarEntries = useMemo(
     () => getHypercarEntries(),
-    [teams]
+    [getHypercarEntries]
   );
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
@@ -279,15 +279,15 @@ const Standings = () => {
 
   const hypercarDrivers = useMemo(
     () => getDriversStandings('HYPERCAR'),
-    [drivers]
+    [getDriversStandings]
   );
   const lmgt3Drivers = useMemo(
     () => getDriversStandings('LMGT3'),
-    [drivers]
+    [getDriversStandings]
   );
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
-    [drivers]
+    [getDriversStandings]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
   const lmgt3Teams = teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);

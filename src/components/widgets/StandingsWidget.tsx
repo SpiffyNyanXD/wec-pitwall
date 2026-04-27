@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, ChevronDown } from 'lucide-react';
 import { teams2024, drivers2024, teams2025, standings2025 } from '@/data/wecData';
@@ -31,26 +31,24 @@ const StandingsWidget = () => {
   };
 
   // Get drivers grouped by crew (shared points)
-  const getDriversStandings = useMemo(() => {
-    return () => {
-      const hypercarDrivers = drivers.filter(d => d.class === 'HYPERCAR');
-      const driverGroups: Record<string, typeof hypercarDrivers> = {};
+  const getDriversStandings = useCallback(() => {
+    const hypercarDrivers = drivers.filter(d => d.class === 'HYPERCAR');
+    const driverGroups: Record<string, typeof hypercarDrivers> = {};
 
-      hypercarDrivers.forEach(driver => {
-        const key = `${driver.teamId}-${driver.points}`;
-        if (!driverGroups[key]) {
-          driverGroups[key] = [];
-        }
-        driverGroups[key].push(driver);
-      });
+    hypercarDrivers.forEach(driver => {
+      const key = `${driver.teamId}-${driver.points}`;
+      if (!driverGroups[key]) {
+        driverGroups[key] = [];
+      }
+      driverGroups[key].push(driver);
+    });
 
-      return Object.values(driverGroups)
-        .map(crew => ({
-          ...crew[0],
-          displayName: crew.map(d => d.lastName || d.name.split(' ').pop()).join(' / ')
-        }))
-        .sort((a, b) => b.points - a.points);
-    };
+    return Object.values(driverGroups)
+      .map(crew => ({
+        ...crew[0],
+        displayName: crew.map(d => d.lastName || d.name.split(' ').pop()).join(' / ')
+      }))
+      .sort((a, b) => b.points - a.points);
   }, [drivers]);
 
   const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
