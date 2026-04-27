@@ -1,3 +1,12 @@
+/**
+ * WEC Pitwall — Data Layer
+ *
+ * I started this project because when I was studying
+ * (trying to study btw) I thought for this and started doing this.
+ *
+ * — SpiffyNyanXD
+ */
+
 // ============= Types =============
 
 export interface Driver {
