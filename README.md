@@ -1,76 +1,140 @@
-# Welcome to your Lovable project
+# WEC Pitwall
 
-**Note on environment variables:**
-You must copy `.env.example` to `.env` and fill in your own Supabase credentials for authentication and favorites to work.
+**Fan-made companion app for the FIA World Endurance Championship.**
 
-## Project info
+Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2026 WEC seasons — all in one place.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+🌐 **Live:** [wec-pitwall.vercel.app](https://wec-pitwall.vercel.app)
 
-## How can I edit this code?
+> Not affiliated with or endorsed by the FIA, ACO, or WEC. All data is manually curated. 
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Race Countdown** — Live countdown to the next WEC round with full session schedule
+- **Standings** — Hypercar, LMGT3 driver and team championship standings
+- **Schedule** — Full season calendar for 2024, 2025 and 2026
+- **Drivers** — Complete driver profiles and career stats
+- **Teams** — Team entries, car numbers, and manufacturer info
+- **Circuits** — Circuit details, lap records, and race history
+- **Manufacturers** — Championship standings and 2026 hypercar grid
+- **Season Timeline** — Round-by-round race winners and manufacturer dominance
+- **Championship Battle** — Point progression charts across the season
+- **Le Mans Hub** — Dedicated 24 Hours of Le Mans page
+- **Favourites** — Save your favourite teams and drivers
+- **Notifications** — Race weekend alerts
+- **User Accounts** — Sign up with email, set a username and display name
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+| Layer | Technology |
+|---|---|
+| Framework | React 18 + TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS + shadcn/ui |
+| Auth & Database | Supabase |
+| Deployment | Vercel |
+| Fonts | Orbitron (numbers/times), Inter (UI) |
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Local Development
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- A Supabase project (free tier works)
+
+### Setup
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Clone the repo
+git clone https://github.com/SpiffyNyanXD/wec-pitwall.git
+cd wec-pitwall
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Configure environment variables
+cp .env.example .env
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Fill in your `.env`:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+```
+
+```sh
+# 4. Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open [http://localhost:8080](http://localhost:8080).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
 
-**Use GitHub Codespaces**
+```sh
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Supabase Setup
 
-This project is built with:
+The app uses three tables in Supabase:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| Table | Purpose |
+|---|---|
+| `profiles` | Username, display name, avatar per user |
+| `favorite_teams` | User-saved favourite teams |
+| `notification_subscriptions` | Race alert preferences |
 
-## How can I deploy this project?
+RLS is enabled on all tables. Migrations are tracked in the repo. The `handle_new_user` trigger auto-creates a profile row on every new signup.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment
 
-Yes, you can!
+The project auto-deploys to Vercel on every push to `main`. No manual steps needed.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Environment variables required in Vercel project settings:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+VITE_SUPABASE_URL
+VITE_SUPABASE_PUBLISHABLE_KEY
+```
+
+---
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable UI components and widgets
+│   ├── ui/           # shadcn/ui base components
+│   └── widgets/      # Dashboard widgets (countdown, standings, etc.)
+├── contexts/         # React context (AuthContext)
+├── data/             # Static WEC data (wecData.ts — races, drivers, teams)
+├── hooks/            # Custom hooks (useTimezone, useTimeFormat, etc.)
+├── integrations/     # Supabase client
+└── pages/            # Route-level page components
+```
+
+---
+
+## Contributing
+
+This is a personal fan project. Issues and suggestions welcome via GitHub Issues.
+
+If you find data errors (wrong race results, points, driver info), please open an issue with a source link.
+
+---
+
+## Disclaimer
+
+WEC Pitwall is an independent fan project. It is not affiliated with, endorsed by, or connected to the FIA, ACO, WEC, or any team or manufacturer featured. All championship data is manually curated and may not be 100% accurate. For official results, visit [fiawec.com](https://www.fiawec.com).
