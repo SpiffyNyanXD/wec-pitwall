@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Bell, Heart, User, ChevronRight, LogIn } from 'lucide-react';
@@ -180,6 +181,7 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Settings" url="/settings" noIndex={true} />
       <Header />
       
       <main className="container py-8 px-4">

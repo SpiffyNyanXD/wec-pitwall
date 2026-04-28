@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -117,6 +118,11 @@ const Timeline = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Season Timeline"
+        description="FIA WEC season timeline — race winners, pole positions and championship milestones."
+        url="/timeline"
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />

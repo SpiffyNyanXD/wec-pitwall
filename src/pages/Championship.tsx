@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -50,6 +51,11 @@ export default function Championship() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Championship Battle"
+        description="Round-by-round FIA WEC championship points progression for 2024 and 2025 seasons."
+        url="/championship"
+      />
       <Header />
       <main className="container mx-auto px-4 py-8">
         <motion.div

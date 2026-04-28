@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
@@ -47,6 +48,11 @@ const DriverProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={driver ? `${driver.name}` : 'Driver'}
+        description={driver ? `${driver.name} — FIA WEC driver profile, stats and race history.` : ''}
+        url={driver ? `/drivers/${driver.id}` : '/drivers'}
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

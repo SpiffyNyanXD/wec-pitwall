@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -84,6 +85,11 @@ const Drivers = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Drivers"
+        description="Complete FIA WEC driver lineup for 2026 including Hypercar and LMGT3 class drivers."
+        url="/drivers"
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

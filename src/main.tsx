@@ -8,9 +8,13 @@ import { inject } from '@vercel/analytics';
 injectSpeedInsights();
 inject();
 
+import { HelmetProvider } from 'react-helmet-async';
+import React from 'react';
+
 createRoot(document.getElementById("root")!).render(
-  <>
-    <App />
-    <SpeedInsights />
-  </>
+  <React.StrictMode>
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  </React.StrictMode>
 );

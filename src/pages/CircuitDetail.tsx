@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
