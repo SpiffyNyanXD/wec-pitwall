@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
@@ -8,10 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 
 const Schedule = () => {
-  useEffect(() => {
-    document.title = "Schedule | WEC Pitwall";
-  }, []);
-
   const formatDate = (dateString: string, endDate?: string) => {
     const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
     const start = parseDate(dateString);
@@ -118,6 +115,11 @@ const Schedule = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Race Schedule"
+        description="Full FIA WEC race calendar for the 2024, 2025 and 2026 seasons including session times."
+        url="/schedule"
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

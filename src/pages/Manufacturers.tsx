@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Calendar, Car, Shield, Milestone, Flag } from 'lucide-react';
@@ -28,10 +29,6 @@ const getPositionColor = (position: number) => {
 };
 
 const Manufacturers = () => {
-  useEffect(() => {
-    document.title = "Manufacturers | WEC Pitwall";
-  }, []);
-
   const [activeSeason, setActiveSeason] = useState('2025');
 
   const standingsData = activeSeason === '2025'
@@ -51,6 +48,11 @@ const Manufacturers = () => {
 
   return (
     <div className="min-h-screen pb-20 bg-background">
+      <SEOHead
+        title="Manufacturers"
+        description="FIA WEC Manufacturers Championship standings and the 2026 Hypercar grid."
+        url="/manufacturers"
+      />
       <Header />
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

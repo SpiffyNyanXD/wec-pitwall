@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Star, LogIn, X } from 'lucide-react';
@@ -137,6 +138,7 @@ const FavoritesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Favourites" url="/favorites" noIndex={true} />
       <Header />
       
       <main className="container py-8 px-4">

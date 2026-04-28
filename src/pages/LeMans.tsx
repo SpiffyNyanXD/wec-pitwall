@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -112,6 +113,11 @@ const LeMans = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEOHead
+        title="24 Hours of Le Mans"
+        description="Everything about the 24 Hours of Le Mans — the most iconic endurance race in the world."
+        url="/le-mans"
+      />
       {/* Background effects with Gold */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-wec-gold/5 rounded-full blur-[100px]" />

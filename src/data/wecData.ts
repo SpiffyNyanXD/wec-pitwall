@@ -1364,17 +1364,35 @@ export const weather = {
 // Helper functions
 // Pre-built lookup Maps — created once at module load time, O(1) lookups
 // Avoids allocating a new merged array on every single call
-const _driverMap = new Map<string, Driver>(
-  [...drivers2024, ...drivers2025, ...drivers2026].map(d => [d.id, d])
-);
+let _driverMapCache: Map<string, Driver> | null = null;
+let _teamMapCache: Map<string, Team> | null = null;
 
-const _teamMap = new Map<string, Team>(
-  [...teams2024, ...teams2025, ...hypercars2026, ...lmgt3Teams2026].map(t => [t.id, t])
-);
+const getDriverMap = () => {
+  if (!_driverMapCache) {
+    _driverMapCache = new Map<string, Driver>(
+      [...drivers2024, ...drivers2025, ...(typeof drivers2026 !== 'undefined' ? drivers2026 : [])].map(d => [d.id, d])
+    );
+  }
+  return _driverMapCache;
+};
 
-export const getDriverById = (id: string): Driver | undefined => _driverMap.get(id);
+const getTeamMap = () => {
+  if (!_teamMapCache) {
+    _teamMapCache = new Map<string, Team>(
+      [
+        ...teams2024,
+        ...teams2025,
+        ...(typeof hypercars2026 !== 'undefined' ? hypercars2026 : []),
+        ...(typeof lmgt3Teams2026 !== 'undefined' ? lmgt3Teams2026 : [])
+      ].map(t => [t.id, t])
+    );
+  }
+  return _teamMapCache;
+};
 
-export const getTeamById = (id: string): Team | undefined => _teamMap.get(id);
+export const getDriverById = (id: string): Driver | undefined => getDriverMap().get(id);
+
+export const getTeamById = (id: string): Team | undefined => getTeamMap().get(id);
 
 export const getDriversByClass = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3'): Driver[] => {
   return drivers2024.filter(d => d.class === carClass);
