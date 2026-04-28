@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
@@ -21,10 +22,6 @@ const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: type
 };
 
 const Standings = () => {
-  useEffect(() => {
-    document.title = "Standings | WEC Pitwall";
-  }, []);
-
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
@@ -294,6 +291,11 @@ const Standings = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Championship Standings"
+        description="2025 FIA WEC Hypercar and LMGT3 driver and team championship standings."
+        url="/standings"
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

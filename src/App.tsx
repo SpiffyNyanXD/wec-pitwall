@@ -45,6 +45,12 @@ const FirstVisitGuard = ({ children }: { children: React.ReactNode }) => {
     if (location.pathname === '/auth') return;
     if (user) return;
 
+    // Do not redirect known search engine crawlers and bots
+    // Bots don't have localStorage so they'd always get redirected otherwise
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isBot = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver|twitterbot|linkedinbot|discordbot|whatsapp|telegrambot|applebot/.test(userAgent);
+    if (isBot) return;
+
     const hasVisited = localStorage.getItem('wec-has-visited');
     if (!hasVisited) {
       localStorage.setItem('wec-has-visited', '1');

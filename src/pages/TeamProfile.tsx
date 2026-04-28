@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
@@ -23,9 +24,6 @@ const TeamProfile = () => {
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (team) {
-      document.title = `${team.name} | Teams | WEC Pitwall`;
-    }
     if (user && team) {
       checkFavorite();
     }
@@ -174,6 +172,11 @@ const TeamProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={team ? team.name : 'Team'}
+        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
+        url={team ? `/teams/${team.id}` : '/teams'}
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div 

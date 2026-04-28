@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, BellOff } from 'lucide-react';
@@ -11,6 +12,7 @@ const Notifications = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Notifications" url="/notifications" noIndex={true} />
       <Header />
       <main className="container py-12 px-4 relative z-10">
         <motion.div

@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -96,6 +97,11 @@ const Teams = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Teams"
+        description="All FIA WEC teams for the 2026 season — Hypercar and LMGT3 entries, car numbers and manufacturers."
+        url="/teams"
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
