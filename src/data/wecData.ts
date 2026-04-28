@@ -1362,32 +1362,28 @@ export const weather = {
 };
 
 // Helper functions
-// Pre-built lookup Maps — created once at module load time, O(1) lookups
-// Avoids allocating a new merged array on every single call
-let _driverMapCache: Map<string, Driver> | null = null;
-let _teamMapCache: Map<string, Team> | null = null;
+// Lazy-initialized lookup Maps — built on first call, O(1) lookups thereafter.
+// Lazy init is required because drivers2026, hypercars2026, lmgt3Teams2026
+// are declared later in this file — eager init causes a ReferenceError (temporal dead zone).
+let _driverMap: Map<string, Driver> | null = null;
+let _teamMap: Map<string, Team> | null = null;
 
-const getDriverMap = () => {
-  if (!_driverMapCache) {
-    _driverMapCache = new Map<string, Driver>(
-      [...drivers2024, ...drivers2025, ...(typeof drivers2026 !== 'undefined' ? drivers2026 : [])].map(d => [d.id, d])
+const getDriverMap = (): Map<string, Driver> => {
+  if (!_driverMap) {
+    _driverMap = new Map(
+      [...drivers2024, ...drivers2025, ...drivers2026].map(d => [d.id, d])
     );
   }
-  return _driverMapCache;
+  return _driverMap;
 };
 
-const getTeamMap = () => {
-  if (!_teamMapCache) {
-    _teamMapCache = new Map<string, Team>(
-      [
-        ...teams2024,
-        ...teams2025,
-        ...(typeof hypercars2026 !== 'undefined' ? hypercars2026 : []),
-        ...(typeof lmgt3Teams2026 !== 'undefined' ? lmgt3Teams2026 : [])
-      ].map(t => [t.id, t])
+const getTeamMap = (): Map<string, Team> => {
+  if (!_teamMap) {
+    _teamMap = new Map(
+      [...teams2024, ...teams2025, ...hypercars2026, ...lmgt3Teams2026].map(t => [t.id, t])
     );
   }
-  return _teamMapCache;
+  return _teamMap;
 };
 
 export const getDriverById = (id: string): Driver | undefined => getDriverMap().get(id);
