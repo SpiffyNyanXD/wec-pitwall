@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, Flag, Calendar, Trophy, ArrowLeft } from 'lucide-react';
+import { Home, Calendar, Trophy, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 
 const quickLinks = [
   { to: '/', label: 'Dashboard', icon: Home },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
   { to: '/standings', label: 'Standings', icon: Trophy },
-  { to: '/teams', label: 'Teams', icon: Flag },
+  { to: '/teams', label: 'Teams', icon: Trophy },
 ];
 
 const NotFound = () => {
@@ -38,22 +38,26 @@ const NotFound = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="mb-6"
+            className="mb-6 relative"
           >
-            <span className="font-racing text-8xl md:text-9xl font-bold text-gradient opacity-30">
-              404
-            </span>
-          </motion.div>
-
-          {/* Flag icon */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex justify-center mb-6"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center">
-              <Flag className="w-8 h-8 text-muted-foreground" />
+            {/* Caveman GIF background */}
+            <div
+              className="mx-auto rounded-2xl overflow-hidden"
+              style={{
+                backgroundImage: 'url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif)',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                height: '280px',
+                width: '100%',
+                maxWidth: '400px',
+              }}
+            />
+            {/* 404 number overlaid at top of GIF */}
+            <div className="absolute top-4 left-0 right-0 flex justify-center">
+              <span className="font-racing text-7xl md:text-8xl font-bold text-foreground/80">
+                404
+              </span>
             </div>
           </motion.div>
 
