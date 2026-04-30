@@ -454,7 +454,7 @@ const RaceProfile = () => {
                 <CardHeader>
                   <CardTitle className="font-racing flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-wec-gold" />
-                    Full Race Results — Hypercar Class
+                    Full Race Results — All Classes
                   </CardTitle>
                   {/* Pole + Fastest Lap summary */}
                   <div className="flex flex-wrap gap-4 mt-2">
@@ -521,7 +521,7 @@ const RaceProfile = () => {
                                 <span className="text-sm">{result.flag}</span>
                                 <div>
                                   <p className="font-medium text-foreground text-sm leading-tight">
-                                    {result.manufacturer}
+                                    {result.manufacturer} · {result.class}
                                     {result.isFastestLap && (
                                       <span className="ml-2 text-wec-gold text-xs font-bold">⚡ FL</span>
                                     )}
