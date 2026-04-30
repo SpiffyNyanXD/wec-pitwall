@@ -1757,8 +1757,8 @@ export const raceResults: RaceResultSet[] = [
     polePosition: 'Ferrari #51',
     poleTime: '1:30.127',
     fastestLap: 'Toyota #8',
-    fastestLapTime: '1:32.4',
-    fastestLapDriver: 'S. Buemi',
+    fastestLapTime: '1:32.400',
+    fastestLapDriver: 'Sébastien Buemi',
     results: [
       {
         position: 1,
@@ -1819,7 +1819,7 @@ export const raceResults: RaceResultSet[] = [
         carNumber: '#20',
         team: 'BMW M Team WRT',
         manufacturer: 'BMW',
-        drivers: ['R. Marciello', 'M. Vaxivière', 'N. Yelloly'],
+        drivers: ['R. Rast', 'M. Vaxivière', 'N. Yelloly'],
         class: 'HYPERCAR',
         laps: 213,
         gap: '+1:00.543',
@@ -1947,7 +1947,7 @@ export const raceResults: RaceResultSet[] = [
       {
         position: 15,
         carNumber: '#69',
-        team: 'WRT',
+        team: 'BMW M Team WRT',
         manufacturer: 'BMW',
         drivers: ['M. Sørensen', 'C. De Phillippi', 'A. Farfus'],
         class: 'LMGT3',
