@@ -52,6 +52,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://wec-pitwall.vercel.app/compare</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Circuit pages -->
   <url><loc>https://wec-pitwall.vercel.app/circuit/qatar</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
