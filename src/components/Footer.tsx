@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { APP_INFO } from '@/lib/constants';
 
@@ -10,7 +11,7 @@ const Footer = () => {
       <div className="container py-6 px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} {APP_INFO.NAME}. {APP_INFO.DISCLAIMER}</p>
-          
+
           <div className="flex items-center gap-4">
             <Dialog open={openModal === 'privacy'} onOpenChange={(open) => setOpenModal(open ? 'privacy' : null)}>
               <DialogTrigger asChild>
@@ -58,6 +59,8 @@ const Footer = () => {
                 </div>
               </DialogContent>
             </Dialog>
+
+            <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight">Cookie Policy</Link>
           </div>
         </div>
         <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.DATA_NOTE}</p>
