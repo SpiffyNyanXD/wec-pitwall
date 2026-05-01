@@ -1,11 +1,10 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Trophy, Flag, Medal, ChevronRight, Search, X, Users } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { drivers2024, drivers2026, getDriversByClass } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -144,13 +143,18 @@ const Drivers = () => {
               ? [...getDriversByClass('HYPERCAR'), ...drivers2026]
               : getDriversByClass(carClass);
 
+            const normalize = (str: string) => str
+              .normalize('NFD')
+              .replace(/[̀-ͯ]/g, '')
+              .toLowerCase();
+            const q = normalize(searchQuery.trim());
+
             const filteredDrivers = allClassDrivers.filter(d => {
-              const q = searchQuery.toLowerCase().trim();
               if (!q) return true;
-              return d.name.toLowerCase().includes(q) ||
-                     d.team.toLowerCase().includes(q) ||
-                     d.carNumber.toLowerCase().includes(q) ||
-                     d.nationality?.toLowerCase().includes(q);
+              return normalize(d.name).includes(q) ||
+                     normalize(d.team).includes(q) ||
+                     normalize(d.carNumber).includes(q) ||
+                     normalize(d.nationality ?? '').includes(q);
             });
 
             return (

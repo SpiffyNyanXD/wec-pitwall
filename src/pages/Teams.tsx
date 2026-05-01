@@ -2,7 +2,7 @@ import SEOHead from "@/components/SEOHead";
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flag, Users, MapPin, Search, X, Car } from 'lucide-react';
+import { Trophy, Flag, Users, MapPin, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -102,9 +102,11 @@ const Teams = () => {
 
   const manufacturers = ['All', 'Ferrari', 'Toyota', 'BMW', 'Cadillac', 'Alpine', 'Peugeot', 'Aston Martin', 'Genesis'];
 
-  const filteredHypercars = activeFilter === 'All'
-    ? hypercars
-    : hypercars.filter(t => t.manufacturer === activeFilter);
+  const manufacturerFilter = activeFilter === 'All' ? '' : activeFilter;
+
+  const filteredHypercars = manufacturerFilter
+    ? hypercars.filter(t => t.manufacturer === manufacturerFilter)
+    : hypercars;
 
   return (
     <div className="min-h-screen bg-background">
@@ -182,7 +184,7 @@ const Teams = () => {
               ))}
               {filteredHypercars.length === 0 && (
                 <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
-                  No hypercar teams found matching your filters.
+                  No hypercar teams found{searchQuery ? ` for "${searchQuery}"` : ""}{manufacturerFilter ? ` from ${manufacturerFilter}` : ""}.
                 </div>
               )}
             </div>
