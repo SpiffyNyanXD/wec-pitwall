@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
@@ -36,28 +36,19 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const queryClient = new QueryClient();
 
 const FirstVisitGuard = ({ children }: { children: React.ReactNode }) => {
+  // No forced redirect. All content is freely accessible.
+  // Auth is only required for personalized features (Favourites, Notifications).
+  return <>{children}</>;
+};
+
+const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (loading) return;
-    if (location.pathname === '/auth') return;
-    if (user) return;
-
-    // Do not redirect known search engine crawlers and bots
-    // Bots don't have localStorage so they'd always get redirected otherwise
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isBot = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver|twitterbot|linkedinbot|discordbot|whatsapp|telegrambot|applebot/.test(userAgent);
-    if (isBot) return;
-
-    const hasVisited = localStorage.getItem('wec-has-visited');
-    if (!hasVisited) {
-      localStorage.setItem('wec-has-visited', '1');
-      navigate('/auth');
-    }
-  }, [user, loading, location.pathname, navigate]);
-
+  if (loading) return null;
+  if (!user) {
+    return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
+  }
   return <>{children}</>;
 };
 
@@ -97,12 +88,24 @@ const App = () => (
               <Route path="/race/:id" element={<RaceProfile />} />
               <Route path="/standings" element={<Standings />} />
               <Route path="/championship" element={<Championship />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/settings" element={
+                <RequireAuth>
+                  <Settings />
+                </RequireAuth>
+              } />
+              <Route path="/favorites" element={
+                <RequireAuth>
+                  <Favorites />
+                </RequireAuth>
+              } />
               <Route path="/timeline" element={<Timeline />} />
               <Route path="/le-mans" element={<LeMans />} />
               <Route path="/manufacturers" element={<Manufacturers />} />
-              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/notifications" element={
+                <RequireAuth>
+                  <Notifications />
+                </RequireAuth>
+              } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,8 +1,8 @@
 import SEOHead from "@/components/SEOHead";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Trophy, Flag, Medal, ChevronRight, Search } from 'lucide-react';
+import { Trophy, Flag, Medal, ChevronRight, Search, X, Users } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -110,17 +110,26 @@ const Drivers = () => {
             </h1>
             <p className="text-muted-foreground">FIA World Endurance Championship drivers</p>
           </div>
-
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search driver or team..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-card border-border"
-            />
-          </div>
         </motion.div>
+
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search drivers, teams, car numbers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 bg-muted/30 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
@@ -135,13 +144,14 @@ const Drivers = () => {
               ? [...getDriversByClass('HYPERCAR'), ...drivers2026]
               : getDriversByClass(carClass);
 
-            const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-            const normalizedSearch = normalize(searchQuery);
-
-            const filteredDrivers = allClassDrivers.filter(driver =>
-              normalize(driver.name).includes(normalizedSearch) ||
-              normalize(driver.team).includes(normalizedSearch)
-            );
+            const filteredDrivers = allClassDrivers.filter(d => {
+              const q = searchQuery.toLowerCase().trim();
+              if (!q) return true;
+              return d.name.toLowerCase().includes(q) ||
+                     d.team.toLowerCase().includes(q) ||
+                     d.carNumber.toLowerCase().includes(q) ||
+                     d.nationality?.toLowerCase().includes(q);
+            });
 
             return (
               <TabsContent key={carClass} value={carClass}>
@@ -150,13 +160,8 @@ const Drivers = () => {
                     <DriverCard key={driver.id} driver={driver} index={index} />
                   ))}
                   {filteredDrivers.length === 0 && (
-                    <div className="col-span-full">
-                      <EmptyState
-                        icon={Users}
-                        title="No drivers found"
-                        description={`No drivers found matching "${searchQuery}".`}
-                        action={searchQuery ? { label: "Clear search", onClick: () => setSearchQuery('') } : undefined}
-                      />
+                    <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
+                      No drivers found for "{searchQuery}"
                     </div>
                   )}
                 </div>

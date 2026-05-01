@@ -1,6 +1,6 @@
 # WEC Pitwall
 
-**Fan-made companion app for the FIA World Endurance Championship.**
+**Analytics platform for the FIA World Endurance Championship.**
 
 Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2026 WEC seasons — all in one place.
 
