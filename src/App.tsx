@@ -13,6 +13,8 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 // Keep Index as eager (it's the first page)
 import Index from "./pages/Index";
 
+import Header from "@/components/Header";
+
 // Lazy load everything else
 const Auth = lazy(() => import("./pages/Auth"));
 const Drivers = lazy(() => import("./pages/Drivers"));
@@ -33,6 +35,7 @@ const Manufacturers = lazy(() => import("./pages/Manufacturers"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const DriverComparison = lazy(() => import('./pages/DriverComparison'));
 
 const queryClient = new QueryClient();
 
@@ -102,6 +105,11 @@ const App = () => (
                 </RequireAuth>
               } />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/compare" element={
+                <Suspense fallback={<><Header /><PageLoader /></>}>
+                  <DriverComparison />
+                </Suspense>
+              } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

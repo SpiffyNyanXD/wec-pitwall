@@ -556,6 +556,87 @@ const RaceProfile = () => {
             </motion.div>
           )}
 
+          {/* Race Pace Analysis — shown only for completed races */}
+          {race.status === 'completed' && raceResult && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-card p-6 mt-6 md:col-span-2"
+            >
+              <h2 className="text-lg font-bold text-foreground mb-4">Race Pace Analysis</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                {/* Winning margin insight */}
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                    Winning Margin
+                  </p>
+                  <p className="font-racing text-2xl font-bold text-foreground">
+                    {raceResult.results[1]?.gap ?? 'N/A'}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">P1 gap to P2</p>
+                </div>
+
+                {/* Average lap delta */}
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                    Avg Lap Delta (P1 vs P2)
+                  </p>
+                  {(() => {
+                    const totalLaps = raceResult.results[0]?.laps || 1;
+                    const marginStr = raceResult.results[1]?.gap || '';
+                    const match = marginStr.match(/\+?(\d+):?(\d+\.?\d*)/);
+                    if (!match) return <p className="font-racing text-2xl font-bold text-foreground">N/A</p>;
+                    const totalSeconds = match[1].includes(':')
+                      ? parseInt(match[1]) * 60 + parseFloat(match[2])
+                      : parseFloat(match[1] + '.' + (match[2] || '0'));
+                    const avgDelta = totalSeconds / totalLaps;
+                    return (
+                      <>
+                        <p className="font-racing text-2xl font-bold text-primary">
+                          +{avgDelta.toFixed(3)}s
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">per lap average</p>
+                      </>
+                    );
+                  })()}
+                </div>
+
+                {/* Fastest lap */}
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                    Fastest Lap
+                  </p>
+                  <p className="font-racing text-2xl font-bold text-foreground">
+                    {raceResult.fastestLapTime}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {raceResult.fastestLapDriver} — {raceResult.fastestLap}
+                  </p>
+                </div>
+              </div>
+
+              {/* Competitiveness indicator */}
+              <div className="mt-4 p-4 bg-muted/20 rounded-lg">
+                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                  Race Verdict
+                </p>
+                {(() => {
+                  const marginStr = raceResult.results[1]?.gap || '';
+                  const seconds = parseFloat(marginStr.replace('+', '').replace('s', ''));
+                  let verdict = '';
+                  let color = '';
+                  if (seconds < 5) { verdict = 'Photo finish — exceptional race battle'; color = 'text-green-500'; }
+                  else if (seconds < 30) { verdict = 'Close race — strategy was decisive'; color = 'text-yellow-500'; }
+                  else if (seconds < 60) { verdict = 'Controlled win — consistent pace advantage'; color = 'text-orange-500'; }
+                  else { verdict = 'Dominant performance — significant gap to second'; color = 'text-red-500'; }
+                  return <p className={`text-sm font-medium ${color}`}>{verdict}</p>;
+                })()}
+              </div>
+            </motion.div>
+          )}
+
           {/* Lap Records */}
           {circuit?.lapRecords && (
             <motion.div
