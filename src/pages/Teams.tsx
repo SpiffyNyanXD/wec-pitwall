@@ -1,8 +1,8 @@
 import SEOHead from "@/components/SEOHead";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flag, Users, MapPin } from 'lucide-react';
+import { Trophy, Flag, Users, MapPin, Search, X, Car } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -83,11 +83,22 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
 
 const Teams = () => {
   const [activeFilter, setActiveFilter] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Use 2025 data to match active season
-  const hypercars = teams2025.filter(t => t.class === 'HYPERCAR');
-  const lmp2 = teams2025.filter(t => t.class === 'LMP2');
-  const lmgt3 = teams2025.filter(t => t.class === 'LMGT3');
+  const filteredTeams = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return teams2025;
+    return teams2025.filter(t =>
+      t.name.toLowerCase().includes(q) ||
+      t.manufacturer.toLowerCase().includes(q) ||
+      t.carNumber.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
+
+  const hypercars = filteredTeams.filter(t => t.class === 'HYPERCAR');
+  const lmp2 = filteredTeams.filter(t => t.class === 'LMP2');
+  const lmgt3 = filteredTeams.filter(t => t.class === 'LMGT3');
 
   const manufacturers = ['All', 'Ferrari', 'Toyota', 'BMW', 'Cadillac', 'Alpine', 'Peugeot', 'Aston Martin', 'Genesis'];
 
@@ -122,6 +133,25 @@ const Teams = () => {
           <p className="text-muted-foreground">Season Teams & Manufacturers</p>
         </motion.div>
 
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search teams, manufacturers, car numbers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 bg-muted/30 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
         <Tabs defaultValue="HYPERCAR" className="w-full">
           <TabsList className="grid w-full max-w-lg grid-cols-3 mb-8 h-12">
             <TabsTrigger value="HYPERCAR" className="font-racing h-10 px-4">Hypercar</TabsTrigger>
@@ -151,13 +181,8 @@ const Teams = () => {
                 <TeamCard key={team.id} team={team} index={index} />
               ))}
               {filteredHypercars.length === 0 && (
-                <div className="col-span-full">
-                  <EmptyState
-                    icon={Car}
-                    title="No teams found"
-                    description={`No ${activeFilter} entries found.`}
-                    action={activeFilter !== 'All' ? { label: "View all teams", onClick: () => setActiveFilter('All') } : undefined}
-                  />
+                <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
+                  No hypercar teams found matching your filters.
                 </div>
               )}
             </div>
@@ -168,6 +193,11 @@ const Teams = () => {
               {lmp2.map((team, index) => (
                 <TeamCard key={team.id} team={team} index={index} />
               ))}
+              {lmp2.length === 0 && (
+                <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
+                  No LMP2 teams found matching "{searchQuery}".
+                </div>
+              )}
             </div>
           </TabsContent>
 
@@ -176,6 +206,11 @@ const Teams = () => {
               {lmgt3.map((team, index) => (
                 <TeamCard key={team.id} team={team} index={index} />
               ))}
+              {lmgt3.length === 0 && (
+                <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
+                  No LMGT3 teams found matching "{searchQuery}".
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>

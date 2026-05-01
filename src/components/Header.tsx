@@ -170,7 +170,7 @@ const Header = () => {
                 WEC <span className="text-primary">Pitwall</span>
               </h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                Fan-Made Companion
+                WEC Analytics Platform
               </p>
             </div>
           </Link>

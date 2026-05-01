@@ -1,13 +1,24 @@
 import SEOHead from "@/components/SEOHead";
-import { useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapPin, Route, Calendar } from 'lucide-react';
+import { MapPin, Route, Calendar, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { circuits } from '@/data/wecData';
 
 const Circuits = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredCircuits = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return circuits;
+    return circuits.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.country.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
@@ -34,8 +45,27 @@ const Circuits = () => {
           <p className="text-muted-foreground">FIA World Endurance Championship venues</p>
         </motion.div>
 
+        <div className="relative mb-8 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search by circuit name or country..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 bg-muted/30 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {circuits.map((circuit, index) => (
+          {filteredCircuits.map((circuit, index) => (
             <motion.div
               key={circuit.id}
               initial={{ opacity: 0, y: 20 }}
@@ -81,6 +111,12 @@ const Circuits = () => {
             </motion.div>
           ))}
         </div>
+
+        {filteredCircuits.length === 0 && (
+          <div className="py-12 text-center text-muted-foreground text-sm">
+            No circuits found for "{searchQuery}"
+          </div>
+        )}
       </main>
     </div>
   );

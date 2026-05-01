@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Flag, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -24,6 +24,7 @@ const Auth = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signIn, signUp, session, user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleUsernameChange = (value: string) => {
     const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -110,7 +111,8 @@ const Auth = () => {
           }
         } else {
           toast.success('Welcome back!');
-          navigate('/');
+          const from = (location.state as { from?: string })?.from || '/';
+          navigate(from, { replace: true });
         }
       } else {
         const { error } = await signUp(email, password, displayName);
@@ -130,7 +132,8 @@ const Auth = () => {
             // Note: profile row is auto-created by trigger, we just update it
           }
           toast.success('Account created! Please check your email to verify.');
-          navigate('/');
+          const from = (location.state as { from?: string })?.from || '/';
+          navigate(from, { replace: true });
         }
       }
     } finally {
