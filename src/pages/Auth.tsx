@@ -84,72 +84,74 @@ const Auth = () => {
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    if (!isLogin) {
-      if (!username || username.length < 3) {
-        toast.error('Username must be at least 3 characters');
-        return;
+  const handleLoginSubmit = async () => {
+    const { error } = await signIn(email, password);
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        toast.error('Invalid email or password');
+      } else {
+        toast.error(error.message);
       }
-      if (usernameStatus === 'taken') {
-        toast.error('That username is already taken');
-        return;
+    } else {
+      toast.success('Welcome back!');
+      if (rememberMe) {
+        localStorage.setItem('wec_remembered_email', email);
+      } else {
+        localStorage.removeItem('wec_remembered_email');
       }
-      if (usernameStatus === 'invalid') {
-        toast.error('Username can only contain letters, numbers, and underscores');
-        return;
-      }
-      if (usernameStatus === 'checking') {
-        toast.error('Please wait while we check username availability');
-        return;
-      }
+      const from = (location.state as { from?: string })?.from || '/';
+      navigate(from, { replace: true });
+    }
+  };
+
+  const handleSignUpSubmit = async () => {
+    if (!username || username.length < 3) {
+      toast.error('Username must be at least 3 characters');
+      return;
+    }
+    if (usernameStatus === 'taken') {
+      toast.error('That username is already taken');
+      return;
+    }
+    if (usernameStatus === 'invalid') {
+      toast.error('Username can only contain letters, numbers, and underscores');
+      return;
+    }
+    if (usernameStatus === 'checking') {
+      toast.error('Please wait while we check username availability');
+      return;
     }
 
-    setIsSubmitting(true);
+    const { error } = await signUp(email, password, displayName);
+    if (error) {
+      if (error.message.includes('already registered')) {
+        toast.error('This email is already registered. Try logging in instead.');
+      } else {
+        toast.error(error.message);
+      }
+    } else {
+      if (username) {
+        await supabase
+          .from('profiles')
+          .update({ username, display_name: displayName || null })
+          .eq('user_id', session?.user?.id || '');
+      }
+      toast.success('Account created! Please check your email to verify.');
+      const from = (location.state as { from?: string })?.from || '/';
+      navigate(from, { replace: true });
+    }
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            toast.error('Invalid email or password');
-          } else {
-            toast.error(error.message);
-          }
-        } else {
-          toast.success('Welcome back!');
-          if (rememberMe) {
-            localStorage.setItem('wec_remembered_email', email);
-          } else {
-            localStorage.removeItem('wec_remembered_email');
-          }
-          const from = (location.state as { from?: string })?.from || '/';
-          navigate(from, { replace: true });
-        }
+        await handleLoginSubmit();
       } else {
-        const { error } = await signUp(email, password, displayName);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            toast.error('This email is already registered. Try logging in instead.');
-          } else {
-            toast.error(error.message);
-          }
-        } else {
-          // Save username to profile
-          if (username) {
-            await supabase
-              .from('profiles')
-              .update({ username, display_name: displayName || null })
-              .eq('user_id', session?.user?.id || '');
-            // Note: profile row is auto-created by trigger, we just update it
-          }
-          toast.success('Account created! Please check your email to verify.');
-          const from = (location.state as { from?: string })?.from || '/';
-          navigate(from, { replace: true });
-        }
+        await handleSignUpSubmit();
       }
     } finally {
       setIsSubmitting(false);

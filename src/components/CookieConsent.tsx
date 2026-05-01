@@ -1,20 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 const CookieConsent = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [hasConsented, setHasConsented] = useState(false);
-
-  useEffect(() => {
-    // Check if user has already consented
-    const consentGiven = localStorage.getItem('wec_cookie_consent');
-    if (!consentGiven) {
-      setIsVisible(true);
-    } else {
-      setHasConsented(true);
-    }
-  }, []);
+  // Use lazy initialization to check localStorage synchronously
+  const [isVisible, setIsVisible] = useState(() => {
+    return !localStorage.getItem('wec_cookie_consent');
+  });
+  const [hasConsented, setHasConsented] = useState(() => {
+    return !!localStorage.getItem('wec_cookie_consent');
+  });
 
   const handleAccept = () => {
     localStorage.setItem('wec_cookie_consent', 'true');
