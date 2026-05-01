@@ -5,8 +5,9 @@ const CookiePolicy = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`Cookie Policy | ${APP_INFO.NAME}`}
+        title="Cookie Policy"
         description="Cookie usage and preference controls for WEC Pitwall."
+        url="/cookie-policy"
       />
 
       <main className="container max-w-4xl py-10 px-4">
