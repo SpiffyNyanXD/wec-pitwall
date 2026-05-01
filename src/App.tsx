@@ -37,6 +37,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const DriverComparison = lazy(() => import('./pages/DriverComparison'));
 
+import CookieConsent from '@/components/CookieConsent';
+
 const queryClient = new QueryClient();
 
 
@@ -119,6 +121,7 @@ const App = () => (
         </SeasonProvider>
       </AuthProvider>
     </ThemeProvider>
+    <CookieConsent />
     <SpeedInsights />
   </QueryClientProvider>
 );
