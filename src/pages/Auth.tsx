@@ -1,6 +1,5 @@
 import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { supabase } from '@/integrations/supabase/client';
 import { Flag, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 const emailSchema = z.string().email('Please enter a valid email address');
