@@ -1,83 +1,100 @@
-import { APP_INFO } from '@/lib/constants';
+import { motion } from 'framer-motion';
+import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 
 const CookiePolicy = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`Cookie Policy | ${APP_INFO.NAME}`}
-        description="Cookie usage and preference controls for WEC Pitwall."
+        title="Cookie Policy"
+        description="WEC Pitwall Cookie Policy — how and why we use cookies."
+        url="/cookie-policy"
+        noIndex={false}
       />
+      <Header />
+      <main className="container max-w-3xl py-12 px-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
 
-      <main className="container max-w-4xl py-10 px-4">
-        <h1 className="text-3xl font-bold tracking-tight">Cookie Policy</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Last updated May 01, 2026</p>
+          <div className="mb-10">
+            <h1 className="text-4xl font-black uppercase tracking-tight text-foreground mb-2">
+              Cookie Policy
+            </h1>
+            <p className="text-sm text-muted-foreground">Last updated: May 02, 2026</p>
+          </div>
 
-        <div className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
-          <p>
-            This Cookie Policy explains how <strong>{APP_INFO.NAME}</strong> ("Company", "we", "us", and
-            "our") uses cookies and similar technologies to recognize you when you visit our website at{' '}
-            <a href="https://wec-pitwall.vercel.app" target="_blank" rel="noreferrer noopener">
-              https://wec-pitwall.vercel.app
-            </a>
-            .
-          </p>
+          <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">
 
-          <h2>What are cookies?</h2>
-          <p>
-            Cookies are small data files that are placed on your computer or mobile device when you visit a
-            website. Cookies are widely used by website owners to make websites work, or work more efficiently,
-            and to provide reporting information.
-          </p>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">What Are Cookies?</h2>
+              <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners in order to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
+            </section>
 
-          <h2>Why do we use cookies?</h2>
-          <p>
-            We use cookies for essential functionality and to improve your experience. Some cookies are required
-            for technical reasons so the Website can operate correctly.
-          </p>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">How We Use Cookies</h2>
+              <p>WEC Pitwall uses cookies and similar tracking technologies to:</p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Maintain your session after login (authentication cookies via Supabase)</li>
+                <li>Remember your preferences (theme, timezone, display settings)</li>
+                <li>Store your cookie consent decision</li>
+                <li>Improve the performance and reliability of the platform</li>
+              </ul>
+            </section>
 
-          <h2>How can I control cookies?</h2>
-          <p>
-            You can choose whether to accept or reject cookies through your browser settings. If you reject
-            cookies, parts of this Website may not function as intended.
-          </p>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">Types of Cookies We Use</h2>
+              <div className="glass-card overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/30">
+                      <th className="text-left p-3 font-semibold text-foreground">Type</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Purpose</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-border">
+                      <td className="p-3 font-medium text-foreground">Essential</td>
+                      <td className="p-3">Authentication session (Supabase auth token)</td>
+                      <td className="p-3">Session</td>
+                    </tr>
+                    <tr className="border-b border-border">
+                      <td className="p-3 font-medium text-foreground">Functional</td>
+                      <td className="p-3">Theme preference, timezone, display settings</td>
+                      <td className="p-3">1 year</td>
+                    </tr>
+                    <tr className="border-b border-border">
+                      <td className="p-3 font-medium text-foreground">Preference</td>
+                      <td className="p-3">Cookie consent decision</td>
+                      <td className="p-3">1 year</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-foreground">localStorage</td>
+                      <td className="p-3">Remembered email, first visit flag</td>
+                      <td className="p-3">Until cleared</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
 
-          <h3>Unclassified cookies</h3>
-          <p>These cookies are currently being reviewed and categorized with their providers.</p>
-          <table>
-            <tbody>
-              <tr>
-                <th>Name</th>
-                <td>wec-timezone</td>
-              </tr>
-              <tr>
-                <th>Provider</th>
-                <td>wec-pitwall.vercel.app</td>
-              </tr>
-              <tr>
-                <th>Type</th>
-                <td>html_local_storage</td>
-              </tr>
-              <tr>
-                <th>Expires in</th>
-                <td>persistent</td>
-              </tr>
-            </tbody>
-          </table>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">Third-Party Cookies</h2>
+              <p>We use Supabase for authentication and database services. Supabase may set cookies necessary for session management. We do not use any advertising or tracking cookies from third parties.</p>
+            </section>
 
-          <h2>How can I control cookies on my browser?</h2>
-          <ul>
-            <li><a href="https://support.google.com/chrome/answer/95647#zippy=%2Callow-or-block-cookies" target="_blank" rel="noreferrer noopener">Chrome</a></li>
-            <li><a href="https://support.microsoft.com/en-us/windows/delete-and-manage-cookies-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noreferrer noopener">Internet Explorer</a></li>
-            <li><a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop?redirectslug=enable-and-disable-cookies-website-preferences&redirectlocale=en-US" target="_blank" rel="noreferrer noopener">Firefox</a></li>
-            <li><a href="https://support.apple.com/en-ie/guide/safari/sfri11471/mac" target="_blank" rel="noreferrer noopener">Safari</a></li>
-            <li><a href="https://support.microsoft.com/en-us/windows/microsoft-edge-browsing-data-and-privacy-bb8174ba-9d73-dcf2-9b4a-c582b4e640dd" target="_blank" rel="noreferrer noopener">Edge</a></li>
-            <li><a href="https://help.opera.com/en/latest/web-preferences/" target="_blank" rel="noreferrer noopener">Opera</a></li>
-          </ul>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">How to Control Cookies</h2>
+              <p>You can control and/or delete cookies as you wish. You can delete all cookies that are already on your computer and you can set most browsers to prevent them from being placed. However, if you do this, you may have to manually adjust some preferences every time you visit a site and some services and functionalities may not work.</p>
+              <p className="mt-2">To manage your cookie preferences on WEC Pitwall, you can use the cookie consent banner that appears on your first visit, or clear your browser's local storage and cookies to reset your consent decision.</p>
+            </section>
 
-          <h2>Where can I get further information?</h2>
-          <p>If you have any questions about our use of cookies, please contact us through the app channels.</p>
-        </div>
+            <section>
+              <h2 className="text-lg font-bold text-foreground mb-3">Contact Us</h2>
+              <p>If you have questions about our use of cookies, contact us at <a href="mailto:privacy@wecpitwall.com" className="text-primary hover:underline">privacy@wecpitwall.com</a>.</p>
+            </section>
+
+          </div>
+        </motion.div>
       </main>
     </div>
   );

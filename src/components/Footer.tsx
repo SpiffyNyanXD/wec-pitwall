@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { APP_INFO } from '@/lib/constants';
 
 const Footer = () => {
-  const [openModal, setOpenModal] = useState<'privacy' | 'terms' | 'contact' | null>(null);
+  const [openModal, setOpenModal] = useState<'terms' | 'contact' | null>(null);
 
   return (
     <footer className="border-t border-border/50 mt-8">
@@ -13,21 +13,7 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} {APP_INFO.NAME}. {APP_INFO.DISCLAIMER}</p>
 
           <div className="flex items-center gap-4">
-            <Dialog open={openModal === 'privacy'} onOpenChange={(open) => setOpenModal(open ? 'privacy' : null)}>
-              <DialogTrigger asChild>
-                <button className="hover:text-foreground transition-colors tap-highlight">Privacy</button>
-              </DialogTrigger>
-              <DialogContent className="glass-card border-glass-border">
-                <DialogHeader>
-                  <DialogTitle className="font-racing">Privacy Policy</DialogTitle>
-                </DialogHeader>
-                <div className="text-sm text-muted-foreground space-y-4">
-                  <p>{APP_INFO.NAME} is a fan-made application. We collect minimal data necessary for the app to function.</p>
-                  <p>If you create an account, we store your email and preferences securely. We do not share your data with third parties.</p>
-                  <p>This is not an official FIA WEC product and is not affiliated with the FIA or WEC.</p>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Link to="/privacy" className="hover:text-foreground transition-colors tap-highlight">Privacy Policy</Link>
 
             <Dialog open={openModal === 'terms'} onOpenChange={(open) => setOpenModal(open ? 'terms' : null)}>
               <DialogTrigger asChild>
