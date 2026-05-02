@@ -35,6 +35,7 @@ const LeMans = lazy(() => import("./pages/LeMans"));
 const Manufacturers = lazy(() => import("./pages/Manufacturers"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const DriverComparison = lazy(() => import('./pages/DriverComparison'));
 
@@ -105,7 +106,16 @@ const App = () => (
                   <Notifications />
                 </RequireAuth>
               } />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/privacy" element={
+                <Suspense fallback={<><Header /></>}>
+                  <PrivacyPolicy />
+                </Suspense>
+              } />
+              <Route path="/cookie-policy" element={
+                <Suspense fallback={<><Header /></>}>
+                  <CookiePolicy />
+                </Suspense>
+              } />
               <Route path="/compare" element={
                 <Suspense fallback={<><Header /><PageLoader /></>}>
                   <DriverComparison />
