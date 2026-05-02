@@ -1,4 +1,5 @@
 import SEOHead from "@/components/SEOHead";
+import { useMemo } from "react";
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';

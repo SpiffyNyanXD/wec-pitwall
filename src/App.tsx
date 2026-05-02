@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import CookieConsent from "@/components/CookieConsent";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -119,6 +120,7 @@ const App = () => (
         </SeasonProvider>
       </AuthProvider>
     </ThemeProvider>
+    <CookieConsent />
     <SpeedInsights />
   </QueryClientProvider>
 );

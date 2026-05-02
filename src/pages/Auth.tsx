@@ -17,6 +17,7 @@ const passwordSchema = z.string().min(6, 'Password must be at least 6 characters
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
@@ -75,67 +76,82 @@ const Auth = () => {
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    if (!isLogin) {
-      if (!username || username.length < 3) {
-        toast.error('Username must be at least 3 characters');
-        return;
+  useEffect(() => {
+    const remembered = localStorage.getItem('wec_remembered_email');
+    if (remembered) {
+      setEmail(remembered);
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleLoginSubmit = async () => {
+    const { error } = await signIn(email, password);
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        toast.error('Invalid email or password');
+      } else {
+        toast.error(error.message);
       }
-      if (usernameStatus === 'taken') {
-        toast.error('That username is already taken');
-        return;
+    } else {
+      toast.success('Welcome back!');
+      if (rememberMe) {
+        localStorage.setItem('wec_remembered_email', email);
+      } else {
+        localStorage.removeItem('wec_remembered_email');
       }
-      if (usernameStatus === 'invalid') {
-        toast.error('Username can only contain letters, numbers, and underscores');
-        return;
-      }
-      if (usernameStatus === 'checking') {
-        toast.error('Please wait while we check username availability');
-        return;
-      }
+      const from = (location.state as { from?: string })?.from || '/';
+      navigate(from, { replace: true });
+    }
+  };
+
+  const handleSignUpSubmit = async () => {
+    if (!username || username.length < 3) {
+      toast.error('Username must be at least 3 characters');
+      return;
+    }
+    if (usernameStatus === 'taken') {
+      toast.error('That username is already taken');
+      return;
+    }
+    if (usernameStatus === 'invalid') {
+      toast.error('Username can only contain letters, numbers, and underscores');
+      return;
+    }
+    if (usernameStatus === 'checking') {
+      toast.error('Please wait while we check username availability');
+      return;
     }
 
-    setIsSubmitting(true);
+    const { error } = await signUp(email, password, displayName);
+    if (error) {
+      if (error.message.includes('already registered')) {
+        toast.error('This email is already registered. Try logging in instead.');
+      } else {
+        toast.error(error.message);
+      }
+    } else {
+      if (username) {
+        await supabase
+          .from('profiles')
+          .update({ username, display_name: displayName || null })
+          .eq('user_id', session?.user?.id || '');
+      }
+      toast.success('Account created! Please check your email to verify.');
+      const from = (location.state as { from?: string })?.from || '/';
+      navigate(from, { replace: true });
+    }
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            toast.error('Invalid email or password');
-          } else {
-            toast.error(error.message);
-          }
-        } else {
-          toast.success('Welcome back!');
-          const from = (location.state as { from?: string })?.from || '/';
-          navigate(from, { replace: true });
-        }
+        await handleLoginSubmit();
       } else {
-        const { error } = await signUp(email, password, displayName);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            toast.error('This email is already registered. Try logging in instead.');
-          } else {
-            toast.error(error.message);
-          }
-        } else {
-          // Save username to profile
-          if (username) {
-            await supabase
-              .from('profiles')
-              .update({ username, display_name: displayName || null })
-              .eq('user_id', session?.user?.id || '');
-            // Note: profile row is auto-created by trigger, we just update it
-          }
-          toast.success('Account created! Please check your email to verify.');
-          const from = (location.state as { from?: string })?.from || '/';
-          navigate(from, { replace: true });
-        }
+        await handleSignUpSubmit();
       }
     } finally {
       setIsSubmitting(false);
@@ -171,20 +187,19 @@ const Auth = () => {
         className="w-full max-w-md relative z-10"
       >
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-4">
+        <div className="flex items-center justify-center gap-3 mb-2">
           <div className="relative">
-            <div className="w-12 h-12 rounded-lg racing-gradient flex items-center justify-center">
-              <Flag className="w-6 h-6 text-primary-foreground" />
+            <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+              <span className="font-racing text-2xl font-bold text-primary">W</span>
             </div>
             <div className="absolute -inset-1 rounded-lg racing-gradient opacity-30 blur-md -z-10" />
           </div>
-          <span className="text-2xl font-racing font-bold text-gradient">WEC Pitwall</span>
+          <h1 className="text-4xl font-black text-foreground">WEC Pitwall</h1>
         </div>
 
         {/* Subtitle */}
-        <p className="text-center text-sm text-muted-foreground mb-6 -mt-4">
-          Your fan-made companion for the FIA World Endurance Championship.
-          Track races, standings, drivers and teams — all in one place.
+        <p className="text-center text-sm text-muted-foreground mb-6 mt-3">
+          Analytics platform for the FIA World Endurance Championship. Track standings, race strategy, teams and drivers.
         </p>
 
         {/* Feature highlights */}
@@ -279,7 +294,7 @@ const Auth = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="racer@wechub.com"
+                  placeholder="racer@wecpitwall.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -304,6 +319,31 @@ const Auth = () => {
                   className="pl-10 bg-muted/50 border-border focus:border-primary"
                 />
               </div>
+            </div>
+
+            <div className="flex justify-between items-center mt-2 mb-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border border-border bg-muted cursor-pointer"
+                />
+                <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+                  Remember Me
+                </label>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  console.log('Password reset flow not implemented');
+                  toast.info('Password reset instructions sent to your email (Demo)');
+                }}
+                className="text-xs text-primary hover:underline transition-colors"
+              >
+                Forgot Password?
+              </button>
             </div>
 
             <Button

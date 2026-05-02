@@ -32,7 +32,7 @@ const RaceProfile = () => {
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
   const race = allRaces.find(r => r.id === id);
-  const resultSet = raceResults.find(r => r.raceId === id);
+  const raceResult = raceResults.find(r => r.raceId === id);
 
   useEffect(() => {
     if (race) {
@@ -411,10 +411,10 @@ const RaceProfile = () => {
                     <span className="font-medium">{race.winningTeam}</span>
                   </div>
                 )}
-                {resultSet?.polePosition ? (
+                {raceResult?.polePosition ? (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Pole Position</span>
-                    <span className="font-medium">{resultSet.polePosition} — {resultSet.poleTime}</span>
+                    <span className="font-medium">{raceResult.polePosition} — {raceResult.poleTime}</span>
                   </div>
                 ) : race.polePosition && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
@@ -422,10 +422,10 @@ const RaceProfile = () => {
                     <span className="font-medium">{race.polePosition}</span>
                   </div>
                 )}
-                {resultSet?.fastestLap ? (
+                {raceResult?.fastestLap ? (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Fastest Lap</span>
-                    <span className="font-medium text-wec-gold">{resultSet.fastestLapTime}</span>
+                    <span className="font-medium text-wec-gold">{raceResult.fastestLapTime}</span>
                   </div>
                 ) : race.fastestLap && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
@@ -443,7 +443,7 @@ const RaceProfile = () => {
           </motion.div>
 
           {/* Full Results Table */}
-          {resultSet && race.status === 'completed' && (
+          {raceResult && race.status === 'completed' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -461,15 +461,15 @@ const RaceProfile = () => {
                     <div className="flex items-center gap-2 text-sm">
                       <div className="w-2 h-2 rounded-full bg-primary" />
                       <span className="text-muted-foreground">Pole:</span>
-                      <span className="font-medium">{resultSet.polePosition}</span>
-                      <span className="font-racing text-primary">{resultSet.poleTime}</span>
+                      <span className="font-medium">{raceResult.polePosition}</span>
+                      <span className="font-racing text-primary">{raceResult.poleTime}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <div className="w-2 h-2 rounded-full bg-wec-gold" />
                       <span className="text-muted-foreground">Fastest Lap:</span>
-                      <span className="font-medium">{resultSet.fastestLap}</span>
-                      <span className="font-racing text-wec-gold">{resultSet.fastestLapTime}</span>
-                      <span className="text-muted-foreground text-xs">({resultSet.fastestLapDriver})</span>
+                      <span className="font-medium">{raceResult.fastestLap}</span>
+                      <span className="font-racing text-wec-gold">{raceResult.fastestLapTime}</span>
+                      <span className="text-muted-foreground text-xs">({raceResult.fastestLapDriver})</span>
                     </div>
                   </div>
                 </CardHeader>
@@ -486,7 +486,7 @@ const RaceProfile = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {resultSet.results.map((result, i) => (
+                        {raceResult.results.map((result, i) => (
                           <tr
                             key={result.position}
                             className={`border-b border-glass-border/50 transition-colors hover:bg-muted/20 ${
