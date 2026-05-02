@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const CookieConsent = () => {
+interface CookieConsentProps {
+  onConsentChange?: (consent: boolean) => void;
+}
+
+const CookieConsent = ({ onConsentChange }: CookieConsentProps) => {
   // Use lazy initialization to check localStorage synchronously
   const [isVisible, setIsVisible] = useState(() => {
     return !localStorage.getItem('wec_cookie_consent');
@@ -15,11 +19,13 @@ const CookieConsent = () => {
     localStorage.setItem('wec_cookie_consent', 'true');
     setIsVisible(false);
     setHasConsented(true);
+    onConsentChange?.(true);
   };
 
   const handleReject = () => {
     localStorage.setItem('wec_cookie_consent', 'false');
     setIsVisible(false);
+    onConsentChange?.(false);
   };
 
   if (!isVisible || hasConsented) return null;
@@ -36,7 +42,7 @@ const CookieConsent = () => {
           <p className="text-sm text-foreground">
             We use cookies to improve your experience. By using our site, you consent to our use of cookies.
           </p>
-          <a href="/privacy" className="text-xs text-primary hover:underline mt-1 inline-block">
+          <a href="/cookie-policy" className="text-xs text-primary hover:underline mt-1 inline-block">
             Learn more
           </a>
         </div>
@@ -57,6 +63,7 @@ const CookieConsent = () => {
         <button
           onClick={handleReject}
           className="p-1.5 rounded-lg hover:bg-muted transition-colors"
+          aria-label="Dismiss cookie banner"
         >
           <X className="w-4 h-4 text-muted-foreground" />
         </button>

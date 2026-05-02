@@ -338,7 +338,7 @@ const Auth = () => {
                 type="button"
                 onClick={() => {
                   console.log('Password reset flow not implemented');
-                  toast.info('Password reset instructions sent to your email (Demo)');
+                  toast.warn('Password reset is not available in this demo');
                 }}
                 className="text-xs text-primary hover:underline transition-colors"
               >
