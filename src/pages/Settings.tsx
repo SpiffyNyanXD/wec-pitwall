@@ -31,7 +31,7 @@ const SettingsPage = () => {
     favoriteTeamAlerts: true,
     pushNotifications: false,
   });
-  const [marketingConsent, setMarketingConsent] = useState(true);
+  const [marketingConsent, setMarketingConsent] = useState<boolean>(profile?.marketing_emails ?? true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,8 +46,8 @@ const SettingsPage = () => {
     if (profile) {
       setEditUsername(profile.username ?? '');
       setEditDisplayName(profile.display_name ?? '');
-      if (profile.marketing_consent !== undefined) {
-        setMarketingConsent(profile.marketing_consent);
+      if (profile.marketing_emails !== undefined) {
+        setMarketingConsent(profile.marketing_emails);
       }
     }
   }, [profile]);
@@ -57,7 +57,7 @@ const SettingsPage = () => {
     if (!user) return;
     const { error } = await supabase
       .from('profiles')
-      .update({ marketing_consent: checked })
+      .update({ marketing_emails: checked })
       .eq('user_id', user.id);
     if (error) {
       console.error('Failed to update marketing consent:', error);
@@ -65,6 +65,7 @@ const SettingsPage = () => {
       toast.error('Failed to update privacy preferences');
     } else {
       toast.success('Privacy preferences updated');
+      await refreshProfile();
     }
   };
 

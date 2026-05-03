@@ -150,7 +150,7 @@ const Auth = () => {
     }
     setIsSubmitting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: 'https://wec-pitwall.vercel.app/reset-password',
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     setIsSubmitting(false);
     if (error) {
@@ -185,7 +185,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-8">
       <SEOHead
         title="Sign In"
         description="Sign in to WEC Pitwall to save favourites and get race alerts."

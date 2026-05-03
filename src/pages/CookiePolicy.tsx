@@ -10,8 +10,8 @@ const cookiePolicyHTML = `
   [data-custom-class='heading_2'], [data-custom-class='heading_2'] * { font-family: Arial !important; font-size: 17px !important; color: #000000 !important; }
   [data-custom-class='body_text'], [data-custom-class='body_text'] * { color: #595959 !important; font-size: 14px !important; font-family: Arial !important; }
   [data-custom-class='link'], [data-custom-class='link'] * { color: #3030F1 !important; font-size: 14px !important; font-family: Arial !important; word-break: break-word !important; }
-  ul { list-style-type: square; }
-  ul > li > ul { list-style-type: circle; }
+  [data-custom-class='body'] ul { list-style-type: square; }
+  [data-custom-class='body'] ul > li > ul { list-style-type: circle; }
 </style>
 <div data-custom-class="body">
   <div><strong><span style="font-size: 26px;"><span data-custom-class="title">COOKIE POLICY</span></span></strong></div>
@@ -98,7 +98,7 @@ export default function CookiePolicy() {
       <div className="min-h-screen bg-background px-4 py-16">
         <div className="max-w-3xl mx-auto">
           <div
-            className="bg-white rounded-lg p-8 text-gray-800"
+            className="glass-card p-8 legal-content"
             dangerouslySetInnerHTML={{ __html: cookiePolicyHTML }}
           />
         </div>

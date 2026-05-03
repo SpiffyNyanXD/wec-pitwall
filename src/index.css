@@ -119,9 +119,25 @@
     @apply border-border;
   }
 
+  html {
+    height: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
     font-family: var(--font-body);
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -191,5 +207,42 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background: hsl(var(--muted));
     border-radius: 2px;
+  }
+
+  .legal-content [data-custom-class='body_text'],
+  .legal-content .terms-body {
+    color: var(--foreground) !important;
+    opacity: 0.85;
+  }
+
+  .legal-content [data-custom-class='title'],
+  .legal-content [data-custom-class='heading_1'],
+  .legal-content [data-custom-class='heading_2'],
+  .legal-content .terms-body h1,
+  .legal-content .terms-body h2 {
+    color: var(--foreground) !important;
+  }
+
+  .legal-content [data-custom-class='link'] a,
+  .legal-content a {
+    color: #E8002D !important;
+  }
+
+  /* Remove hardcoded backgrounds */
+  .legal-content * {
+    background: transparent !important;
+  }
+
+  .legal-content h2[id] {
+    scroll-margin-top: 80px;
+  }
+
+  .dsar-iframe-wrapper iframe {
+    background: white;
+  }
+
+  /* Dark mode: invert the iframe colors */
+  .dark .dsar-iframe-wrapper iframe {
+    filter: invert(1) hue-rotate(180deg);
   }
 }

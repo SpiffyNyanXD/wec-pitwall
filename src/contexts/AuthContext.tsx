@@ -8,7 +8,7 @@ interface Profile {
   username: string | null;
   display_name: string | null;
   avatar_url: string | null;
-  marketing_consent?: boolean;
+  marketing_emails: boolean;
 }
 
 interface AuthContextType {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfileLoading(true);
     const { data } = await supabase
       .from('profiles')
-      .select('id, user_id, username, display_name, avatar_url')
+      .select('id, user_id, username, display_name, avatar_url, marketing_emails')
       .eq('user_id', userId)
       .single();
     setProfile(data ?? null);
