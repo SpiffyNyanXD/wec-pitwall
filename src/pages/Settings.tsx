@@ -31,6 +31,7 @@ const SettingsPage = () => {
     favoriteTeamAlerts: true,
     pushNotifications: false,
   });
+  const [marketingConsent, setMarketingConsent] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,8 +46,27 @@ const SettingsPage = () => {
     if (profile) {
       setEditUsername(profile.username ?? '');
       setEditDisplayName(profile.display_name ?? '');
+      if (profile.marketing_consent !== undefined) {
+        setMarketingConsent(profile.marketing_consent);
+      }
     }
   }, [profile]);
+
+  const handleMarketingConsentChange = async (checked: boolean) => {
+    setMarketingConsent(checked);
+    if (!user) return;
+    const { error } = await supabase
+      .from('profiles')
+      .update({ marketing_consent: checked })
+      .eq('user_id', user.id);
+    if (error) {
+      console.error('Failed to update marketing consent:', error);
+      setMarketingConsent(!checked); // revert on error
+      toast.error('Failed to update privacy preferences');
+    } else {
+      toast.success('Privacy preferences updated');
+    }
+  };
 
   const handleUsernameEdit = (value: string) => {
     const cleaned = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -315,6 +335,33 @@ const SettingsPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Privacy Preferences */}
+          <div className="glass-card p-6 mb-6">
+            <h2 className="text-lg font-semibold text-foreground mb-4">Privacy Preferences</h2>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">Marketing Communications</p>
+                <p className="text-xs text-muted-foreground">
+                  Receive updates about new features and WEC season content. You can unsubscribe at any time.
+                </p>
+              </div>
+              <Switch
+                checked={marketingConsent}
+                onCheckedChange={handleMarketingConsentChange}
+                aria-label="Marketing communications toggle"
+              />
+            </div>
+
+            <p className="text-xs text-muted-foreground mt-4">
+              To exercise your data rights, contact us at{' '}
+              <a href="mailto:privacy@wecpitwall.com" className="text-primary hover:underline">
+                privacy@wecpitwall.com
+              </a>{' '}
+              or via this Settings page.
+            </p>
           </div>
 
           {/* Theme */}
