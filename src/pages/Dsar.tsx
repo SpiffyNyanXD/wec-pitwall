@@ -15,7 +15,7 @@ export default function Dsar() {
             <p className="text-xs font-semibold tracking-widest text-[#E8002D] uppercase">Privacy</p>
             <h1 className="text-3xl font-bold text-foreground">Data Subject Access Request</h1>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Exercise your privacy rights under GDPR and other regulations. We respond within 30 days.
+              Exercise your privacy rights under GDPR and other regulations. We aim to respond to subject access requests within one month; where necessary, we may extend this by up to two further months and will inform you within the first month.
             </p>
           </div>
 
