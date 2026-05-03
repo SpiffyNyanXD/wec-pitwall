@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import SEOHead from '@/components/SEOHead';
+import Header from '@/components/Header';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -49,7 +52,8 @@ export default function ResetPassword() {
         description="Set a new password for your WEC Pitwall account."
         noIndex={true}
       />
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <Header />
+      <div className="min-h-screen bg-background flex items-center justify-center px-4 pt-20">
         <div className="glass-card p-8 w-full max-w-md space-y-6">
           <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
 
@@ -57,27 +61,25 @@ export default function ResetPassword() {
           {success && <p className="text-sm text-primary">{success}</p>}
 
           <div className="space-y-4">
-            <input
+            <Input
               type="password"
               placeholder="New password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border border-border rounded px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
             />
-            <input
+            <Input
               type="password"
               placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-transparent border border-border rounded px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
             />
-            <button
+            <Button
               onClick={handleReset}
               disabled={isLoading}
-              className="w-full racing-gradient text-white py-2 rounded font-semibold disabled:opacity-50"
+              className="w-full racing-gradient text-white"
             >
               {isLoading ? 'Updating...' : 'Update Password'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

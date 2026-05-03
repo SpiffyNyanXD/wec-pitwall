@@ -12,12 +12,12 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} {APP_INFO.NAME}. {APP_INFO.DISCLAIMER}</p>
 
-          <div className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-foreground transition-colors tap-highlight">Privacy Policy</Link>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+            <Link to="/privacy" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Privacy Policy</Link>
 
             <Dialog open={openModal === 'terms'} onOpenChange={(open) => setOpenModal(open ? 'terms' : null)}>
               <DialogTrigger asChild>
-                <button className="hover:text-foreground transition-colors tap-highlight">Terms</button>
+                <button className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Terms</button>
               </DialogTrigger>
               <DialogContent className="glass-card border-glass-border">
                 <DialogHeader>
@@ -33,7 +33,7 @@ const Footer = () => {
 
             <Dialog open={openModal === 'contact'} onOpenChange={(open) => setOpenModal(open ? 'contact' : null)}>
               <DialogTrigger asChild>
-                <button className="hover:text-foreground transition-colors tap-highlight">Contact</button>
+                <button className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Contact</button>
               </DialogTrigger>
               <DialogContent className="glass-card border-glass-border">
                 <DialogHeader>
@@ -46,15 +46,18 @@ const Footer = () => {
               </DialogContent>
             </Dialog>
 
-            <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight">Cookie Policy</Link>
+            <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Cookie Policy</Link>
 
-            <Link to="/terms" className="hover:text-foreground transition-colors tap-highlight">Terms of Use</Link>
+            <Link to="/terms" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Terms of Use</Link>
 
-            <Link to="/data-request" className="hover:text-foreground transition-colors tap-highlight">Data Request</Link>
+            <Link to="/data-request" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Data Request</Link>
 
-            <a href="#" className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight">
+            <button
+              type="button"
+              className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight bg-transparent border-none p-0 cursor-pointer whitespace-nowrap"
+            >
               Consent Preferences
-            </a>
+            </button>
           </div>
         </div>
         <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.DATA_NOTE}</p>
