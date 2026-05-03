@@ -1,4 +1,5 @@
 import SEOHead from "@/components/SEOHead";
+import WecLogo from '@/components/WecLogo';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
@@ -6,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { supabase } from '@/integrations/supabase/client';
 import { Flag, Mail, Lock, User, Loader2 } from 'lucide-react';
@@ -142,6 +143,23 @@ const Auth = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      toast.error('Please enter your email address first.');
+      return;
+    }
+    setIsSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: 'https://wec-pitwall.vercel.app/reset-password',
+    });
+    setIsSubmitting(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Password reset email sent. Check your inbox.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -189,9 +207,7 @@ const Auth = () => {
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-2">
           <div className="relative">
-            <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
-              <span className="font-racing text-2xl font-bold text-primary">W</span>
-            </div>
+            <WecLogo className="w-12 h-12 [&>span]:text-2xl" />
             <div className="absolute -inset-1 rounded-lg racing-gradient opacity-30 blur-md -z-10" />
           </div>
           <h1 className="text-4xl font-black text-foreground">WEC Pitwall</h1>
@@ -336,11 +352,9 @@ const Auth = () => {
               </div>
               <button
                 type="button"
-                onClick={() => {
-                  console.log('Password reset flow not implemented');
-                  toast.info('Password reset instructions sent to your email (Demo)');
-                }}
-                className="text-xs text-primary hover:underline transition-colors"
+                onClick={handleForgotPassword}
+                disabled={isSubmitting}
+                className="text-xs text-primary hover:underline transition-colors disabled:opacity-50"
               >
                 Forgot Password?
               </button>
@@ -372,8 +386,16 @@ const Auth = () => {
           </div>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
+        <p className="text-xs text-muted-foreground text-center mt-6">
+          By continuing, you agree to our{' '}
+          <Link to="/terms" className="text-primary hover:underline">
+            Terms of Use
+          </Link>{' '}
+          and acknowledge our{' '}
+          <Link to="/privacy" className="text-primary hover:underline">
+            Privacy Policy
+          </Link>
+          .
         </p>
       </motion.div>
     </div>

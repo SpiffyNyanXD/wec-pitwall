@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
+import { Link } from 'react-router-dom';
 
 const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
   <section id={id} className="mb-10">
@@ -133,8 +134,8 @@ const PrivacyPolicy = () => {
 
           <Section id="uslaws" title="11. Do United States Residents Have Specific Privacy Rights?">
             <p>If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific rights regarding your personal information.</p>
-            <p>These rights may include: right to know, right to access, right to correct, right to request deletion, right to obtain a copy, right to non-discrimination, and right to opt out of the processing of personal data for targeted advertising.</p>
-            <p>To exercise these rights, you may contact us at <a href="mailto:privacy@wecpitwall.com" className="text-primary hover:underline">privacy@wecpitwall.com</a> or via the Settings page.</p>
+            <p>Rights may include: right to know, right to access, right to correct, right to request deletion, right to obtain a copy, right to non-discrimination, and right to opt out of the processing of personal data for targeted advertising.</p>
+            <p>To exercise these rights, you may contact us at <a href="mailto:privacy@wecpitwall.com" className="text-primary hover:underline">privacy@wecpitwall.com</a> or via the <Link to="/settings" className="text-primary hover:underline">Settings page</Link>.</p>
             <p><strong className="text-foreground">Appeals:</strong> If we decline to take action regarding your request, you may appeal our decision by emailing us at <a href="mailto:privacy@wecpitwall.com" className="text-primary hover:underline">privacy@wecpitwall.com</a>.</p>
           </Section>
 

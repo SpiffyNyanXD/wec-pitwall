@@ -8,6 +8,7 @@ interface Profile {
   username: string | null;
   display_name: string | null;
   avatar_url: string | null;
+  marketing_consent?: boolean;
 }
 
 interface AuthContextType {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
+import WecLogo from '@/components/WecLogo';
 import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -74,9 +75,7 @@ const Header = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-3 cursor-pointer"
                   >
-                    <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
-                      <span className="font-racing text-lg font-bold text-primary-foreground">W</span>
-                    </div>
+                    <WecLogo />
                     <div>
                       <span className="font-racing text-xl font-bold text-foreground tracking-wide">
                         WEC <span className="text-primary">Pitwall</span>
@@ -163,9 +162,7 @@ const Header = () => {
           </Sheet>
           
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg racing-gradient flex items-center justify-center shadow-lg">
-              <span className="font-racing text-lg font-bold text-primary-foreground">W</span>
-            </div>
+            <WecLogo />
             <div className="hidden sm:block">
               <h1 className="font-racing text-xl font-bold text-foreground tracking-wide">
                 WEC <span className="text-primary">Pitwall</span>

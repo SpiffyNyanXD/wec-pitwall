@@ -47,6 +47,14 @@ const Footer = () => {
             </Dialog>
 
             <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight">Cookie Policy</Link>
+
+            <Link to="/terms" className="hover:text-foreground transition-colors tap-highlight">Terms of Use</Link>
+
+            <Link to="/data-request" className="hover:text-foreground transition-colors tap-highlight">Data Request</Link>
+
+            <a href="#" className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight">
+              Consent Preferences
+            </a>
           </div>
         </div>
         <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.DATA_NOTE}</p>

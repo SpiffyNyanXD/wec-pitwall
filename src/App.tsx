@@ -38,6 +38,9 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const DriverComparison = lazy(() => import('./pages/DriverComparison'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Dsar = lazy(() => import('./pages/Dsar'));
+const Terms = lazy(() => import('./pages/Terms'));
 
 const queryClient = new QueryClient();
 
@@ -119,6 +122,21 @@ const App = () => (
               <Route path="/compare" element={
                 <Suspense fallback={<><Header /><PageLoader /></>}>
                   <DriverComparison />
+                </Suspense>
+              } />
+              <Route path="/reset-password" element={
+                <Suspense fallback={<div />}>
+                  <ResetPassword />
+                </Suspense>
+              } />
+              <Route path="/data-request" element={
+                <Suspense fallback={<><Header /><PageLoader /></>}>
+                  <Dsar />
+                </Suspense>
+              } />
+              <Route path="/terms" element={
+                <Suspense fallback={<><Header /><PageLoader /></>}>
+                  <Terms />
                 </Suspense>
               } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

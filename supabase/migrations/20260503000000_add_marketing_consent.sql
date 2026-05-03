@@ -1,0 +1,2 @@
+ALTER TABLE public.profiles
+ADD COLUMN IF NOT EXISTS marketing_consent BOOLEAN NOT NULL DEFAULT TRUE;
