@@ -25,8 +25,7 @@ export default function ResetPassword() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleReset = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleReset = async () => {
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -61,7 +60,7 @@ export default function ResetPassword() {
           {error && <p className="text-sm text-destructive">{error}</p>}
           {success && <p className="text-sm text-primary">{success}</p>}
 
-          <form onSubmit={handleReset} className="space-y-4">
+          <div className="space-y-4">
             <Input
               type="password"
               placeholder="New password"
@@ -75,13 +74,13 @@ export default function ResetPassword() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <Button
-              type="submit"
+              onClick={handleReset}
               disabled={isLoading}
               className="w-full racing-gradient text-white"
             >
               {isLoading ? 'Updating...' : 'Update Password'}
             </Button>
-          </form>
+          </div>
         </div>
       </div>
     </>

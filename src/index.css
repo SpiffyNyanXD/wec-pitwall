@@ -126,7 +126,6 @@
   body {
     @apply bg-background text-foreground font-body antialiased;
     font-family: var(--font-body);
-
     min-height: 100%;
     overflow-x: hidden;
   }
