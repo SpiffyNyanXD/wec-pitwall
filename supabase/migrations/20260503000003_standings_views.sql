@@ -1,6 +1,6 @@
 -- ============================================================
 -- VIEW: Hypercar Drivers Championship
--- Aggregates points_drivers across all races per car
+-- Aggregates points_drivers across all races per car for active season
 -- ============================================================
 CREATE OR REPLACE VIEW public.v_hypercar_drivers_standings AS
 SELECT
@@ -12,14 +12,16 @@ SELECT
   RANK() OVER (ORDER BY COALESCE(SUM(rr.points_drivers), 0) DESC) AS position
 FROM public.cars c
 JOIN public.manufacturers m ON m.id = c.manufacturer_id
+JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
 WHERE c.category = 'Hypercar'
+  AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name, m.name
 ORDER BY total_points DESC;
 
 -- ============================================================
 -- VIEW: Hypercar Manufacturers Championship
--- Top 2 cars per manufacturer per race only
+-- Top 2 cars per manufacturer per race only for active season
 -- ============================================================
 CREATE OR REPLACE VIEW public.v_hypercar_manufacturers_standings AS
 WITH ranked_per_race AS (
@@ -34,7 +36,9 @@ WITH ranked_per_race AS (
   FROM public.race_results rr
   JOIN public.cars c ON c.id = rr.car_id
   JOIN public.manufacturers m ON m.id = c.manufacturer_id
+  JOIN public.seasons s ON s.id = c.season_id
   WHERE c.category = 'Hypercar'
+    AND s.is_active = true
 )
 SELECT
   manufacturer,
@@ -57,8 +61,10 @@ SELECT
   COUNT(rr.id) AS races_entered,
   RANK() OVER (ORDER BY COALESCE(SUM(rr.points_teams), 0) DESC) AS position
 FROM public.cars c
+JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
 WHERE c.category = 'LMGT3'
+  AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name
 ORDER BY total_points DESC;
 
@@ -72,8 +78,10 @@ SELECT
   COALESCE(SUM(rr.points_drivers), 0) AS total_points,
   RANK() OVER (ORDER BY COALESCE(SUM(rr.points_drivers), 0) DESC) AS position
 FROM public.cars c
+JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
 WHERE c.category = 'LMGT3'
+  AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name
 ORDER BY total_points DESC;
 

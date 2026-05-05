@@ -14,6 +14,19 @@ INSERT INTO public.points_scales (duration_hours, finish_position, points) VALUE
   (6,  9,  2),
   (6, 10,  1);
 
+-- 8-hour race points (intermediate scale)
+INSERT INTO public.points_scales (duration_hours, finish_position, points) VALUES
+  (8,  1, 33),
+  (8,  2, 24),
+  (8,  3, 20),
+  (8,  4, 16),
+  (8,  5, 13),
+  (8,  6, 11),
+  (8,  7,  8),
+  (8,  8,  5),
+  (8,  9,  3),
+  (8, 10,  1);
+
 -- Le Mans 24h scale — placeholder, fill later
 INSERT INTO public.points_scales (duration_hours, finish_position, points) VALUES
   (24,  1, 50),
