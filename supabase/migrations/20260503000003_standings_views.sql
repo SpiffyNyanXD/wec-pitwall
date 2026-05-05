@@ -14,6 +14,7 @@ FROM public.cars c
 JOIN public.manufacturers m ON m.id = c.manufacturer_id
 JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
+LEFT JOIN public.races r ON r.id = rr.race_id AND r.season_id = s.id
 WHERE c.category = 'Hypercar'
   AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name, m.name
@@ -36,7 +37,8 @@ WITH ranked_per_race AS (
   FROM public.race_results rr
   JOIN public.cars c ON c.id = rr.car_id
   JOIN public.manufacturers m ON m.id = c.manufacturer_id
-  JOIN public.seasons s ON s.id = c.season_id
+  JOIN public.races r ON r.id = rr.race_id
+  JOIN public.seasons s ON s.id = r.season_id
   WHERE c.category = 'Hypercar'
     AND s.is_active = true
 )
@@ -63,6 +65,7 @@ SELECT
 FROM public.cars c
 JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
+LEFT JOIN public.races r ON r.id = rr.race_id AND r.season_id = s.id
 WHERE c.category = 'LMGT3'
   AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name
@@ -80,6 +83,7 @@ SELECT
 FROM public.cars c
 JOIN public.seasons s ON s.id = c.season_id
 LEFT JOIN public.race_results rr ON rr.car_id = c.id
+LEFT JOIN public.races r ON r.id = rr.race_id AND r.season_id = s.id
 WHERE c.category = 'LMGT3'
   AND s.is_active = true
 GROUP BY c.id, c.car_number, c.team_name
