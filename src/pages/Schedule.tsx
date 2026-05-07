@@ -34,7 +34,7 @@ const Schedule = () => {
     }
   };
 
-  const RaceCard = ({ race, index }: { race: any; index: number }) => (
+  const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => (
     <Link to={`/race/${race.id}`}>
       <motion.div
         initial={{ opacity: 0, x: -20 }}

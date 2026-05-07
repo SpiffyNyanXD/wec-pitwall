@@ -162,7 +162,7 @@ export default function Championship() {
               <div className="glass-card p-6 rounded-xl">
                 <h3 className="font-racing text-xl mb-4 text-gradient">Final Manufacturer Standings</h3>
                 <div className="space-y-3">
-                  {standings.hypercars.manufacturers.slice(0, 5).map((mfg: any, idx: number) => (
+                  {standings.hypercars.manufacturers.slice(0, 5).map((mfg: Record<string, unknown>, idx: number) => (
                     <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
@@ -177,7 +177,7 @@ export default function Championship() {
               <div className="glass-card p-6 rounded-xl">
                 <h3 className="font-racing text-xl mb-4 text-gradient">Final Driver Standings</h3>
                 <div className="space-y-3">
-                  {standings.hypercars.drivers.slice(0, 6).map((driver: any, idx: number) => (
+                  {standings.hypercars.drivers.slice(0, 6).map((driver: Record<string, unknown>, idx: number) => (
                     <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-muted-foreground w-4">{driver.position}</span>

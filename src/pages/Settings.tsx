@@ -299,7 +299,7 @@ const SettingsPage = () => {
                   <p className="font-medium">Timezone</p>
                   <p className="text-sm text-muted-foreground">Select how session times are displayed</p>
                 </div>
-                <Select value={timezone} onValueChange={(val: any) => setTimezone(val)}>
+                <Select value={timezone} onValueChange={(val: Record<string, unknown>) => setTimezone(val)}>
                   <SelectTrigger className="w-[180px] bg-background/50 border-border/50">
                     <SelectValue placeholder="Select Timezone" />
                   </SelectTrigger>
