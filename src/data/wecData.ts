@@ -1425,7 +1425,7 @@ export const getCurrentOrNextRaceWeekRace = (): Race | undefined => {
   return races.find(r => new Date(r.date) > now);
 };
 
-export const getDriversBySeason = (season: number): any[] => {
+export const getDriversBySeason = (season: number): Record<string, unknown>[] => {
   return season === 2025 ? standings2025.hypercars.drivers : drivers2024;
 };
 

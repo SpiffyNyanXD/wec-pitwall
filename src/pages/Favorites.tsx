@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { hypercars2026 } from '@/data/wecData';
 
 interface FavoriteTeam {
   id: string;
@@ -27,13 +26,9 @@ const FavoritesPage = () => {
   const [favoriteTeams, setFavoriteTeams] = useState<FavoriteTeam[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      loadFavorites();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
+  // We don't have a good mock for all teams right now since we deprecated the static array
+  // So I'm providing an empty state placeholder
+  const teamsList: Record<string, unknown>[] = [];
 
   const loadFavorites = async () => {
     if (!user || !supabase) {
@@ -52,7 +47,15 @@ const FavoritesPage = () => {
     setLoading(false);
   };
 
-  const addFavorite = async (team: typeof hypercars2026[0]) => {
+  useEffect(() => {
+    if (user) {
+      loadFavorites();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const addFavorite = async (team: Record<string, unknown>) => {
     if (!user) {
       toast.error('Please sign in to add favorites');
       return;
@@ -180,36 +183,42 @@ const FavoritesPage = () => {
 
           {/* All Teams */}
           <h2 className="font-racing text-lg mb-4">All Teams</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {hypercars2026.map((team) => (
-              <motion.div
-                key={team.id}
-                className="glass-card p-4 flex items-center justify-between"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-racing text-primary">{team.carNumber}</span>
-                    <p className="font-medium">{team.name}</p>
-                  </div>
-                  <Badge variant="outline" className={getClassBadge(team.class)}>
-                    {team.class}
-                  </Badge>
-                </div>
-                <Button
-                  variant={isFavorite(team.id) ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => isFavorite(team.id) 
-                    ? removeFavorite(favoriteTeams.find(f => f.team_id === team.id)?.id || '')
-                    : addFavorite(team)
-                  }
-                  className={isFavorite(team.id) ? "bg-transparent hover:bg-transparent border-wec-gold" : ""}
+          {teamsList.length === 0 ? (
+            <div className="text-center p-8 text-muted-foreground glass-card">
+              Team browser coming soon with live data.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {teamsList.map((team) => (
+                <motion.div
+                  key={team.id}
+                  className="glass-card p-4 flex items-center justify-between"
+                  whileHover={{ scale: 1.02 }}
                 >
-                  <Heart className={`w-4 h-4 transition-colors ${isFavorite(team.id) ? "fill-wec-gold text-wec-gold" : ""}`} />
-                </Button>
-              </motion.div>
-            ))}
-          </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-racing text-primary">{team.carNumber}</span>
+                      <p className="font-medium">{team.name}</p>
+                    </div>
+                    <Badge variant="outline" className={getClassBadge(team.class)}>
+                      {team.class}
+                    </Badge>
+                  </div>
+                  <Button
+                    variant={isFavorite(team.id) ? "default" : "outline"}
+                    size="icon"
+                    onClick={() => isFavorite(team.id)
+                      ? removeFavorite(favoriteTeams.find(f => f.team_id === team.id)?.id || '')
+                      : addFavorite(team)
+                    }
+                    className={isFavorite(team.id) ? "bg-transparent hover:bg-transparent border-wec-gold" : ""}
+                  >
+                    <Heart className={`w-4 h-4 transition-colors ${isFavorite(team.id) ? "fill-wec-gold text-wec-gold" : ""}`} />
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </main>
     </div>
