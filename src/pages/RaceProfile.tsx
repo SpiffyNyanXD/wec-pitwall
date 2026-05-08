@@ -135,7 +135,7 @@ const RaceProfile = () => {
       elevation: '30m change',
       longestStraight: '6.0 km (Mulsanne)',
       lapRecords: {
-        hypercar: { time: '3:23.550', driver: 'Kamui Kobayashi', year: 2024 },
+        hypercar: { time: '3:26.9', driver: 'Ferrari AF Corse #50', year: 2024 }, // Note: Kobayashi holds all-time circuit record (3:14.791) set in LMP1 era
         lmp2: { time: '3:30.567', driver: 'Louis Delétraz', year: 2024 },
         gt3: { time: '3:54.234', driver: 'Davide Rigon', year: 2024 },
       },

@@ -6,18 +6,15 @@ interface ManufacturerProgressionChartProps {
 
 // Points data per manufacturer per round — 2025 season (completed)
 const PROGRESSION_DATA_2025 = [
-  { round: 'R1\nQatar', Ferrari: 26, Toyota: 20, Porsche: 15, Alpine: 12, BMW: 10, Cadillac: 8, Peugeot: 6, AstonMartin: 4 },
-  { round: 'R2\nImola', Ferrari: 51, Toyota: 38, Porsche: 28, Alpine: 22, BMW: 19, Cadillac: 14, Peugeot: 11, AstonMartin: 7 },
-  { round: 'R3\nSpa', Ferrari: 76, Toyota: 58, Porsche: 44, Alpine: 31, BMW: 27, Cadillac: 21, Peugeot: 16, AstonMartin: 10 },
-  { round: 'R4\nLe Mans', Ferrari: 126, Toyota: 96, Porsche: 72, Alpine: 51, BMW: 43, Cadillac: 35, Peugeot: 26, AstonMartin: 16 },
-  { round: 'R5\nSão Paulo', Ferrari: 152, Toyota: 118, Porsche: 91, Alpine: 66, BMW: 55, Cadillac: 46, Peugeot: 34, AstonMartin: 21 },
-  { round: 'R6\nFuji', Ferrari: 204, Toyota: 170, Porsche: 127, Alpine: 91, BMW: 73, Cadillac: 62, Peugeot: 47, AstonMartin: 29 },
-  { round: 'R7\nBahrain', Ferrari: 334, Toyota: 278, Porsche: 265, Alpine: 201, BMW: 187, Cadillac: 156, Peugeot: 98, AstonMartin: 67 },
+  { round: 'R1\nQatar', Ferrari: 26, Toyota: 20, Porsche: 15, Alpine: 12, BMW: 10, Cadillac: 8, Peugeot: 6, 'Aston Martin': 4 },
+  { round: 'R2\nImola', Ferrari: 51, Toyota: 38, Porsche: 28, Alpine: 22, BMW: 19, Cadillac: 14, Peugeot: 11, 'Aston Martin': 7 },
+  { round: 'R3\nSpa', Ferrari: 76, Toyota: 58, Porsche: 44, Alpine: 31, BMW: 27, Cadillac: 21, Peugeot: 16, 'Aston Martin': 10 },
+  { round: 'R4\nLe Mans', Ferrari: 133, Toyota: 59, Porsche: 50, Alpine: 31, BMW: 27, Cadillac: 21, Peugeot: 16, 'Aston Martin': 16 },
 ];
 
 // 2026 — only R1 Imola completed so far
 const PROGRESSION_DATA_2026 = [
-  { round: 'R1\nImola', Ferrari: 46, Toyota: 50, Alpine: 22, BMW: 30, Cadillac: 14, Peugeot: 6, AstonMartin: 8 },
+  { round: 'R1\nQatar', Ferrari: 46, Toyota: 50, Alpine: 22, BMW: 30, Cadillac: 14, Peugeot: 6, 'Aston Martin': 8 },
 ];
 
 const MANUFACTURER_COLORS: Record<string, string> = {
@@ -28,7 +25,7 @@ const MANUFACTURER_COLORS: Record<string, string> = {
   BMW: '#1C69D4',
   Cadillac: '#6B9FD4',
   Peugeot: '#E8C840',
-  AstonMartin: '#005140',
+  'Aston Martin': '#005140',
 };
 
 const ManufacturerProgressionChart = ({ season }: ManufacturerProgressionChartProps) => {

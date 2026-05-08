@@ -191,9 +191,7 @@ const StandingsWidget = () => {
         </TabsContent>
       </Tabs>
       
-      <p className="text-[10px] text-muted-foreground mt-3 text-center opacity-60">
-        Sample data for demonstration purposes
-      </p>
+
     </motion.div>
   );
 };
