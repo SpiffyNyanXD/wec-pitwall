@@ -180,7 +180,7 @@ const Teams = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredHypercars.map((team, index) => (
-                <TeamCard key={team.id} team={team} index={index} />
+                <TeamCard key={`${team.id}-${index}`} team={team} index={index} />
               ))}
               {filteredHypercars.length === 0 && (
                 <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
@@ -193,7 +193,7 @@ const Teams = () => {
           <TabsContent value="LMP2">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {lmp2.map((team, index) => (
-                <TeamCard key={team.id} team={team} index={index} />
+                <TeamCard key={`${team.id}-${index}`} team={team} index={index} />
               ))}
               {lmp2.length === 0 && (
                 <div className="col-span-full py-12 text-center text-muted-foreground text-sm">
@@ -206,7 +206,7 @@ const Teams = () => {
           <TabsContent value="LMGT3">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {lmgt3.map((team, index) => (
-                <TeamCard key={team.id} team={team} index={index} />
+                <TeamCard key={`${team.id}-${index}`} team={team} index={index} />
               ))}
               {lmgt3.length === 0 && (
                 <div className="col-span-full py-12 text-center text-muted-foreground text-sm">

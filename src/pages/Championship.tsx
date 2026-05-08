@@ -15,10 +15,10 @@ const manufacturerData2025 = [
 ];
 
 const driversData2025 = [
-  { round: 'R1 Qatar',   'Pier Guidi/Calado/Giovinazzi': 25, 'Kubica/Hanson/Ye': 15, 'Fuoco/Molina/Nielsen': 12, 'Estre/Lotterer/Vanthoor': 18, 'Conway/Kobayashi/de Vries': 10, 'Buemi/Hartley/Hirakawa': 8 },
-  { round: 'R2 Imola',   'Pier Guidi/Calado/Giovinazzi': 50, 'Kubica/Hanson/Ye': 33, 'Fuoco/Molina/Nielsen': 22, 'Estre/Lotterer/Vanthoor': 36, 'Conway/Kobayashi/de Vries': 23, 'Buemi/Hartley/Hirakawa': 16 },
-  { round: 'R3 Spa',     'Pier Guidi/Calado/Giovinazzi': 68, 'Kubica/Hanson/Ye': 48, 'Fuoco/Molina/Nielsen': 30, 'Estre/Lotterer/Vanthoor': 61, 'Conway/Kobayashi/de Vries': 33, 'Buemi/Hartley/Hirakawa': 24 },
-  { round: 'R4 Le Mans', 'Pier Guidi/Calado/Giovinazzi': 83, 'Kubica/Hanson/Ye': 73, 'Fuoco/Molina/Nielsen': 38, 'Estre/Lotterer/Vanthoor': 76, 'Conway/Kobayashi/de Vries': 48, 'Buemi/Hartley/Hirakawa': 32 },
+  { round: 'R1 Qatar',   '#51 Ferrari': 25, '#83 AF Corse': 15, '#50 Ferrari': 12, '#6 Porsche': 18, '#7 Toyota': 10, '#8 Toyota': 8 },
+  { round: 'R2 Imola',   '#51 Ferrari': 50, '#83 AF Corse': 33, '#50 Ferrari': 22, '#6 Porsche': 36, '#7 Toyota': 23, '#8 Toyota': 16 },
+  { round: 'R3 Spa',     '#51 Ferrari': 68, '#83 AF Corse': 48, '#50 Ferrari': 30, '#6 Porsche': 61, '#7 Toyota': 33, '#8 Toyota': 24 },
+  { round: 'R4 Le Mans', '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
 ];
 
 const manufacturerData2024 = [
@@ -33,14 +33,14 @@ const manufacturerData2024 = [
 ];
 
 const driversData2024 = [
-  { round: 'R1 Qatar',   'Estre/Lotterer/Vanthoor': 38, 'Fuoco/Molina/Nielsen': 8, 'Kobayashi/de Vries/Conway': 12, 'Pier Guidi/Calado/Giovinazzi': 15, 'Makowiecki/Christensen/Campbell': 24, 'Buemi/Hartley/Hirakawa': 2 },
-  { round: 'R2 Imola',   'Estre/Lotterer/Vanthoor': 56, 'Fuoco/Molina/Nielsen': 23, 'Kobayashi/de Vries/Conway': 37, 'Pier Guidi/Calado/Giovinazzi': 27, 'Makowiecki/Christensen/Campbell': 39, 'Buemi/Hartley/Hirakawa': 14 },
-  { round: 'R3 Spa',     'Estre/Lotterer/Vanthoor': 74, 'Fuoco/Molina/Nielsen': 40, 'Kobayashi/de Vries/Conway': 45, 'Pier Guidi/Calado/Giovinazzi': 35, 'Makowiecki/Christensen/Campbell': 54, 'Buemi/Hartley/Hirakawa': 26 },
-  { round: 'R4 Le Mans', 'Estre/Lotterer/Vanthoor': 99, 'Fuoco/Molina/Nielsen': 90, 'Kobayashi/de Vries/Conway': 77, 'Pier Guidi/Calado/Giovinazzi': 65, 'Makowiecki/Christensen/Campbell': 71, 'Buemi/Hartley/Hirakawa': 58 },
-  { round: 'R5 Sao Paulo','Estre/Lotterer/Vanthoor': 117, 'Fuoco/Molina/Nielsen': 105, 'Kobayashi/de Vries/Conway': 95, 'Pier Guidi/Calado/Giovinazzi': 83, 'Makowiecki/Christensen/Campbell': 86, 'Buemi/Hartley/Hirakawa': 76 },
-  { round: 'R6 COTA',    'Estre/Lotterer/Vanthoor': 125, 'Fuoco/Molina/Nielsen': 113, 'Kobayashi/de Vries/Conway': 113, 'Pier Guidi/Calado/Giovinazzi': 101, 'Makowiecki/Christensen/Campbell': 94, 'Buemi/Hartley/Hirakawa': 94 },
-  { round: 'R7 Fuji',    'Estre/Lotterer/Vanthoor': 150, 'Fuoco/Molina/Nielsen': 115, 'Kobayashi/de Vries/Conway': 113, 'Pier Guidi/Calado/Giovinazzi': 119, 'Makowiecki/Christensen/Campbell': 104, 'Buemi/Hartley/Hirakawa': 109 },
-  { round: 'R8 Bahrain', 'Estre/Lotterer/Vanthoor': 152, 'Fuoco/Molina/Nielsen': 115, 'Kobayashi/de Vries/Conway': 113, 'Pier Guidi/Calado/Giovinazzi': 137, 'Makowiecki/Christensen/Campbell': 114, 'Buemi/Hartley/Hirakawa': 134 },
+  { round: 'R1 Qatar',   '#6 Porsche': 38, '#50 Ferrari': 8, '#7 Toyota': 12, '#51 Ferrari': 15, '#5 Porsche': 24, '#8 Toyota': 2 },
+  { round: 'R2 Imola',   '#6 Porsche': 56, '#50 Ferrari': 23, '#7 Toyota': 37, '#51 Ferrari': 27, '#5 Porsche': 39, '#8 Toyota': 14 },
+  { round: 'R3 Spa',     '#6 Porsche': 74, '#50 Ferrari': 40, '#7 Toyota': 45, '#51 Ferrari': 35, '#5 Porsche': 54, '#8 Toyota': 26 },
+  { round: 'R4 Le Mans', '#6 Porsche': 99, '#50 Ferrari': 90, '#7 Toyota': 77, '#51 Ferrari': 65, '#5 Porsche': 71, '#8 Toyota': 58 },
+  { round: 'R5 Sao Paulo','#6 Porsche': 117, '#50 Ferrari': 105, '#7 Toyota': 95, '#51 Ferrari': 83, '#5 Porsche': 86, '#8 Toyota': 76 },
+  { round: 'R6 COTA',    '#6 Porsche': 125, '#50 Ferrari': 113, '#7 Toyota': 113, '#51 Ferrari': 101, '#5 Porsche': 94, '#8 Toyota': 94 },
+  { round: 'R7 Fuji',    '#6 Porsche': 150, '#50 Ferrari': 115, '#7 Toyota': 113, '#51 Ferrari': 119, '#5 Porsche': 104, '#8 Toyota': 109 },
+  { round: 'R8 Bahrain', '#6 Porsche': 152, '#50 Ferrari': 115, '#7 Toyota': 113, '#51 Ferrari': 137, '#5 Porsche': 114, '#8 Toyota': 134 },
 ];
 
 export default function Championship() {
@@ -93,7 +93,7 @@ export default function Championship() {
                     <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                     <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                     <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: "20px" }} />
                     {season === '2025' ? (
                       <>
                         <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
@@ -129,24 +129,24 @@ export default function Championship() {
                     <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                     <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                     <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: "20px" }} />
                     {season === '2025' ? (
                       <>
-                        <Line type="monotone" dataKey="Pier Guidi/Calado/Giovinazzi" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Kubica/Hanson/Ye" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Fuoco/Molina/Nielsen" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Estre/Lotterer/Vanthoor" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Conway/Kobayashi/de Vries" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Buemi/Hartley/Hirakawa" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#51 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#83 AF Corse" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#50 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
                       </>
                     ) : (
                       <>
-                        <Line type="monotone" dataKey="Estre/Lotterer/Vanthoor" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Fuoco/Molina/Nielsen" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Kobayashi/de Vries/Conway" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Pier Guidi/Calado/Giovinazzi" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Makowiecki/Christensen/Campbell" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
-                        <Line type="monotone" dataKey="Buemi/Hartley/Hirakawa" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#50 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#51 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#5 Porsche" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                        <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
                       </>
                     )}
                   </LineChart>
@@ -163,7 +163,7 @@ export default function Championship() {
                 <h3 className="font-racing text-xl mb-4 text-gradient">Final Manufacturer Standings</h3>
                 <div className="space-y-3">
                   {standings.hypercars.manufacturers.slice(0, 5).map((mfg: Record<string, unknown>, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                    <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
                         <span className="font-medium">{mfg.manufacturer}</span>
@@ -178,7 +178,7 @@ export default function Championship() {
                 <h3 className="font-racing text-xl mb-4 text-gradient">Final Driver Standings</h3>
                 <div className="space-y-3">
                   {standings.hypercars.drivers.slice(0, 6).map((driver: Record<string, unknown>, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                    <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
                         <span className="font-medium text-sm truncate max-w-[200px]">{driver.drivers}</span>

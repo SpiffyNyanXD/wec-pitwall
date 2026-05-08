@@ -380,7 +380,7 @@ const Standings = () => {
                 ) : hypercarDrivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarDrivers.map((driver, index) => (
-                      <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
                     ))}
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
@@ -391,7 +391,7 @@ const Standings = () => {
                      <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.team : standings2024.lmgt3.champion.team}</p>
                    </div>
                 ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -409,14 +409,14 @@ const Standings = () => {
                     <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026.</p>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {hypercarEntries.map((team, index) => (
-                        <EntryRow key={team.id} team={team} position={index + 1} />
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                       ))}
                     </div>
                   </>
                 ) : hypercarEntries.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarEntries.map((team, index) => (
-                      <EntryRow key={team.id} team={team} position={index + 1} />
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                     ))}
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
@@ -427,7 +427,7 @@ const Standings = () => {
                      <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.manufacturer : standings2024.lmgt3.champion.manufacturer}</p>
                    </div>
                 ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -445,11 +445,11 @@ const Standings = () => {
                 ) : manufacturersStandings.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {manufacturersStandings.map((manufacturer, index) => (
-                      <ManufacturerRow key={manufacturer.name} manufacturer={manufacturer} position={index + 1} />
+                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -491,11 +491,11 @@ const Standings = () => {
                 ) : lmgt3Drivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Drivers.map((driver, index) => (
-                      <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -513,11 +513,11 @@ const Standings = () => {
                 ) : lmgt3Teams.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Teams.map((team, index) => (
-                      <EntryRow key={team.id} team={team} position={index + 1} />
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                     ))}
                   </div>
                 ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
               </div>
             </TabsContent>
@@ -559,11 +559,11 @@ const Standings = () => {
                   {lmp2Teams.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {lmp2Teams.map((team, index) => (
-                        <EntryRow key={team.id} team={team} position={index + 1} />
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                       ))}
                     </div>
                   ) : (
-                    <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                   )}
                 </TabsContent>
 
@@ -571,16 +571,16 @@ const Standings = () => {
                   {lmp2Drivers.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {lmp2Drivers.map((driver, index) => (
-                        <DriverRow key={driver.id} driver={driver} position={index + 1} />
+                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
                       ))}
                     </div>
                   ) : (
-                    <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                   )}
                 </TabsContent>
               </Tabs>
             ) : (
-              <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+              <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
             )}
           </div>
         </div>

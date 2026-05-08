@@ -245,7 +245,7 @@ const Manufacturers = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Object.entries(carsByManufacturer).map(([manufacturer, cars], mIndex) => (
               <motion.div
-                key={manufacturer}
+                key={`${manufacturer}-${mIndex}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: mIndex * 0.05 }}
@@ -261,7 +261,7 @@ const Manufacturers = () => {
 
                 <div className="space-y-3">
                   {cars.map((car, cIndex) => (
-                    <Card key={car.id} className="glass-card hover:border-primary/50 transition-colors">
+                    <Card key={`${car.id}-${cIndex}`} className="glass-card hover:border-primary/50 transition-colors">
                       <CardContent className="p-4 flex items-center gap-4">
                         <div
                           className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden"

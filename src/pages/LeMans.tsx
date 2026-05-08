@@ -288,7 +288,7 @@ const LeMans = () => {
               <li className="flex flex-col gap-1 border-b border-border/30 pb-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Lap Record (Hypercar)</span>
-                  <span className="font-medium">3:23.550</span>
+                  <span className="font-medium">3:26.9</span>
                 </div>
                 <span className="text-sm text-muted-foreground/80 text-right">Kamui Kobayashi (2024)</span>
               </li>

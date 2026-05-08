@@ -37,7 +37,7 @@ export const CLASS_BADGES = {
 export const POINTS_INFO = {
   DRIVERS_SHARED: 'Points shared between co-drivers',
   ENTRIES_INDEPENDENT: 'Each car entry scores independently',
-  MANUFACTURERS_COMBINED: 'Combined points from all entries',
+  MANUFACTURERS_COMBINED: 'Points from highest-finishing car per race',
   LMP2_NOTE: 'LMP2 competes only at the 24 Hours of Le Mans since 2024',
 } as const;
 
@@ -52,6 +52,6 @@ export const APP_INFO = {
   NAME: 'WEC Pitwall',
   TAGLINE: 'Fan-Made WEC Companion',
   DISCLAIMER: 'Fan-made application. Not affiliated with FIA or WEC.',
-  DATA_NOTE: 'All standings and statistics shown are sample data for demonstration purposes only.',
+
   COPYRIGHT: '© 2026 WEC Pitwall. This is a fan project.',
 } as const;
