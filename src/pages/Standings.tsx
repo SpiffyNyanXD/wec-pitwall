@@ -384,12 +384,17 @@ const Standings = () => {
                     ))}
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
-                   <div className="glass-card p-6 flex flex-col items-center justify-center text-center border-primary/20">
-                     <Trophy className="w-12 h-12 text-green-400 mb-4" />
-                     <h3 className="text-xl font-racing font-bold mb-2">LMGT3 Champions</h3>
-                     <p className="text-muted-foreground">{selectedSeason === 2025 ? standings2025.lmgt3.champion.drivers : standings2024.lmgt3.champion.drivers}</p>
-                     <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.team : standings2024.lmgt3.champion.team}</p>
-                   </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                          <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
@@ -420,12 +425,17 @@ const Standings = () => {
                     ))}
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
-                   <div className="glass-card p-6 flex flex-col items-center justify-center text-center border-primary/20">
-                     <Trophy className="w-12 h-12 text-green-400 mb-4" />
-                     <h3 className="text-xl font-racing font-bold mb-2">LMGT3 Champions</h3>
-                     <p className="text-muted-foreground">{selectedSeason === 2025 ? standings2025.lmgt3.champion.team : standings2024.lmgt3.champion.team}</p>
-                     <p className="text-sm font-medium text-green-400 mt-2">{selectedSeason === 2025 ? standings2025.lmgt3.champion.manufacturer : standings2024.lmgt3.champion.manufacturer}</p>
-                   </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                          <span className="font-medium text-sm">{String(team.team)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(team.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
@@ -556,7 +566,19 @@ const Standings = () => {
                 </TabsList>
 
                 <TabsContent value="teams">
-                  {lmp2Teams.length > 0 ? (
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmgt3.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                            <span className="font-medium text-sm">{String(team.team)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Teams.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {lmp2Teams.map((team, index) => (
                         <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
@@ -568,7 +590,19 @@ const Standings = () => {
                 </TabsContent>
 
                 <TabsContent value="drivers">
-                  {lmp2Drivers.length > 0 ? (
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmgt3.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Drivers.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {lmp2Drivers.map((driver, index) => (
                         <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
