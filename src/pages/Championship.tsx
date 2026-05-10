@@ -44,6 +44,185 @@ const driversData2024 = [
   { round: 'R8 Bahrain', '#6 Porsche': 152, '#50 Ferrari': 115, '#7 Toyota': 113, '#51 Ferrari': 137, '#5 Porsche': 114, '#8 Toyota': 134 },
 ];
 
+const ManufacturerStandingsTable = ({ season, hcMfg, standings }: any) => (
+  <div className="glass-card p-6 rounded-xl">
+    <h3 className="font-racing text-xl mb-4 text-gradient">
+      {season === '2026' ? "Manufacturers Championship" : "Final Manufacturer Standings"}
+    </h3>
+    <div className="space-y-3">
+      {season === '2026' ? (
+        hcMfg.map((mfg: any, idx: number) => {
+          const isTied = idx > 0 && mfg.total_points === hcMfg[idx - 1].total_points;
+          return (
+            <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
+                  {isTied && <span className="text-[10px] font-bold text-yellow-500 bg-yellow-500/20 px-1 rounded">TIE</span>}
+                </div>
+                <span className="font-medium">{mfg.manufacturer}</span>
+              </div>
+              <span className="font-racing text-lg">{mfg.total_points}</span>
+            </div>
+          );
+        })
+      ) : (
+        standings.hypercars.manufacturers.slice(0, 5).map((mfg: Record<string, unknown>, idx: number) => (
+          <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
+              <span className="font-medium">{mfg.manufacturer as string}</span>
+            </div>
+            <span className="font-racing text-lg">{mfg.points as string}</span>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+);
+
+const DriverStandingsTable = ({ season, hcDrivers, standings, driverNamesMap }: any) => (
+  <div className="glass-card p-6 rounded-xl">
+    <h3 className="font-racing text-xl mb-4 text-gradient">
+      {season === '2026' ? "Hypercar Drivers Championship" : "Final Driver Standings"}
+    </h3>
+    <div className="space-y-3">
+      {season === '2026' ? (
+        hcDrivers.map((driver: any) => {
+          const names = driverNamesMap[driver.car_number] || driver.team_name;
+          return (
+            <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
+                <span className="font-medium text-sm truncate max-w-[200px]" title={names}>
+                  #{driver.car_number} {driver.manufacturer} — {names}
+                </span>
+              </div>
+              <span className="font-racing text-lg">{driver.total_points}</span>
+            </div>
+          );
+        })
+      ) : (
+        standings.hypercars.drivers.slice(0, 6).map((driver: Record<string, unknown>, idx: number) => (
+          <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
+              <span className="font-medium text-sm truncate max-w-[200px]">{driver.drivers as string}</span>
+            </div>
+            <span className="font-racing text-lg">{driver.points as string}</span>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+);
+
+const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: any) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="grid md:grid-cols-2 gap-8"
+  >
+    <div className="glass-card p-6 rounded-xl">
+      <h3 className="font-racing text-xl mb-4 text-gradient">LMGT3 Drivers Championship</h3>
+      <div className="space-y-3">
+        {lmgt3Drivers.map((driver: any) => {
+          const names = driverNamesMap[driver.car_number] || driver.team_name;
+          return (
+            <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
+                <span className="font-medium text-sm truncate max-w-[200px]" title={names}>
+                  #{driver.car_number} {driver.team_name} — {names}
+                </span>
+              </div>
+              <span className="font-racing text-lg">{driver.total_points}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </motion.div>
+);
+
+const ChartsSection = ({ season, mfgData, driverData }: any) => (
+  <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card p-4 sm:p-6 rounded-xl"
+    >
+      <h2 className="text-xl sm:text-2xl font-racing mb-6">Manufacturers Championship — {season}</h2>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={mfgData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
+            <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} />
+            {season === '2025' ? (
+              <>
+                <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Cadillac" stroke="#1E3A5F" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            ) : (
+              <>
+                <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Alpine" stroke="#00529F" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card p-4 sm:p-6 rounded-xl"
+    >
+      <h2 className="text-xl sm:text-2xl font-racing mb-6">Drivers Championship — {season}</h2>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={driverData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
+            <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} />
+            {season === '2025' ? (
+              <>
+                <Line type="monotone" dataKey="#51 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#83 AF Corse" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#50 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            ) : (
+              <>
+                <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#50 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#51 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#5 Porsche" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
+  </>
+);
+
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 
@@ -88,186 +267,19 @@ export default function Championship() {
 
           <div className="grid gap-8">
             {season !== '2026' && <ManufacturerProgressionChart season={season} />}
-
-            {season !== '2026' && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-card p-4 sm:p-6 rounded-xl"
-                >
-                  <h2 className="text-xl sm:text-2xl font-racing mb-6">Manufacturers Championship — {season}</h2>
-                  <div className="h-[300px] md:h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={mfgData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
-                        <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
-                        <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
-                        <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
-                        <Legend wrapperStyle={{ paddingTop: "20px" }} />
-                        {season === '2025' ? (
-                          <>
-                            <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Cadillac" stroke="#1E3A5F" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
-                          </>
-                        ) : (
-                          <>
-                            <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="Alpine" stroke="#00529F" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
-                          </>
-                        )}
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-card p-4 sm:p-6 rounded-xl"
-                >
-                  <h2 className="text-xl sm:text-2xl font-racing mb-6">Drivers Championship — {season}</h2>
-                  <div className="h-[300px] md:h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={driverData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
-                        <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
-                        <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
-                        <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
-                        <Legend wrapperStyle={{ paddingTop: "20px" }} />
-                        {season === '2025' ? (
-                          <>
-                            <Line type="monotone" dataKey="#51 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#83 AF Corse" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#50 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
-                          </>
-                        ) : (
-                          <>
-                            <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#50 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#51 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#5 Porsche" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
-                            <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
-                          </>
-                        )}
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </motion.div>
-              </>
-            )}
+            {season !== '2026' && <ChartsSection season={season} mfgData={mfgData} driverData={driverData} />}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="grid md:grid-cols-2 gap-8"
             >
-              <div className="glass-card p-6 rounded-xl">
-                <h3 className="font-racing text-xl mb-4 text-gradient">
-                  {season === '2026' ? "Manufacturers Championship" : "Final Manufacturer Standings"}
-                </h3>
-                <div className="space-y-3">
-                  {season === '2026' ? (
-                    hcMfg.map((mfg, idx) => {
-                      const isTied = idx > 0 && mfg.total_points === hcMfg[idx - 1].total_points;
-                      return (
-                        <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
-                              {isTied && <span className="text-[10px] font-bold text-yellow-500 bg-yellow-500/20 px-1 rounded">TIE</span>}
-                            </div>
-                            <span className="font-medium">{mfg.manufacturer}</span>
-                          </div>
-                          <span className="font-racing text-lg">{mfg.total_points}</span>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    standings.hypercars.manufacturers.slice(0, 5).map((mfg: Record<string, unknown>, idx: number) => (
-                      <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                        <div className="flex items-center gap-3">
-                          <span className="font-bold text-muted-foreground w-4">{mfg.position}</span>
-                          <span className="font-medium">{mfg.manufacturer}</span>
-                        </div>
-                        <span className="font-racing text-lg">{mfg.points}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="glass-card p-6 rounded-xl">
-                <h3 className="font-racing text-xl mb-4 text-gradient">
-                  {season === '2026' ? "Hypercar Drivers Championship" : "Final Driver Standings"}
-                </h3>
-                <div className="space-y-3">
-                  {season === '2026' ? (
-                    hcDrivers.map((driver) => {
-                      const names = driverNamesMap[driver.car_number] || driver.team_name;
-                      return (
-                        <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
-                            <span className="font-medium text-sm truncate max-w-[200px]" title={names}>
-                              #{driver.car_number} {driver.manufacturer} — {names}
-                            </span>
-                          </div>
-                          <span className="font-racing text-lg">{driver.total_points}</span>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    standings.hypercars.drivers.slice(0, 6).map((driver: Record<string, unknown>, idx: number) => (
-                      <div key={`item-${idx}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                        <div className="flex items-center gap-3">
-                          <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
-                          <span className="font-medium text-sm truncate max-w-[200px]">{driver.drivers}</span>
-                        </div>
-                        <span className="font-racing text-lg">{driver.points}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+              <ManufacturerStandingsTable season={season} hcMfg={hcMfg} standings={standings} />
+              <DriverStandingsTable season={season} hcDrivers={hcDrivers} standings={standings} driverNamesMap={driverNamesMap} />
             </motion.div>
 
             {season === '2026' && lmgt3Drivers.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="grid md:grid-cols-2 gap-8"
-              >
-                <div className="glass-card p-6 rounded-xl">
-                  <h3 className="font-racing text-xl mb-4 text-gradient">LMGT3 Drivers Championship</h3>
-                  <div className="space-y-3">
-                    {lmgt3Drivers.map((driver) => {
-                      const names = driverNamesMap[driver.car_number] || driver.team_name;
-                      return (
-                        <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{driver.position}</span>
-                            <span className="font-medium text-sm truncate max-w-[200px]" title={names}>
-                              #{driver.car_number} {driver.team_name} — {names}
-                            </span>
-                          </div>
-                          <span className="font-racing text-lg">{driver.total_points}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </motion.div>
+              <Lmgt3StandingsTable lmgt3Drivers={lmgt3Drivers} driverNamesMap={driverNamesMap} />
             )}
 
             <motion.div
