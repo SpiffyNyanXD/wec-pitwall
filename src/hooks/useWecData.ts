@@ -184,3 +184,73 @@ export function useSeasonStats(seasonId: string | null) {
   }, [seasonId]);
   return { data, loading };
 }
+
+// Helper to abbreviate driver names: "Sébastien Buemi" -> "S. Buemi"
+function abbreviateName(fullName: string) {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(' ');
+  if (parts.length === 1) return parts[0];
+  return `${parts[0][0]}. ${parts.slice(1).join(' ')}`;
+}
+
+// Season drivers hook - fetches drivers, joins cars, groups by car_number and returns abbreviated names
+export function useSeasonDrivers(seasonId: string | null) {
+  const [data, setData] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!seasonId) return;
+    supabase
+      .from('drivers')
+      .select('full_name, cars!inner(season_id, car_number, team_name)')
+      .eq('cars.season_id', seasonId)
+      .then(({ data: rows, error: err }) => {
+        if (err) {
+          setError(err.message);
+        } else {
+          // Group by car_number
+          const map: Record<string, string[]> = {};
+          (rows ?? []).forEach((r: Record<string, unknown>) => {
+            const num = (r.cars as Record<string, unknown>).car_number as string;
+            if (!map[num]) map[num] = [];
+            map[num].push(abbreviateName(r.full_name as string));
+          });
+
+          const result: Record<string, string> = {};
+          for (const num in map) {
+            result[num] = map[num].join(' / ');
+          }
+          setData(result);
+        }
+        setLoading(false);
+      });
+  }, [seasonId]);
+
+  return { data, loading, error };
+}
+
+// Car season stats hook - fetches from v_car_season_stats
+export function useCarSeasonStats(seasonId: string | null) {
+  const [data, setData] = useState<Record<string, unknown>[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!seasonId) return;
+    supabase
+      .from('v_car_season_stats')
+      .select('*')
+      .eq('season_id', seasonId)
+      .then(({ data: rows, error: err }) => {
+        if (err) {
+          setError(err.message);
+        } else {
+          setData(rows ?? []);
+        }
+        setLoading(false);
+      });
+  }, [seasonId]);
+
+  return { data, loading, error };
+}

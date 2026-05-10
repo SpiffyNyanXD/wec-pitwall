@@ -29,6 +29,8 @@ const Schedule = () => {
         return <Badge variant="outline" className="bg-secondary/20 text-secondary border-secondary/30 animate-pulse">LIVE</Badge>;
       case 'upcoming':
         return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Upcoming</Badge>;
+      case 'postponed':
+        return <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30">Postponed</Badge>;
       default:
         return null;
     }
