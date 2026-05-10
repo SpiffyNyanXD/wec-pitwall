@@ -44,14 +44,14 @@ const driversData2024 = [
   { round: 'R8 Bahrain', '#6 Porsche': 152, '#50 Ferrari': 115, '#7 Toyota': 113, '#51 Ferrari': 137, '#5 Porsche': 114, '#8 Toyota': 134 },
 ];
 
-const ManufacturerStandingsTable = ({ season, hcMfg, standings }: any) => (
+const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: string, hcMfg: Record<string, unknown>[], standings: Record<string, unknown> }) => (
   <div className="glass-card p-6 rounded-xl">
     <h3 className="font-racing text-xl mb-4 text-gradient">
       {season === '2026' ? "Manufacturers Championship" : "Final Manufacturer Standings"}
     </h3>
     <div className="space-y-3">
       {season === '2026' ? (
-        hcMfg.map((mfg: any, idx: number) => {
+        hcMfg.map((mfg: Record<string, unknown>, idx: number) => {
           const isTied = idx > 0 && mfg.total_points === hcMfg[idx - 1].total_points;
           return (
             <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
@@ -81,14 +81,14 @@ const ManufacturerStandingsTable = ({ season, hcMfg, standings }: any) => (
   </div>
 );
 
-const DriverStandingsTable = ({ season, hcDrivers, standings, driverNamesMap }: any) => (
+const DriverStandingsTable = ({ season, hcDrivers, standings, driverNamesMap }: { season: string, hcDrivers: Record<string, unknown>[], standings: Record<string, unknown>, driverNamesMap: Record<string, string> }) => (
   <div className="glass-card p-6 rounded-xl">
     <h3 className="font-racing text-xl mb-4 text-gradient">
       {season === '2026' ? "Hypercar Drivers Championship" : "Final Driver Standings"}
     </h3>
     <div className="space-y-3">
       {season === '2026' ? (
-        hcDrivers.map((driver: any) => {
+        hcDrivers.map((driver: Record<string, unknown>) => {
           const names = driverNamesMap[driver.car_number] || driver.team_name;
           return (
             <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
@@ -117,7 +117,7 @@ const DriverStandingsTable = ({ season, hcDrivers, standings, driverNamesMap }: 
   </div>
 );
 
-const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: any) => (
+const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: { lmgt3Drivers: Record<string, unknown>[], driverNamesMap: Record<string, string> }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -126,7 +126,7 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: any) => (
     <div className="glass-card p-6 rounded-xl">
       <h3 className="font-racing text-xl mb-4 text-gradient">LMGT3 Drivers Championship</h3>
       <div className="space-y-3">
-        {lmgt3Drivers.map((driver: any) => {
+        {lmgt3Drivers.map((driver: Record<string, unknown>) => {
           const names = driverNamesMap[driver.car_number] || driver.team_name;
           return (
             <div key={`${driver.car_number}-${driver.team_name}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
@@ -145,7 +145,7 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: any) => (
   </motion.div>
 );
 
-const ChartsSection = ({ season, mfgData, driverData }: any) => (
+const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgData: Record<string, unknown>[], driverData: Record<string, unknown>[] }) => (
   <>
     <motion.div
       initial={{ opacity: 0, y: 20 }}
