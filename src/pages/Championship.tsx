@@ -52,7 +52,7 @@ const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: stri
     <div className="space-y-3">
       {season === '2026' ? (
         hcMfg.map((mfg: Record<string, unknown>, idx: number) => {
-          const isTied = hcMfg.filter((m: any) => m.total_points === mfg.total_points).length > 1;
+          const isTied = hcMfg.filter((m: Record<string, unknown>) => m.total_points === mfg.total_points).length > 1;
           return (
             <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
               <div className="flex items-center gap-3">
