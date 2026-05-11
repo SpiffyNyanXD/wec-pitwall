@@ -42,7 +42,7 @@ export function useRaces(seasonId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -63,7 +63,7 @@ export function useHypercarDriversStandings(seasonId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -84,7 +84,7 @@ export function useHypercarManufacturersStandings(seasonId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -105,7 +105,7 @@ export function useLmgt3TeamsStandings(seasonId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -126,7 +126,7 @@ export function useLmgt3DriversStandings(seasonId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -147,7 +147,7 @@ export function useRaceResults(raceId: string | null) {
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!raceId) {
-      setData([]);
+      setTimeout(() => setData([]), 0);
       setLoading(false);
       return;
     }
@@ -190,7 +190,7 @@ export function useSeasonStats(seasonId: string | null) {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -229,7 +229,7 @@ export function useSeasonDrivers(seasonId: string | null) {
 
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
@@ -273,7 +273,7 @@ export function useCarSeasonStats(seasonId: string | null) {
 
   useEffect(() => {
     if (!seasonId) {
-      setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev);
+      setTimeout(() => setData((prev) => (Array.isArray(prev) ? [] : null) as typeof prev), 0);
       setLoading(false);
       return;
     }
