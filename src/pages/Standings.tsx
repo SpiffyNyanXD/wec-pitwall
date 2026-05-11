@@ -568,7 +568,7 @@ const Standings = () => {
                 <TabsContent value="teams">
                   {selectedSeason === 2024 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      {standings2024.lmgt3.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
+                      {standings2024.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
                             <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
@@ -592,7 +592,7 @@ const Standings = () => {
                 <TabsContent value="drivers">
                   {selectedSeason === 2024 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      {standings2024.lmgt3.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      {standings2024.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
                             <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>

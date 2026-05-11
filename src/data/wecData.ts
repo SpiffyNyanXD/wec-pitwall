@@ -869,6 +869,28 @@ export const races2025: Race[] = [
 
 export const drivers2025: Driver[] = [
   {
+    id: 'calado-2025',
+    name: 'James Calado',
+    firstName: 'James',
+    lastName: 'Calado',
+    nationality: 'British',
+    countryFlag: '🇬🇧',
+    team: 'Ferrari AF Corse',
+    teamId: 'ferrari-51',
+    carNumber: '#51',
+    class: 'HYPERCAR',
+    points: 133,
+    position: 1,
+    dateOfBirth: '1989-06-13',
+    placeOfBirth: 'Cropthorne, UK',
+    biography: 'James Calado won the 2025 WEC championship with Ferrari AF Corse.',
+    careerHighlights: ['2025 WEC World Champion', 'Le Mans 24h Winner'],
+    facts: ['Key development driver for the 499P'],
+    championships: 1,
+    leMansWins: 1,
+  },
+
+  {
     id: 'pier-guidi-2025',
     name: 'Alessandro Pier Guidi',
     firstName: 'Alessandro',
@@ -1139,7 +1161,7 @@ export const teams2025: Team[] = [
   { 
     id: 'ferrari-51-2025', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR',
     points: 133, position: 1, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹',
-    drivers: ['calado', 'pier-guidi', 'giovinazzi'],
+    drivers: ['calado-2025', 'pier-guidi-2025', 'giovinazzi-2025'],
     fullName: 'Ferrari AF Corse', chassis: 'Ferrari 499P', engine: 'Ferrari 3.0L Twin-Turbo V6 Hybrid',
     teamPrincipal: 'Antonello Coletta', base: 'Maranello, Italy', founded: '2021', wecDebut: '2023',
     championships: 1, leMansWins: 1, wecWins: 3, poles: 4, fastestLaps: 5,
@@ -2004,5 +2026,27 @@ export const standings2024 = {
       team: 'Manthey PureRxcing #92',
       manufacturer: 'Porsche',
     },
+    drivers: [
+      { position: 1, drivers: 'Lietz / Pera / Hardwick', points: 139 },
+      { position: 2, drivers: 'Bachler / Malykhin / Sturm', points: 104 },
+      { position: 3, drivers: 'Farfus / Gelael / Leung', points: 85 },
+    ],
+    teams: [
+      { position: 1, team: 'Manthey PureRxcing #92', points: 139 },
+      { position: 2, team: 'Manthey EMA #91', points: 104 },
+      { position: 3, team: 'Team WRT #31', points: 85 },
+    ],
   },
+  lmp2: {
+    teams: [
+      { position: 1, team: 'United Autosports #22', points: 109 },
+      { position: 2, team: 'Inter Europol Competition #34', points: 98 },
+      { position: 3, team: 'Team WRT #41', points: 87 },
+    ],
+    drivers: [
+      { position: 1, drivers: 'Hanson / Scherer / Albuquerque', points: 109 },
+      { position: 2, drivers: 'Costa / Scherer / Smiechowski', points: 98 },
+      { position: 3, drivers: 'Andrade / Kubica / Delétraz', points: 87 },
+    ]
+  }
 };

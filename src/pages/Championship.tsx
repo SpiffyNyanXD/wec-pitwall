@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
-import { useActiveSeasonId, useHypercardDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useSeasonDrivers } from '@/hooks/useWecData';
+import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useSeasonDrivers, useRaces } from '@/hooks/useWecData';
 
 const manufacturerData2025 = [
   { round: 'R1 Qatar',    Ferrari: 43, Toyota: 28, Porsche: 36, Cadillac: 22, BMW: 12 },
@@ -52,7 +52,7 @@ const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: stri
     <div className="space-y-3">
       {season === '2026' ? (
         hcMfg.map((mfg: Record<string, unknown>, idx: number) => {
-          const isTied = idx > 0 && mfg.total_points === hcMfg[idx - 1].total_points;
+          const isTied = hcMfg.filter((m: any) => m.total_points === mfg.total_points).length > 1;
           return (
             <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
               <div className="flex items-center gap-3">
@@ -226,11 +226,12 @@ const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgDat
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 
-  const { seasonId } = useActiveSeasonId();
-  const { data: hcDrivers } = useHypercardDriversStandings(season === '2026' ? seasonId : null);
-  const { data: hcMfg } = useHypercarManufacturersStandings(season === '2026' ? seasonId : null);
-  const { data: lmgt3Drivers } = useLmgt3DriversStandings(season === '2026' ? seasonId : null);
-  const { data: driverNamesMap } = useSeasonDrivers(season === '2026' ? seasonId : null);
+  const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+  const { data: races } = useRaces(SEASON_2026_ID);
+  const { data: hcDrivers } = useHypercarDriversStandings(season === '2026' ? SEASON_2026_ID : null);
+  const { data: hcMfg } = useHypercarManufacturersStandings(season === '2026' ? SEASON_2026_ID : null);
+  const { data: lmgt3Drivers } = useLmgt3DriversStandings(season === '2026' ? SEASON_2026_ID : null);
+  const { data: driverNamesMap } = useSeasonDrivers(season === '2026' ? SEASON_2026_ID : null);
 
   const mfgData = season === '2025' ? manufacturerData2025 : manufacturerData2024;
   const driverData = season === '2025' ? driversData2025 : driversData2024;
@@ -289,8 +290,16 @@ export default function Championship() {
             >
               {season === '2026' ? (
                 <div className="flex flex-col items-center gap-1">
-                  <span className="font-medium">After Round 3 — 6 Hours of Spa-Francorchamps</span>
-                  <span>2 of 8 rounds counted (Qatar postponed to October 2026)</span>
+                  {(() => {
+                    const completedRounds = races?.filter(r => r.status === 'completed').length ?? 0;
+                    const totalRounds = races?.length ?? 8;
+                    return (
+                      <>
+                        <span className="font-medium">After Round {completedRounds}</span>
+                        <span>{completedRounds} of {totalRounds} rounds completed</span>
+                      </>
+                    );
+                  })()}
                 </div>
               ) : season === '2025'
                 ? "Rounds 5–8 data will be available after each race."
