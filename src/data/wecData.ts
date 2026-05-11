@@ -888,6 +888,7 @@ export const drivers2025: Driver[] = [
     facts: ['Key development driver for the 499P'],
     championships: 1,
     leMansWins: 1,
+    wecWins: 1,
   },
 
   {

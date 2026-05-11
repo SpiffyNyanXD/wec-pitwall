@@ -227,7 +227,7 @@ export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 
   const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-  const { data: races } = useRaces(SEASON_2026_ID);
+  const { data: races } = useRaces(season === '2026' ? SEASON_2026_ID : null);
   const { data: hcDrivers } = useHypercarDriversStandings(season === '2026' ? SEASON_2026_ID : null);
   const { data: hcMfg } = useHypercarManufacturersStandings(season === '2026' ? SEASON_2026_ID : null);
   const { data: lmgt3Drivers } = useLmgt3DriversStandings(season === '2026' ? SEASON_2026_ID : null);
