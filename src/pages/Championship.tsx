@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
-import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useSeasonDrivers, useRaces } from '@/hooks/useWecData';
+import { useSeasonByYear, useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useSeasonDrivers } from '@/hooks/useWecData';
 
 const manufacturerData2025 = [
   { round: 'R1 Qatar',    Ferrari: 43, Toyota: 28, Porsche: 36, Cadillac: 22, BMW: 12 },
@@ -226,12 +226,13 @@ const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgDat
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 
-  const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-  const { data: races } = useRaces(season === '2026' ? SEASON_2026_ID : null);
-  const { data: hcDrivers } = useHypercarDriversStandings(season === '2026' ? SEASON_2026_ID : null);
-  const { data: hcMfg } = useHypercarManufacturersStandings(season === '2026' ? SEASON_2026_ID : null);
-  const { data: lmgt3Drivers } = useLmgt3DriversStandings(season === '2026' ? SEASON_2026_ID : null);
-  const { data: driverNamesMap } = useSeasonDrivers(season === '2026' ? SEASON_2026_ID : null);
+  const { seasonId: seasonId2026 } = useSeasonByYear(2026);
+  const activeSeasonId = season === '2026' ? seasonId2026 : null;
+
+  const { data: hcDrivers } = useHypercarDriversStandings(activeSeasonId);
+  const { data: hcMfg } = useHypercarManufacturersStandings(activeSeasonId);
+  const { data: lmgt3Drivers } = useLmgt3DriversStandings(activeSeasonId);
+  const { data: driverNamesMap } = useSeasonDrivers(activeSeasonId);
 
   const mfgData = season === '2025' ? manufacturerData2025 : manufacturerData2024;
   const driverData = season === '2025' ? driversData2025 : driversData2024;
