@@ -30,7 +30,7 @@ export function useActiveSeasonId() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     supabase.from('seasons').select('id').eq('is_active', true).single()
-      .then(({ data }) => { if (data) setSeasonId(data.id); setLoading(false); });
+      .then(({ data }) => { if (data) setSeasonId(data.id); setTimeout(() => setLoading(false), 0); });
   }, []);
   return { seasonId, loading };
 }
@@ -74,12 +74,16 @@ export function useRaces(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase.from('races').select('*').eq('season_id', seasonId).order('round_number')
       .then(({ data: rows, error: err }) => {
         if (err) setError(err.message);
         else setData(rows ?? []);
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
   return { data, loading, error };
@@ -100,12 +104,16 @@ export function useHypercarDriversStandings(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase.from('v_hypercar_drivers_standings').select('*').eq('season_id', seasonId).order('position')
       .then(({ data: rows, error: err }) => {
         if (err) setError(err.message);
         else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
   return { data, loading, error };
@@ -126,12 +134,16 @@ export function useHypercarManufacturersStandings(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase.from('v_hypercar_manufacturers_standings').select('*').eq('season_id', seasonId).order('position')
       .then(({ data: rows, error: err }) => {
         if (err) setError(err.message);
         else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
   return { data, loading, error };
@@ -152,12 +164,16 @@ export function useLmgt3TeamsStandings(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase.from('v_lmgt3_teams_standings').select('*').eq('season_id', seasonId).order('position')
       .then(({ data: rows, error: err }) => {
         if (err) setError(err.message);
         else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
   return { data, loading, error };
@@ -178,12 +194,16 @@ export function useLmgt3DriversStandings(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase.from('v_lmgt3_drivers_standings').select('*').eq('season_id', seasonId).order('position')
       .then(({ data: rows, error: err }) => {
         if (err) setError(err.message);
         else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
   return { data, loading, error };
@@ -204,7 +224,11 @@ export function useRaceResults(raceId: string | null) {
   }
 
   useEffect(() => {
-    if (!raceId) return;
+    if (!raceId) {
+      setTimeout(() => setData([]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase
       .from('race_results')
       .select(`*, cars!inner(car_number, team_name, category, manufacturers!inner(name))`)
@@ -232,7 +256,7 @@ export function useRaceResults(raceId: string | null) {
             manufacturer: r.cars.manufacturers.name,
           })));
         }
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [raceId]);
   return { data, loading, error };
@@ -251,7 +275,11 @@ export function useSeasonStats(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData(null), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     Promise.all([
       supabase.from('races').select('id, duration_hours', { count: 'exact' }).eq('season_id', seasonId),
       supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId),
@@ -265,7 +293,7 @@ export function useSeasonStats(seasonId: string | null) {
         totalManufacturers: uniqueMfrs,
         seasonHours,
       });
-      setLoading(false);
+      setTimeout(() => setLoading(false), 0);
     });
   }, [seasonId]);
   return { data, loading };
@@ -294,7 +322,11 @@ export function useSeasonDrivers(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData({}), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase
       .from('drivers')
       .select('full_name, cars!inner(season_id, car_number, team_name)')
@@ -305,10 +337,13 @@ export function useSeasonDrivers(seasonId: string | null) {
         } else {
           // Group by car_number
           const map: Record<string, string[]> = {};
-          (rows ?? []).forEach((r: Record<string, unknown>) => {
-            const num = (r.cars as Record<string, unknown>).car_number as string;
+          (rows as Record<string, unknown>[] ?? []).forEach((r) => {
+            const num = r?.cars?.car_number;
+            if (!num) return;
             if (!map[num]) map[num] = [];
-            map[num].push(abbreviateName(r.full_name as string));
+            if (r?.full_name) {
+              map[num].push(abbreviateName(r.full_name));
+            }
           });
 
           const result: Record<string, string> = {};
@@ -317,7 +352,7 @@ export function useSeasonDrivers(seasonId: string | null) {
           }
           setData(result);
         }
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
 
@@ -339,7 +374,11 @@ export function useCarSeasonStats(seasonId: string | null) {
   }
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) {
+      setTimeout(() => setData([] as never[]), 0);
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
     supabase
       .from('v_car_season_stats')
       .select('*')
@@ -350,7 +389,7 @@ export function useCarSeasonStats(seasonId: string | null) {
         } else {
           setData(rows ?? []);
         }
-        setLoading(false);
+        setTimeout(() => setLoading(false), 0);
       });
   }, [seasonId]);
 

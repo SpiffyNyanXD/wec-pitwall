@@ -52,7 +52,7 @@ const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: stri
     <div className="space-y-3">
       {season === '2026' ? (
         hcMfg.map((mfg: Record<string, unknown>, idx: number) => {
-          const isTied = idx > 0 && mfg.total_points === hcMfg[idx - 1].total_points;
+          const isTied = hcMfg.filter((m: Record<string, unknown>) => m.total_points === mfg.total_points).length > 1;
           return (
             <div key={mfg.manufacturer} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
               <div className="flex items-center gap-3">
@@ -291,8 +291,16 @@ export default function Championship() {
             >
               {season === '2026' ? (
                 <div className="flex flex-col items-center gap-1">
-                  <span className="font-medium">After Round 3 — 6 Hours of Spa-Francorchamps</span>
-                  <span>2 of 8 rounds counted (Qatar postponed to October 2026)</span>
+                  {(() => {
+                    const completedRounds = races?.filter(r => r.status === 'completed').length ?? 0;
+                    const totalRounds = races?.length ?? 8;
+                    return (
+                      <>
+                        <span className="font-medium">After Round {completedRounds}</span>
+                        <span>{completedRounds} of {totalRounds} rounds completed</span>
+                      </>
+                    );
+                  })()}
                 </div>
               ) : season === '2025'
                 ? "Rounds 5–8 data will be available after each race."
