@@ -35,11 +35,44 @@ export function useActiveSeasonId() {
   return { seasonId, loading };
 }
 
+// Season by year hook
+export function useSeasonByYear(year: number | null) {
+  const [seasonId, setSeasonId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [prevYear, setPrevYear] = useState<number | null>(null);
+
+  if (year !== prevYear) {
+    setPrevYear(year);
+    setSeasonId(null);
+    setLoading(!!year);
+  }
+
+  useEffect(() => {
+    if (!year) return;
+    supabase.from('seasons').select('id').eq('year', year).maybeSingle()
+      .then(({ data }) => {
+        if (data) setSeasonId(data.id);
+        else setSeasonId(null);
+        setLoading(false);
+      });
+  }, [year]);
+  return { seasonId, loading };
+}
+
 // Races hook
 export function useRaces(seasonId: string | null) {
   const [data, setData] = useState<Race[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     supabase.from('races').select('*').eq('season_id', seasonId).order('round_number')
@@ -53,10 +86,19 @@ export function useRaces(seasonId: string | null) {
 }
 
 // Hypercar Drivers standings hook
-export function useHypercardDriversStandings(seasonId: string | null) {
+export function useHypercarDriversStandings(seasonId: string | null) {
   const [data, setData] = useState<HypercardDriverStanding[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     supabase.from('v_hypercar_drivers_standings').select('*').eq('season_id', seasonId).order('position')
@@ -74,6 +116,15 @@ export function useHypercarManufacturersStandings(seasonId: string | null) {
   const [data, setData] = useState<ManufacturerStanding[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     supabase.from('v_hypercar_manufacturers_standings').select('*').eq('season_id', seasonId).order('position')
@@ -91,6 +142,15 @@ export function useLmgt3TeamsStandings(seasonId: string | null) {
   const [data, setData] = useState<Lmgt3Standing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     supabase.from('v_lmgt3_teams_standings').select('*').eq('season_id', seasonId).order('position')
@@ -108,6 +168,15 @@ export function useLmgt3DriversStandings(seasonId: string | null) {
   const [data, setData] = useState<Lmgt3Standing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     supabase.from('v_lmgt3_drivers_standings').select('*').eq('season_id', seasonId).order('position')
@@ -125,6 +194,15 @@ export function useRaceResults(raceId: string | null) {
   const [data, setData] = useState<RaceResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (raceId !== prevId) {
+    setPrevId(raceId);
+    setData([]);
+    setLoading(!!raceId);
+    setError(null);
+  }
+
   useEffect(() => {
     if (!raceId) return;
     supabase
@@ -164,6 +242,14 @@ export function useRaceResults(raceId: string | null) {
 export function useSeasonStats(seasonId: string | null) {
   const [data, setData] = useState<SeasonStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData(null);
+    setLoading(!!seasonId);
+  }
+
   useEffect(() => {
     if (!seasonId) return;
     Promise.all([
@@ -198,6 +284,14 @@ export function useSeasonDrivers(seasonId: string | null) {
   const [data, setData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData({});
+    setLoading(!!seasonId);
+    setError(null);
+  }
 
   useEffect(() => {
     if (!seasonId) return;
@@ -235,6 +329,14 @@ export function useCarSeasonStats(seasonId: string | null) {
   const [data, setData] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState<string | null>(null);
+
+  if (seasonId !== prevId) {
+    setPrevId(seasonId);
+    setData([]);
+    setLoading(!!seasonId);
+    setError(null);
+  }
 
   useEffect(() => {
     if (!seasonId) return;
