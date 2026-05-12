@@ -14,7 +14,9 @@ export function CookieConsentListener() {
           version: CONSENT_VERSION,
           timestamp: Date.now(),
         }));
-      } catch {}
+      } catch {
+        // empty
+      }
     }
 
     window.addEventListener('termly:consent', handleConsent);

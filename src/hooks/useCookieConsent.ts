@@ -2,6 +2,17 @@ import { useEffect, useState } from 'react';
 
 export type ConsentStatus = 'accepted' | 'rejected' | 'pending' | 'blocked';
 
+declare global {
+  interface Window {
+    displayPreferenceModal?: () => void;
+    Termly?: {
+      getConsentState?: () => 'accepted' | 'rejected' | 'pending';
+      acceptAll?: () => void;
+      rejectAll?: () => void;
+    };
+  }
+}
+
 const CONSENT_KEY = 'wec_cookie_consent';
 const CONSENT_VERSION = '1';
 
@@ -13,6 +24,19 @@ interface ConsentRecord {
 
 export function useCookieConsent() {
   const [consent, setConsent] = useState<ConsentStatus>('pending');
+
+  function persistConsent(status: 'accepted' | 'rejected') {
+    try {
+      const record: ConsentRecord = {
+        status,
+        version: CONSENT_VERSION,
+        timestamp: Date.now(),
+      };
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(record));
+    } catch {
+      // empty
+    }
+  }
 
   useEffect(() => {
     // 1. Check localStorage first
@@ -32,11 +56,11 @@ export function useCookieConsent() {
       }
     } catch {
       // localStorage unavailable
-    }
+          }
 
     // 2. Check if Termly loaded successfully
     const termlyLoaded = typeof window !== 'undefined' &&
-      typeof (window as any).displayPreferenceModal === 'function';
+      typeof window.displayPreferenceModal === 'function';
 
     if (!termlyLoaded) {
       setConsent('blocked');
@@ -45,7 +69,7 @@ export function useCookieConsent() {
     }
 
     // 3. Termly loaded
-    const termlyConsent = (window as any).Termly?.getConsentState?.();
+    const termlyConsent = window.Termly?.getConsentState?.();
     if (termlyConsent === 'accepted') {
       setConsent('accepted');
       persistConsent('accepted');
@@ -55,27 +79,20 @@ export function useCookieConsent() {
     }
   }, []);
 
-  function persistConsent(status: 'accepted' | 'rejected') {
-    try {
-      const record: ConsentRecord = {
-        status,
-        version: CONSENT_VERSION,
-        timestamp: Date.now(),
-      };
-      localStorage.setItem(CONSENT_KEY, JSON.stringify(record));
-    } catch {}
-  }
-
   function acceptAll() {
     persistConsent('accepted');
     setConsent('accepted');
-    try { (window as any).Termly?.acceptAll?.(); } catch {}
+    try { window.Termly?.acceptAll?.(); } catch {
+      // empty
+    }
   }
 
   function rejectAll() {
     persistConsent('rejected');
     setConsent('rejected');
-    try { (window as any).Termly?.rejectAll?.(); } catch {}
+    try { window.Termly?.rejectAll?.(); } catch {
+      // empty
+    }
   }
 
   return { consent, acceptAll, rejectAll };

@@ -59,8 +59,8 @@ const Footer = () => {
               className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight bg-transparent border-none p-0 cursor-pointer whitespace-nowrap"
               onClick={() => {
                 if (typeof window !== 'undefined' &&
-                    typeof (window as any).displayPreferenceModal === 'function') {
-                  (window as any).displayPreferenceModal();
+                    typeof window.displayPreferenceModal === 'function') {
+                  window.displayPreferenceModal();
                 } else {
                   alert('Cookie preferences: Analytics are not loaded in your browser. No tracking is active.');
                 }

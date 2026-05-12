@@ -266,7 +266,7 @@ export function useSeasonDrivers(seasonId: string | null) {
 
       const map: Record<string, string[]> = {};
       (rows as Record<string, unknown>[] ?? []).forEach((r) => {
-        const num = (r?.cars as any)?.car_number;
+        const num = (r?.cars as Record<string, unknown>)?.car_number;
         if (!num) return;
         if (!map[num]) map[num] = [];
         if (r?.full_name) {
