@@ -2,7 +2,6 @@ import { Toaster } from "@/components/ui/toaster";
 import CookieConsent from "@/components/CookieConsent";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
@@ -10,6 +9,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { SeasonProvider } from "@/contexts/SeasonContext";
 import { SkeletonBox } from "@/components/PageSkeleton";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { CookieConsentListener } from "@/components/CookieConsentListener";
 
 // Keep Index as eager (it's the first page)
 import Index from "./pages/Index";
@@ -42,8 +42,6 @@ const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Dsar = lazy(() => import('./pages/Dsar'));
 const Terms = lazy(() => import('./pages/Terms'));
 
-const queryClient = new QueryClient();
-
 
 const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -69,8 +67,9 @@ const PageLoader = () => (
 );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <>
+      <CookieConsentListener />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <AuthProvider>
         <SeasonProvider>
         <TooltipProvider>
@@ -150,7 +149,8 @@ const App = () => (
     </ThemeProvider>
     <CookieConsent />
     <SpeedInsights />
-  </QueryClientProvider>
+    </>
+
 );
 
 export default App;

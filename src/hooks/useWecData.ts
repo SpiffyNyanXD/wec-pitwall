@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Race, HypercardDriverStanding, ManufacturerStanding, Lmgt3Standing, RaceResult, SeasonStats } from '@/types/wec';
 
@@ -24,13 +25,32 @@ interface RawRaceResultRow {
   };
 }
 
+
+// Module-level map to track season year by season ID
+const seasonYearMap: Record<string, number> = {};
+
+export function getStaleTimeForSeason(seasonId: string | null, defaultStaleTime: number): number {
+  if (!seasonId) return defaultStaleTime;
+  const year = seasonYearMap[seasonId];
+  if (year === 2024 || year === 2025) {
+    return Infinity;
+  }
+  return defaultStaleTime;
+}
+
 // Active season ID hook
 export function useActiveSeasonId() {
   const [seasonId, setSeasonId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    supabase.from('seasons').select('id').eq('is_active', true).single()
-      .then(({ data }) => { if (data) setSeasonId(data.id); setTimeout(() => setLoading(false), 0); });
+    supabase.from('seasons').select('id, year').eq('is_active', true).single()
+      .then(({ data }) => {
+        if (data) {
+          seasonYearMap[data.id] = data.year;
+          setSeasonId(data.id);
+        }
+        setTimeout(() => setLoading(false), 0);
+      });
   }, []);
   return { seasonId, loading };
 }
@@ -51,8 +71,12 @@ export function useSeasonByYear(year: number | null) {
     if (!year) return;
     supabase.from('seasons').select('id').eq('year', year).maybeSingle()
       .then(({ data }) => {
-        if (data) setSeasonId(data.id);
-        else setSeasonId(null);
+        if (data) {
+          seasonYearMap[data.id] = year;
+          setSeasonId(data.id);
+        } else {
+          setSeasonId(null);
+        }
         setLoading(false);
       });
   }, [year]);
@@ -61,242 +85,164 @@ export function useSeasonByYear(year: number | null) {
 
 // Races hook
 export function useRaces(seasonId: string | null) {
-  const [data, setData] = useState<Race[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase.from('races').select('*').eq('season_id', seasonId).order('round_number')
-      .then(({ data: rows, error: err }) => {
-        if (err) setError(err.message);
-        else setData(rows ?? []);
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['races', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('races')
+        .select('*')
+        .eq('season_id', seasonId!)
+        .order('round_number');
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 48),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // Hypercar Drivers standings hook
 export function useHypercarDriversStandings(seasonId: string | null) {
-  const [data, setData] = useState<HypercardDriverStanding[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase.from('v_hypercar_drivers_standings').select('*').eq('season_id', seasonId).order('position')
-      .then(({ data: rows, error: err }) => {
-        if (err) setError(err.message);
-        else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['hypercar-drivers', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_hypercar_drivers_standings')
+        .select('*')
+        .eq('season_id', seasonId!)
+        .order('position');
+      if (error) throw error;
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // Hypercar Manufacturers standings hook
 export function useHypercarManufacturersStandings(seasonId: string | null) {
-  const [data, setData] = useState<ManufacturerStanding[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase.from('v_hypercar_manufacturers_standings').select('*').eq('season_id', seasonId).order('position')
-      .then(({ data: rows, error: err }) => {
-        if (err) setError(err.message);
-        else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['manufacturers', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_hypercar_manufacturers_standings')
+        .select('*')
+        .eq('season_id', seasonId!)
+        .order('position');
+      if (error) throw error;
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // LMGT3 Teams standings hook
 export function useLmgt3TeamsStandings(seasonId: string | null) {
-  const [data, setData] = useState<Lmgt3Standing[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase.from('v_lmgt3_teams_standings').select('*').eq('season_id', seasonId).order('position')
-      .then(({ data: rows, error: err }) => {
-        if (err) setError(err.message);
-        else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['lmgt3-teams', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_lmgt3_teams_standings')
+        .select('*')
+        .eq('season_id', seasonId!)
+        .order('position');
+      if (error) throw error;
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // LMGT3 Drivers standings hook
 export function useLmgt3DriversStandings(seasonId: string | null) {
-  const [data, setData] = useState<Lmgt3Standing[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase.from('v_lmgt3_drivers_standings').select('*').eq('season_id', seasonId).order('position')
-      .then(({ data: rows, error: err }) => {
-        if (err) setError(err.message);
-        else setData((rows ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) })));
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['lmgt3-drivers', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_lmgt3_drivers_standings')
+        .select('*')
+        .eq('season_id', seasonId!)
+        .order('position');
+      if (error) throw error;
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // Race results hook (for a specific race)
 export function useRaceResults(raceId: string | null) {
-  const [data, setData] = useState<RaceResult[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['race-results', raceId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('race_results')
+        .select(`*, cars!inner(car_number, team_name, category, manufacturers!inner(name))`)
+        .eq('race_id', raceId!)
+        .order('finish_position', { ascending: true, nullsFirst: false });
+      if (error) throw error;
 
-  if (raceId !== prevId) {
-    setPrevId(raceId);
-    setData([]);
-    setLoading(!!raceId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!raceId) {
-      setTimeout(() => setData([]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase
-      .from('race_results')
-      .select(`*, cars!inner(car_number, team_name, category, manufacturers!inner(name))`)
-      .eq('race_id', raceId)
-      .order('finish_position', { ascending: true, nullsFirst: false })
-      .then(({ data: rows, error: err }) => {
-        if (err) {
-          setError(err.message);
-        } else {
-          // Cast to RawRaceResultRow[] — shape guaranteed by the select query above
-          const typed = (rows ?? []) as unknown as RawRaceResultRow[];
-          setData(typed.map(r => ({
-            id: r.id,
-            race_id: r.race_id,
-            car_id: r.car_id,
-            finish_position: r.finish_position,
-            classified: r.classified,
-            status: r.status,
-            points_drivers: Number(r.points_drivers),
-            points_teams: Number(r.points_teams),
-            points_manufacturers: Number(r.points_manufacturers),
-            car_number: r.cars.car_number,
-            team_name: r.cars.team_name,
-            category: r.cars.category,
-            manufacturer: r.cars.manufacturers.name,
-          })));
-        }
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [raceId]);
-  return { data, loading, error };
+      const typed = (data ?? []) as unknown as RawRaceResultRow[];
+      return typed.map(r => ({
+        id: r.id,
+        race_id: r.race_id,
+        car_id: r.car_id,
+        finish_position: r.finish_position,
+        classified: r.classified,
+        status: r.status,
+        points_drivers: Number(r.points_drivers),
+        points_teams: Number(r.points_teams),
+        points_manufacturers: Number(r.points_manufacturers),
+        car_number: r.cars.car_number,
+        team_name: r.cars.team_name,
+        category: r.cars.category,
+        manufacturer: r.cars.manufacturers.name,
+      }));
+    },
+    enabled: !!raceId,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 60,
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // Season stats hook
 export function useSeasonStats(seasonId: string | null) {
-  const [data, setData] = useState<SeasonStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData(null);
-    setLoading(!!seasonId);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData(null), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    Promise.all([
-      supabase.from('races').select('id, duration_hours', { count: 'exact' }).eq('season_id', seasonId),
-      supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId),
-      supabase.from('cars').select('manufacturer_id').eq('season_id', seasonId),
-    ]).then(([racesRes, carsRes, mfrsRes]) => {
+  const { data = null, isLoading } = useQuery({
+    queryKey: ['season-stats', seasonId],
+    queryFn: async () => {
+      const [racesRes, carsRes, mfrsRes] = await Promise.all([
+        supabase.from('races').select('id, duration_hours', { count: 'exact' }).eq('season_id', seasonId!),
+        supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId!),
+        supabase.from('cars').select('manufacturer_id').eq('season_id', seasonId!),
+      ]);
       const seasonHours = (racesRes.data ?? []).reduce((sum, r) => sum + r.duration_hours, 0);
       const uniqueMfrs = new Set((mfrsRes.data ?? []).map(c => c.manufacturer_id)).size;
-      setData({
+      return {
         totalRaces: racesRes.count ?? 0,
         totalTeams: carsRes.count ?? 0,
         totalManufacturers: uniqueMfrs,
         seasonHours,
-      });
-      setTimeout(() => setLoading(false), 0);
-    });
-  }, [seasonId]);
-  return { data, loading };
+      };
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 48),
+  });
+  return { data, loading: isLoading };
 }
 
 // Helper to abbreviate driver names: "Sébastien Buemi" -> "S. Buemi"
@@ -309,89 +255,54 @@ function abbreviateName(fullName: string) {
 
 // Season drivers hook - fetches drivers, joins cars, groups by car_number and returns abbreviated names
 export function useSeasonDrivers(seasonId: string | null) {
-  const [data, setData] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
+  const { data = {}, isLoading, error } = useQuery({
+    queryKey: ['drivers', seasonId],
+    queryFn: async () => {
+      const { data: rows, error: err } = await supabase
+        .from('drivers')
+        .select('full_name, cars!inner(season_id, car_number, team_name)')
+        .eq('cars.season_id', seasonId!);
+      if (err) throw err;
 
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData({});
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData({}), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase
-      .from('drivers')
-      .select('full_name, cars!inner(season_id, car_number, team_name)')
-      .eq('cars.season_id', seasonId)
-      .then(({ data: rows, error: err }) => {
-        if (err) {
-          setError(err.message);
-        } else {
-          // Group by car_number
-          const map: Record<string, string[]> = {};
-          (rows as Record<string, unknown>[] ?? []).forEach((r) => {
-            const num = r?.cars?.car_number;
-            if (!num) return;
-            if (!map[num]) map[num] = [];
-            if (r?.full_name) {
-              map[num].push(abbreviateName(r.full_name));
-            }
-          });
-
-          const result: Record<string, string> = {};
-          for (const num in map) {
-            result[num] = map[num].join(' / ');
-          }
-          setData(result);
+      const map: Record<string, string[]> = {};
+      (rows as Record<string, unknown>[] ?? []).forEach((r) => {
+        const num = (r?.cars as any)?.car_number;
+        if (!num) return;
+        if (!map[num]) map[num] = [];
+        if (r?.full_name) {
+          map[num].push(abbreviateName(r.full_name as string));
         }
-        setTimeout(() => setLoading(false), 0);
       });
-  }, [seasonId]);
 
-  return { data, loading, error };
+      const result: Record<string, string> = {};
+      for (const num in map) {
+        result[num] = map[num].join(' / ');
+      }
+      return result;
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 6),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
+  });
+
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
 
 // Car season stats hook - fetches from v_car_season_stats
 export function useCarSeasonStats(seasonId: string | null) {
-  const [data, setData] = useState<Record<string, unknown>[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [prevId, setPrevId] = useState<string | null>(null);
-
-  if (seasonId !== prevId) {
-    setPrevId(seasonId);
-    setData([]);
-    setLoading(!!seasonId);
-    setError(null);
-  }
-
-  useEffect(() => {
-    if (!seasonId) {
-      setTimeout(() => setData([] as never[]), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    supabase
-      .from('v_car_season_stats')
-      .select('*')
-      .eq('season_id', seasonId)
-      .then(({ data: rows, error: err }) => {
-        if (err) {
-          setError(err.message);
-        } else {
-          setData(rows ?? []);
-        }
-        setTimeout(() => setLoading(false), 0);
-      });
-  }, [seasonId]);
-
-  return { data, loading, error };
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: ['car-season-stats', seasonId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_car_season_stats')
+        .select('*')
+        .eq('season_id', seasonId!);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!seasonId,
+    staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
+    gcTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60),
+  });
+  return { data, loading: isLoading, error: error?.message ?? null };
 }
