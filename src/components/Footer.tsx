@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { APP_INFO } from '@/lib/constants';
+import { useCookieConsent } from '@/hooks/useCookieConsent';
 
 const Footer = () => {
+  const { consent } = useCookieConsent();
   const [openModal, setOpenModal] = useState<'terms' | 'contact' | null>(null);
 
   return (
@@ -55,8 +57,17 @@ const Footer = () => {
             <button
               type="button"
               className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight bg-transparent border-none p-0 cursor-pointer whitespace-nowrap"
+              onClick={() => {
+                if (typeof window !== 'undefined' &&
+                    typeof window.displayPreferenceModal === 'function') {
+                  window.displayPreferenceModal();
+                } else {
+                  alert('Cookie preferences: Analytics are not loaded in your browser. No tracking is active.');
+                }
+              }}
             >
               Consent Preferences
+              {consent === 'blocked' && <span className="ml-1 text-xs opacity-50">(blocked)</span>}
             </button>
           </div>
         </div>
