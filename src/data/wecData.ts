@@ -2004,7 +2004,7 @@ export const standings2024 = {
     champion: {
       drivers: 'André Lotterer / Kevin Estre / Laurens Vanthoor',
       team: 'Porsche Penske Motorsport #6',
-      manufacturer: 'Porsche',
+      manufacturer: 'Toyota',
     },
     drivers: [
       { position: 1, drivers: 'Lotterer / Estre / Vanthoor', team: 'Porsche Penske Motorsport #6', points: 152 },
@@ -2012,13 +2012,13 @@ export const standings2024 = {
       { position: 3, drivers: 'Buemi / Hartley / Hirakawa', team: 'Toyota Gazoo Racing #8', points: 135 },
     ],
     manufacturers: [
-      { position: 1, manufacturer: 'Ferrari', points: 289 },
-      { position: 2, manufacturer: 'Porsche', points: 272 },
-      { position: 3, manufacturer: 'Toyota', points: 245 },
-      { position: 4, manufacturer: 'Cadillac', points: 198 },
-      { position: 5, manufacturer: 'BMW', points: 134 },
-      { position: 6, manufacturer: 'Alpine', points: 122 },
-      { position: 7, manufacturer: 'Peugeot', points: 109 },
+      { position: 1, manufacturer: 'Toyota', points: 190 },
+      { position: 2, manufacturer: 'Porsche', points: 188 },
+      { position: 3, manufacturer: 'Ferrari', points: 137 },
+      { position: 4, manufacturer: 'Alpine', points: 70 },
+      { position: 5, manufacturer: 'BMW', points: 64 },
+      { position: 6, manufacturer: 'Cadillac', points: 52 },
+      { position: 7, manufacturer: 'Peugeot', points: 45 },
     ],
   },
   lmgt3: {
@@ -2040,14 +2040,14 @@ export const standings2024 = {
   },
   lmp2: {
     teams: [
-      { position: 1, team: 'United Autosports #22', points: 109 },
-      { position: 2, team: 'Inter Europol Competition #34', points: 98 },
-      { position: 3, team: 'Team WRT #41', points: 87 },
+      { position: 1, team: 'United Autosports #22', points: 50 },
+      { position: 2, team: 'Inter Europol Competition #34', points: 36 },
+      { position: 3, team: 'IDEC Sport #28', points: 30 },
     ],
     drivers: [
-      { position: 1, drivers: 'Hanson / Scherer / Albuquerque', points: 109 },
-      { position: 2, drivers: 'Costa / Scherer / Smiechowski', points: 98 },
-      { position: 3, drivers: 'Andrade / Kubica / Delétraz', points: 87 },
+      { position: 1, drivers: 'Garg / Jarvis / Siegel', points: 50 },
+      { position: 2, drivers: 'Śmiechowski / Lomko / Novalak', points: 36 },
+      { position: 3, drivers: 'Lafargue / van Uitert / de Gerus', points: 30 },
     ]
   }
 };
