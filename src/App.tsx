@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import CookieConsent from "@/components/CookieConsent";
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
@@ -66,6 +66,11 @@ const PageLoader = () => (
   </div>
 );
 
+const RouteWrapper = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  return <main key={location.pathname}>{children}</main>;
+};
+
 const App = () => (
       <>
       <CookieConsentListener />
@@ -77,7 +82,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
-            <Routes>
+            <RouteWrapper><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
               <Route path="/drivers" element={<Drivers />} />
@@ -140,14 +145,14 @@ const App = () => (
               } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
-              </Routes>
+              </Routes></RouteWrapper>
           </Suspense>
         </BrowserRouter>
         </TooltipProvider>
         </SeasonProvider>
       </AuthProvider>
     </ThemeProvider>
-    <CookieConsent />
+
     <SpeedInsights />
     </>
 
