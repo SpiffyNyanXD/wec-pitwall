@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,7 +21,20 @@ export default defineConfig({
       bundleName: "wec-pitwall",
       uploadToken: process.env.CODECOV_TOKEN,
     }),
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: {
+        assets: "./dist/**",
+      },
+      telemetry: false,
+      disable: !process.env.SENTRY_AUTH_TOKEN,
+    }),
   ],
+  build: {
+    sourcemap: true,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

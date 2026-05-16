@@ -13,6 +13,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@sentry/react": "^10.22.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/orbitron": "^5.2.8",
     "@hookform/resolvers": "^3.10.0",
@@ -73,6 +74,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@sentry/vite-plugin": "^4.3.0",
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
