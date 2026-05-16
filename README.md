@@ -133,6 +133,22 @@ This is a personal fan project. Issues and suggestions welcome via GitHub Issues
 
 If you find data errors (wrong race results, points, driver info), please open an issue with a source link.
 
+## Sentry Setup (React + Vite)
+
+Sentry is initialized from `src/instrument.ts` and imported first in `src/main.tsx`.
+
+Set the following environment variables:
+
+- `VITE_SENTRY_DSN` (required for client event ingestion)
+- `VITE_APP_RELEASE` (recommended, e.g. git SHA)
+- `SENTRY_AUTH_TOKEN` (required for sourcemap uploads during `vite build`)
+- `SENTRY_ORG` and `SENTRY_PROJECT` (required for sourcemap uploads)
+
+Optional runtime mirror variables for local reference:
+
+- `VITE_SENTRY_ORG`
+- `VITE_SENTRY_PROJECT`
+
 ---
 
 ## Disclaimer
