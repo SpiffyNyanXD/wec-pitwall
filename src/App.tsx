@@ -68,7 +68,7 @@ const PageLoader = () => (
 
 const RouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  return <main key={location.pathname}>{children}</main>;
+  return <div key={location.pathname}>{children}</div>;
 };
 
 const App = () => (
