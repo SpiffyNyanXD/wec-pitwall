@@ -1,5 +1,37 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/auth",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/login",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/reset-password",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache"
+        }
+      ]
+    }
   ]
 }
