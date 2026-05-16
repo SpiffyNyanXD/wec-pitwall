@@ -1,43 +1,48 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  define: {
-    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL || ''),
-    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(process.env.VITE_SUPABASE_PUBLISHABLE_KEY || ''),
-  },
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  plugins: [
-    react(),
-    codecovVitePlugin({
-      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-      bundleName: "wec-pitwall",
-      uploadToken: process.env.CODECOV_TOKEN,
-    }),
-    sentryVitePlugin({
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      sourcemaps: {
-        assets: "./dist/**",
-      },
-      telemetry: false,
-      disable: !process.env.SENTRY_AUTH_TOKEN,
-    }),
-  ],
-  build: {
-    sourcemap: true,
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const hasSentry = !!env.SENTRY_AUTH_TOKEN;
+
+  return {
+    define: {
+      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(process.env.VITE_SUPABASE_URL || ""),
+      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(process.env.VITE_SUPABASE_PUBLISHABLE_KEY || ""),
     },
-  },
+    server: {
+      host: "::",
+      port: 8080,
+    },
+    plugins: [
+      react(),
+      codecovVitePlugin({
+        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+        bundleName: "wec-pitwall",
+        uploadToken: process.env.CODECOV_TOKEN,
+      }),
+      hasSentry && sentryVitePlugin({
+        org: env.SENTRY_ORG,
+        project: env.SENTRY_PROJECT,
+        authToken: env.SENTRY_AUTH_TOKEN,
+        sourcemaps: {
+          assets: "./dist/**",
+          filesToDeleteAfterUpload: "./dist/**/*.map",
+        },
+        telemetry: false,
+      }),
+    ].filter(Boolean),
+    build: {
+      sourcemap: hasSentry,
+    },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
+  };
 });
