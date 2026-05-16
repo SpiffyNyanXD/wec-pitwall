@@ -2002,9 +2002,12 @@ export const raceResults: RaceResultSet[] = [
 export const standings2024 = {
   hypercars: {
     champion: {
-      drivers: 'André Lotterer / Kevin Estre / Laurens Vanthoor',
-      team: 'Porsche Penske Motorsport #6',
-      manufacturer: 'Toyota',
+      team: 'Porsche Penske Motorsport',
+      car: '#6 Porsche 963',
+      drivers: 'Estre / Lotterer / Vanthoor',
+      manufacturer: 'Porsche',
+      points: 152,
+      manufacturersChampion: 'Toyota',
     },
     drivers: [
       { position: 1, drivers: 'Lotterer / Estre / Vanthoor', team: 'Porsche Penske Motorsport #6', points: 152 },
@@ -2012,13 +2015,15 @@ export const standings2024 = {
       { position: 3, drivers: 'Buemi / Hartley / Hirakawa', team: 'Toyota Gazoo Racing #8', points: 135 },
     ],
     manufacturers: [
-      { position: 1, manufacturer: 'Toyota', points: 190 },
-      { position: 2, manufacturer: 'Porsche', points: 188 },
-      { position: 3, manufacturer: 'Ferrari', points: 137 },
-      { position: 4, manufacturer: 'Alpine', points: 70 },
-      { position: 5, manufacturer: 'BMW', points: 64 },
-      { position: 6, manufacturer: 'Cadillac', points: 52 },
-      { position: 7, manufacturer: 'Peugeot', points: 45 },
+      { position: 1, manufacturer: 'Toyota',           points: 190 },
+      { position: 2, manufacturer: 'Porsche',          points: 188 },
+      { position: 3, manufacturer: 'Ferrari',          points: 137 },
+      { position: 4, manufacturer: 'Alpine',           points: 70  },
+      { position: 5, manufacturer: 'BMW',              points: 64  },
+      { position: 6, manufacturer: 'Peugeot',          points: 57  },
+      { position: 7, manufacturer: 'Cadillac',         points: 42  },
+      { position: 8, manufacturer: 'Lamborghini',      points: 11  },
+      { position: 9, manufacturer: 'Isotta Fraschini', points: 0   },
     ],
   },
   lmgt3: {
