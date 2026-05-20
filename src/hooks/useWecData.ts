@@ -306,3 +306,64 @@ export function useCarSeasonStats(seasonId: string | null) {
   });
   return { data, loading: isLoading, error: error?.message ?? null };
 }
+
+// Last race hook
+export function useLastRace() {
+  const { data = null, isLoading, error } = useQuery({
+    queryKey: ['last-race'],
+    queryFn: async () => {
+      // Find the most recent completed race
+      const { data: raceData, error: raceError } = await supabase
+        .from('races')
+        .select('*')
+        .eq('status', 'completed')
+        .order('scheduled_date', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (raceError && raceError.code !== 'PGRST116') throw raceError;
+      if (!raceData) return null;
+
+      // Find the winner (first position) for this race
+      const { data: resultData, error: resultError } = await supabase
+        .from('race_results')
+        .select(`
+          finish_position,
+          cars!inner (
+            car_number,
+            team_name,
+            manufacturers!inner(name)
+          )
+        `)
+        .eq('race_id', raceData.id)
+        .order('finish_position', { ascending: true })
+        .limit(1)
+        .single();
+
+      // Ensure optional chaining or defaults when parsing
+      const winnerName = resultData ? `${(resultData.cars as Record<string, unknown>)?.manufacturers ? ((resultData.cars as Record<string, unknown>).manufacturers as Record<string, unknown>).name : ''} #${(resultData.cars as Record<string, unknown>)?.car_number ?? ''}`.trim() : null;
+      const winningTeam = resultData ? (resultData.cars as Record<string, unknown>)?.team_name as string : null;
+
+      return {
+        id: raceData.id,
+        name: raceData.name,
+        date: raceData.scheduled_date, // use scheduled_date or date
+        flag: raceData.country_code ? getFlagEmoji(raceData.country_code) : '🏁', // Provide fallback or use simple logic
+        winner: winnerName,
+        winningTeam: winningTeam,
+      };
+    },
+    staleTime: 0,
+  });
+
+  return { data, loading: isLoading, error: error?.message ?? null };
+}
+
+function getFlagEmoji(countryCode: string) {
+  if (!countryCode) return '🏁';
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char =>  127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+}

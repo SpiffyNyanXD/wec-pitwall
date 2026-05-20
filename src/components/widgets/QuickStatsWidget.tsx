@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Factory, Flag, Users, Clock } from 'lucide-react';
 
 const stats = [
-  { label: 'Races', value: '7', icon: Flag, color: 'text-primary' },
+  { label: 'Races', value: '8', icon: Flag, color: 'text-primary' },
   { label: 'Teams', value: '17', icon: Users, color: 'text-wec-gold' },
   { label: 'Manufacturers', value: '8', icon: Factory, color: 'text-secondary' },
   { label: 'Season Hours', value: '62', icon: Clock, color: 'text-green-400' },

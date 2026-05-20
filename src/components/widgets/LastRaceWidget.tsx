@@ -1,12 +1,19 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Trophy, Flag, Calendar, ChevronRight } from 'lucide-react';
-import { races2025, races2026 } from '@/data/wecData';
+import { useLastRace } from '@/hooks/useWecData';
 
 const LastRaceWidget = () => {
-  // Find the most recently completed race
-  const allRaces = [...races2025, ...races2026].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const lastRace = allRaces.find(r => r.status === 'completed');
+  const { data: lastRace, loading } = useLastRace();
+
+  if (loading) return (
+    <div className="glass-card p-5 group h-full flex flex-col justify-center items-center">
+      <div className="animate-pulse flex flex-col items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-muted/50"></div>
+        <div className="h-4 w-24 bg-muted/50 rounded"></div>
+      </div>
+    </div>
+  );
 
   if (!lastRace) return null;
 

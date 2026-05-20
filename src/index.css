@@ -246,3 +246,120 @@
     filter: invert(1) hue-rotate(180deg);
   }
 }
+
+/* ============================================
+   TERMLY COOKIE CONSENT — DARK THEME OVERRIDE
+   ============================================ */
+
+/* Main banner and popup containers */
+#termly-code-snippet-support,
+.termly-styles-root,
+.t-root {
+  color-scheme: dark !important;
+}
+
+#termly-code-snippet-support *,
+.termly-styles-root *,
+.t-root * {
+  box-sizing: border-box;
+}
+
+/* Popup/modal background */
+#termly-code-snippet-support .t-popup,
+#termly-code-snippet-support .t-modal,
+.termly-styles-root [class*="popup"],
+.termly-styles-root [class*="modal"],
+.termly-styles-root [class*="banner"],
+.termly-styles-root [class*="container"],
+.t-root [class*="popup"],
+.t-root [class*="modal"],
+.t-root [class*="banner"],
+.t-root [class*="container"] {
+  background-color: #111111 !important;
+  background: #111111 !important;
+  color: #f5f5f5 !important;
+  border-color: #2a2a2a !important;
+}
+
+/* All text inside Termly */
+#termly-code-snippet-support p,
+#termly-code-snippet-support span,
+#termly-code-snippet-support div,
+#termly-code-snippet-support h1,
+#termly-code-snippet-support h2,
+#termly-code-snippet-support h3,
+#termly-code-snippet-support a,
+.termly-styles-root p,
+.termly-styles-root span,
+.termly-styles-root div,
+.termly-styles-root a,
+.t-root p,
+.t-root span,
+.t-root div,
+.t-root a {
+  color: #f5f5f5 !important;
+  background-color: transparent !important;
+}
+
+/* Primary action button — use WEC Red */
+#termly-code-snippet-support button[class*="accept"],
+#termly-code-snippet-support button[class*="primary"],
+#termly-code-snippet-support button[class*="agree"],
+.termly-styles-root button[class*="accept"],
+.termly-styles-root button[class*="primary"],
+.t-root button[class*="accept"],
+.t-root button[class*="agree"] {
+  background-color: #E8002D !important;
+  color: #ffffff !important;
+  border-color: #E8002D !important;
+}
+
+/* Secondary/decline buttons */
+#termly-code-snippet-support button[class*="decline"],
+#termly-code-snippet-support button[class*="secondary"],
+#termly-code-snippet-support button[class*="reject"],
+.termly-styles-root button[class*="decline"],
+.termly-styles-root button[class*="secondary"],
+.t-root button[class*="decline"],
+.t-root button[class*="reject"] {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #444 !important;
+}
+
+/* Checkboxes and toggles */
+#termly-code-snippet-support input[type="checkbox"],
+.termly-styles-root input[type="checkbox"],
+.t-root input[type="checkbox"] {
+  accent-color: #E8002D !important;
+}
+
+/* Overlay/backdrop */
+#termly-code-snippet-support [class*="overlay"],
+#termly-code-snippet-support [class*="backdrop"],
+.termly-styles-root [class*="overlay"],
+.termly-styles-root [class*="backdrop"],
+.t-root [class*="overlay"],
+.t-root [class*="backdrop"] {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Scrollable content areas */
+#termly-code-snippet-support [class*="scroll"],
+#termly-code-snippet-support [class*="content"],
+.termly-styles-root [class*="scroll"],
+.termly-styles-root [class*="content"],
+.t-root [class*="content"] {
+  background-color: #111111 !important;
+  color: #f5f5f5 !important;
+}
+
+/* Category/section headers inside preferences */
+#termly-code-snippet-support [class*="category"],
+#termly-code-snippet-support [class*="header"],
+.termly-styles-root [class*="category"],
+.t-root [class*="category"] {
+  background-color: #1a1a1a !important;
+  color: #f5f5f5 !important;
+  border-color: #2a2a2a !important;
+}
