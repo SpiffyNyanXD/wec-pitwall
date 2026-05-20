@@ -332,28 +332,35 @@ export function useLastRace() {
           cars!inner (
             car_number,
             team_name,
+            category,
             manufacturers!inner(name)
           )
         `)
         .eq('race_id', raceData.id)
+        .eq('cars.category', 'Hypercar')
         .order('finish_position', { ascending: true })
         .limit(1)
         .single();
 
-      // Ensure optional chaining or defaults when parsing
-      const winnerName = resultData ? `${(resultData.cars as Record<string, unknown>)?.manufacturers ? ((resultData.cars as Record<string, unknown>).manufacturers as Record<string, unknown>).name : ''} #${(resultData.cars as Record<string, unknown>)?.car_number ?? ''}`.trim() : null;
-      const winningTeam = resultData ? (resultData.cars as Record<string, unknown>)?.team_name as string : null;
+      if (resultError && resultError.code !== 'PGRST116') {
+        console.error('Winner query failed:', resultError.message);
+      }
+
+      const winnerCar = resultData?.cars as Record<string, unknown> | null;
+      const mfrName = winnerCar?.manufacturers ? (winnerCar.manufacturers as Record<string, unknown>).name : '';
+      const winnerName = winnerCar?.car_number ? `${mfrName} #${winnerCar.car_number}`.trim() : null;
+      const winningTeam = winnerCar?.team_name as string | null;
 
       return {
         id: raceData.id,
         name: raceData.name,
-        date: raceData.scheduled_date, // use scheduled_date or date
-        flag: raceData.country_code ? getFlagEmoji(raceData.country_code) : '🏁', // Provide fallback or use simple logic
+        date: raceData.scheduled_date,
+        flag: raceData.country_code ? getFlagEmoji(raceData.country_code) : '🏁',
         winner: winnerName,
         winningTeam: winningTeam,
       };
     },
-    staleTime: 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   return { data, loading: isLoading, error: error?.message ?? null };

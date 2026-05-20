@@ -4,7 +4,7 @@ import { Trophy, Flag, Calendar, ChevronRight } from 'lucide-react';
 import { useLastRace } from '@/hooks/useWecData';
 
 const LastRaceWidget = () => {
-  const { data: lastRace, loading } = useLastRace();
+  const { data: lastRace, loading, error } = useLastRace();
 
   if (loading) return (
     <div className="glass-card p-5 group h-full flex flex-col justify-center items-center">
@@ -12,6 +12,12 @@ const LastRaceWidget = () => {
         <div className="w-8 h-8 rounded-full bg-muted/50"></div>
         <div className="h-4 w-24 bg-muted/50 rounded"></div>
       </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="glass-card p-5 group h-full flex flex-col justify-center items-center">
+      <p className="text-sm text-muted-foreground text-center">Unable to load last race data.</p>
     </div>
   );
 

@@ -1,14 +1,18 @@
 import { motion } from 'framer-motion';
 import { Factory, Flag, Users, Clock } from 'lucide-react';
-
-const stats = [
-  { label: 'Races', value: '8', icon: Flag, color: 'text-primary' },
-  { label: 'Teams', value: '17', icon: Users, color: 'text-wec-gold' },
-  { label: 'Manufacturers', value: '8', icon: Factory, color: 'text-secondary' },
-  { label: 'Season Hours', value: '62', icon: Clock, color: 'text-green-400' },
-];
+import { useSeasonStats, useActiveSeasonId } from '@/hooks/useWecData';
 
 const QuickStatsWidget = () => {
+  const activeSeasonId = useActiveSeasonId();
+  const { data: seasonStats } = useSeasonStats(activeSeasonId);
+
+  const stats = [
+    { label: 'Races', value: seasonStats?.totalRaces?.toString() ?? '8', icon: Flag, color: 'text-primary' },
+    { label: 'Teams', value: seasonStats?.totalTeams?.toString() ?? '17', icon: Users, color: 'text-wec-gold' },
+    { label: 'Manufacturers', value: seasonStats?.totalManufacturers?.toString() ?? '8', icon: Factory, color: 'text-secondary' },
+    { label: 'Season Hours', value: seasonStats?.seasonHours?.toString() ?? '62', icon: Clock, color: 'text-green-400' },
+  ];
+
   return (
     <motion.div 
       className="glass-card p-5"

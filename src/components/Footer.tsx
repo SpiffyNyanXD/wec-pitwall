@@ -15,17 +15,9 @@ const Footer = () => {
 
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
             <Link to="/privacy" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Privacy Policy</Link>
-
-
-
-
-
             <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Cookie Policy</Link>
-
             <Link to="/terms" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Terms of Use</Link>
-
             <Link to="/data-request" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Data Request</Link>
-
             <button
               type="button"
               className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight bg-transparent border-none p-0 cursor-pointer whitespace-nowrap"
