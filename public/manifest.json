@@ -1,0 +1,15 @@
+{
+  "name": "WEC Pitwall",
+  "short_name": "WEC Pitwall",
+  "description": "Professional race strategy companion for FIA World Endurance Championship fans",
+  "display": "standalone",
+  "theme_color": "#E8002D",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

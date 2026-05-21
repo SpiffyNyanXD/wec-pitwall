@@ -275,7 +275,6 @@
 .t-root [class*="modal"],
 .t-root [class*="banner"],
 .t-root [class*="container"] {
-  background-color: #111111 !important;
   background: #111111 !important;
   color: #f5f5f5 !important;
   border-color: #2a2a2a !important;
