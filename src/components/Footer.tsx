@@ -18,21 +18,10 @@ const Footer = () => {
             <Link to="/cookie-policy" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Cookie Policy</Link>
             <Link to="/terms" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Terms of Use</Link>
             <Link to="/data-request" className="hover:text-foreground transition-colors tap-highlight whitespace-nowrap">Data Request</Link>
-            <button
-              type="button"
-              className="termly-display-preferences text-muted-foreground hover:text-foreground transition-colors tap-highlight bg-transparent border-none p-0 cursor-pointer whitespace-nowrap"
-              onClick={() => {
-                if (typeof window !== 'undefined' &&
-                    typeof window.displayPreferenceModal === 'function') {
-                  window.displayPreferenceModal();
-                } else {
-                  alert('Cookie preferences: Analytics are not loaded in your browser. No tracking is active.');
-                }
-              }}
-            >
+            <Link to="/cookie-preferences" className="text-muted-foreground hover:text-foreground transition-colors tap-highlight whitespace-nowrap">
               Consent Preferences
               {consent === 'blocked' && <span className="ml-1 text-xs opacity-50">(blocked)</span>}
-            </button>
+            </Link>
           </div>
         </div>
         <p className="text-xs text-muted-foreground/70 text-center mt-4">{APP_INFO.DATA_NOTE}</p>

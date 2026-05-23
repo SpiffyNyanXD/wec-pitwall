@@ -48,7 +48,7 @@ const driversData2024 = [
 
 const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: string, hcMfg: Record<string, unknown>[], standings: Record<string, unknown> }) => (
   <div className="glass-card p-6 rounded-xl">
-    <h3 className="font-racing text-xl mb-4 text-gradient">
+    <h3 className="font-bold text-xl mb-4 text-gradient">
       {season === '2026' ? "Manufacturers Championship" : "Final Manufacturer Standings"}
     </h3>
     <div className="space-y-3">
@@ -85,7 +85,7 @@ const ManufacturerStandingsTable = ({ season, hcMfg, standings }: { season: stri
 
 const DriverStandingsTable = ({ season, hcDrivers, standings, driverNamesMap }: { season: string, hcDrivers: Record<string, unknown>[], standings: Record<string, unknown>, driverNamesMap: Record<string, string> }) => (
   <div className="glass-card p-6 rounded-xl">
-    <h3 className="font-racing text-xl mb-4 text-gradient">
+    <h3 className="font-bold text-xl mb-4 text-gradient">
       {season === '2026' ? "Hypercar Drivers Championship" : "Final Driver Standings"}
     </h3>
     <div className="space-y-3">
@@ -126,7 +126,7 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: { lmgt3Drivers: R
     className="grid md:grid-cols-2 gap-8"
   >
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="font-racing text-xl mb-4 text-gradient">LMGT3 Drivers Championship</h3>
+      <h3 className="font-bold text-xl mb-4 text-gradient">LMGT3 Drivers Championship</h3>
       <div className="space-y-3">
         {lmgt3Drivers.map((driver: Record<string, unknown>) => {
           const names = driverNamesMap[driver.car_number] || driver.team_name;
@@ -154,7 +154,7 @@ const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgDat
       animate={{ opacity: 1, y: 0 }}
       className="glass-card p-4 sm:p-6 rounded-xl"
     >
-      <h2 className="text-xl sm:text-2xl font-racing mb-6">Manufacturers Championship — {season}</h2>
+      <h2 className="text-xl sm:text-2xl font-bold mb-6">Manufacturers Championship — {season}</h2>
       <div className="h-[300px] md:h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={mfgData}>
@@ -190,7 +190,7 @@ const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgDat
       animate={{ opacity: 1, y: 0 }}
       className="glass-card p-4 sm:p-6 rounded-xl"
     >
-      <h2 className="text-xl sm:text-2xl font-racing mb-6">Drivers Championship — {season}</h2>
+      <h2 className="text-xl sm:text-2xl font-bold mb-6">Drivers Championship — {season}</h2>
       <div className="h-[300px] md:h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={driverData}>
@@ -259,7 +259,7 @@ export default function Championship() {
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-racing text-gradient mb-2">Championship Battle</h1>
+              <h1 className="text-4xl font-bold text-gradient mb-2">Championship Battle</h1>
               <p className="text-muted-foreground">Round-by-round point progression</p>
             </div>
 
@@ -273,8 +273,7 @@ export default function Championship() {
           </div>
 
           <div className="grid gap-8">
-            {season !== '2026' && <ManufacturerProgressionChart season={season} />}
-            {season !== '2026' && <ChartsSection season={season} mfgData={mfgData} driverData={driverData} />}
+
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

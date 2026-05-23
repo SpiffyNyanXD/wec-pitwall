@@ -1,16 +1,16 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, ChevronDown } from 'lucide-react';
-import { teams2024, drivers2024, teams2025, standings2025 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
 const StandingsWidget = () => {
-  const [selectedSeason, setSelectedSeason] = useState<2024 | 2025>(2025);
+  const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
   
-  const teams = selectedSeason === 2025 ? teams2025 : teams2024;
-  const drivers = selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024;
+  const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
+  const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
 
   const getMedalIcon = (position: number) => {
     switch (position) {
@@ -137,32 +137,32 @@ const StandingsWidget = () => {
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
               <button
-                onClick={() => setSelectedSeason(2024)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  selectedSeason === 2024 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                }`}
-              >
-                2024
-              </button>
-              <button
                 onClick={() => setSelectedSeason(2025)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
-                  selectedSeason === 2025 
+                  selectedSeason === 2025
                     ? 'bg-primary text-primary-foreground' 
                     : 'bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}
               >
                 2025
               </button>
+              <button
+                onClick={() => setSelectedSeason(2026)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  selectedSeason === 2026
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                2026
+              </button>
             </div>
           </div>
         </div>
         
         <div className="flex items-center justify-between mb-3">
-          <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400 border-green-500/30">
-            {selectedSeason} Season Complete
+          <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
+            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
