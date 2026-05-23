@@ -21,19 +21,28 @@ const Schedule = () => {
     return `${start.toLocaleDateString('en-US', { ...options, year: 'numeric' })}`;
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Completed</Badge>;
-      case 'live':
-        return <Badge variant="outline" className="bg-secondary/20 text-secondary border-secondary/30 animate-pulse">LIVE</Badge>;
-      case 'upcoming':
-        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">Upcoming</Badge>;
-      case 'postponed':
-        return <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30">Postponed</Badge>;
-      default:
-        return null;
+  const getStatusBadge = (race: Race) => {
+    if (race.status === 'completed') {
+      return <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-muted text-xs">Done</Badge>;
+    } else if (race.status === 'cancelled' || race.status === 'postponed') {
+      return <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30">Postponed</Badge>;
+    } else if (race.status === 'live') {
+      return <Badge variant="outline" className="bg-secondary/20 text-secondary border-secondary/30 animate-pulse">LIVE</Badge>;
+    } else if (race.status === 'scheduled') {
+      // Find the first upcoming scheduled race to highlight
+      const now = new Date();
+      const upcomingRaces = races
+        .filter((r) => r.status === 'scheduled')
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+      const isNext = upcomingRaces.length > 0 && upcomingRaces[0].id === race.id;
+
+      if (isNext) {
+        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 text-xs">Next</Badge>;
+      }
+      return <Badge variant="outline" className="bg-muted/20 text-muted-foreground border-muted/30 text-xs">Upcoming</Badge>;
     }
+    return null;
   };
 
   const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => (
@@ -57,7 +66,7 @@ const Schedule = () => {
               <p className="font-racing text-base font-bold truncate">{race.name}</p>
             </div>
             <div className="md:hidden">
-              {getStatusBadge(race.status)}
+              {getStatusBadge(race)}
             </div>
           </div>
 
@@ -90,7 +99,7 @@ const Schedule = () => {
 
           {/* Status & Winner */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            {getStatusBadge(race.status)}
+            {getStatusBadge(race)}
             
             {race.winner && (
               <div className="flex items-center gap-2 text-sm">

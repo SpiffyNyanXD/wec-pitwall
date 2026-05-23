@@ -92,7 +92,7 @@ export function useRaces(seasonId: string | null) {
         .from('races')
         .select('*')
         .eq('season_id', seasonId!)
-        .order('round_number');
+        .order('scheduled_date');
       if (error) throw error;
       return data ?? [];
     },

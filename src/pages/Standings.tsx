@@ -311,7 +311,7 @@ const Standings = () => {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h1 className="font-racing text-3xl md:text-4xl font-bold">
+            <h1 className="text-3xl md:text-4xl font-bold">
               <span className="text-gradient">Championship Standings</span>
             </h1>
             
@@ -345,7 +345,7 @@ const Standings = () => {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-wec-gold" />
-            <h2 className="font-racing text-2xl font-bold">Hypercar</h2>
+            <h2 className="text-2xl font-bold">Hypercar</h2>
             <Badge className="bg-primary/20 text-primary border-primary/30">
               {CLASS_BADGES.HYPERCAR}
             </Badge>
@@ -353,15 +353,15 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
-              <TabsTrigger value="drivers" className="font-racing gap-2 text-xs">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
-              <TabsTrigger value="entries" className="font-racing gap-2 text-xs">
+              <TabsTrigger value="entries" className="gap-2 text-xs font-bold">
                 <Users className="w-3 h-3" />
                 Entries
               </TabsTrigger>
-              <TabsTrigger value="manufacturers" className="font-racing gap-2 text-xs">
+              <TabsTrigger value="manufacturers" className="gap-2 text-xs font-bold">
                 <Factory className="w-3 h-3" />
                 Manufacturers
               </TabsTrigger>
@@ -376,7 +376,7 @@ const Standings = () => {
                   </span>
                 </div>
                 {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : hypercarDrivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarDrivers.map((driver, index) => (
@@ -411,7 +411,7 @@ const Standings = () => {
                 </div>
                 {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
                   <>
-                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026.</p>
+                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {hypercarEntries.map((team, index) => (
                         <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
@@ -451,7 +451,7 @@ const Standings = () => {
                   </span>
                 </div>
                 {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : manufacturersStandings.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {manufacturersStandings.map((manufacturer, index) => (
@@ -470,7 +470,7 @@ const Standings = () => {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-green-400" />
-            <h2 className="font-racing text-2xl font-bold">LMGT3</h2>
+            <h2 className="text-2xl font-bold">LMGT3</h2>
             <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
               {CLASS_BADGES.LMGT3}
             </Badge>
@@ -478,11 +478,11 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
-              <TabsTrigger value="drivers" className="font-racing gap-2 text-xs">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
-              <TabsTrigger value="teams" className="font-racing gap-2 text-xs">
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
                 <Users className="w-3 h-3" />
                 Teams
               </TabsTrigger>
@@ -497,7 +497,7 @@ const Standings = () => {
                   </span>
                 </div>
                 {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : lmgt3Drivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Drivers.map((driver, index) => (
@@ -519,7 +519,7 @@ const Standings = () => {
                   </span>
                 </div>
                 {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round. Next race: 1812 km of Qatar — 28 February 2026." />
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : lmgt3Teams.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Teams.map((team, index) => (
@@ -538,7 +538,7 @@ const Standings = () => {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-blue-400" />
-            <h2 className="font-racing text-2xl font-bold">LMP2</h2>
+            <h2 className="text-2xl font-bold">LMP2</h2>
             <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
               {CLASS_BADGES.LMP2}
             </Badge>
@@ -555,11 +555,11 @@ const Standings = () => {
             {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
               <Tabs defaultValue="teams" className="w-full">
                 <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
-                  <TabsTrigger value="teams" className="font-racing gap-2 text-xs">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
                     <Users className="w-3 h-3" />
                     Teams
                   </TabsTrigger>
-                  <TabsTrigger value="drivers" className="font-racing gap-2 text-xs">
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                     <User className="w-3 h-3" />
                     Drivers
                   </TabsTrigger>
@@ -650,4 +650,5 @@ const Standings = () => {
   );
 };
 
+// FONT-AUDIT: this page uses default sans font — verified to match home page
 export default Standings;
