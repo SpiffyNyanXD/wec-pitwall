@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import { drivers2025 } from '@/data/wecData';
+import { Helmet } from "react-helmet-async";
 
 const DriverComparison = () => {
   const [driver1Id, setDriver1Id] = useState<string>('');
@@ -31,6 +32,14 @@ const DriverComparison = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
+      <Helmet>
+        <title>Driver Comparison | WEC Pitwall</title>
+        <meta name="description" content="Head-to-head WEC driver comparison — points, wins, podiums, pole positions and fastest laps side by side." />
+        <meta property="og:title" content="WEC Driver Head-to-Head Comparison" />
+        <meta property="og:url" content="https://wec-pitwall.vercel.app/compare" />
+        <link rel="canonical" href="https://wec-pitwall.vercel.app/compare" />
+      </Helmet>
       <SEOHead title="Driver Comparison" description="Compare WEC drivers head-to-head" url="/compare" />
       <Header />
       <main className="container py-8 px-4">

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { standings2024, standings2025, hypercars2026 } from '@/data/wecData';
+import { Helmet } from "react-helmet-async";
 
 const manufacturerColors: Record<string, string> = {
   'Ferrari': '#DC0000',
@@ -48,6 +49,14 @@ const Manufacturers = () => {
 
   return (
     <div className="min-h-screen pb-20 bg-background">
+
+      <Helmet>
+        <title>WEC Manufacturers Championship 2026 | WEC Pitwall</title>
+        <meta name="description" content="2026 FIA WEC Manufacturers Championship — Toyota, Ferrari, BMW, Alpine, Aston Martin, Cadillac, Peugeot, Genesis." />
+        <meta property="og:title" content="2026 WEC Manufacturers Championship" />
+        <meta property="og:url" content="https://wec-pitwall.vercel.app/manufacturers" />
+        <link rel="canonical" href="https://wec-pitwall.vercel.app/manufacturers" />
+      </Helmet>
       <SEOHead
         title="Manufacturers"
         description="FIA WEC Manufacturers Championship standings and the 2026 Hypercar grid."

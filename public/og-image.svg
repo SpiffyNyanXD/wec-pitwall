@@ -1,0 +1,7 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#000000"/>
+  <rect x="0" y="0" width="8" height="630" fill="#E8002D"/>
+  <text x="80" y="280" font-family="Arial" font-size="72" font-weight="bold" fill="#ffffff">WEC Pitwall</text>
+  <text x="80" y="360" font-family="Arial" font-size="32" fill="#999999">FIA World Endurance Championship</text>
+  <text x="80" y="420" font-family="Arial" font-size="28" fill="#E8002D">Analytics Platform</text>
+</svg>
