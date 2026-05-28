@@ -40,6 +40,7 @@ const Index = () => {
       <Header />
       
       <main className="container py-6 px-4 relative z-10">
+        <h1 className="sr-only">WEC Pitwall Dashboard - FIA World Endurance Championship Companion</h1>
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
           initial={{ opacity: 0 }}
