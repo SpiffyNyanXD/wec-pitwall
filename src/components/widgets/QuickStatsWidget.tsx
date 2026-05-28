@@ -3,8 +3,8 @@ import { Factory, Flag, Users, Clock } from 'lucide-react';
 import { useSeasonStats, useActiveSeasonId } from '@/hooks/useWecData';
 
 const QuickStatsWidget = () => {
-  const activeSeasonId = useActiveSeasonId();
-  const { data: seasonStats } = useSeasonStats(activeSeasonId);
+  const { seasonId } = useActiveSeasonId();
+  const { data: seasonStats } = useSeasonStats(seasonId ?? null);
 
   const stats = [
     { label: 'Races', value: seasonStats?.totalRaces?.toString() ?? '8', icon: Flag, color: 'text-primary' },

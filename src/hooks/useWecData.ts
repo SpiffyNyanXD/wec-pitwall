@@ -343,7 +343,7 @@ export function useLastRace() {
         .single();
 
       if (resultError && resultError.code !== 'PGRST116') {
-        console.error('Winner query failed:', resultError.message);
+        throw new Error(`Winner query failed: ${resultError.message}`);
       }
 
       const winnerCar = resultData?.cars as Record<string, unknown> | null;
