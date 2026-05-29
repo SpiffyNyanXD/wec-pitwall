@@ -7,6 +7,8 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
+import { Helmet } from "react-helmet-async";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 const Schedule = () => {
   const formatDate = (dateString: string, endDate?: string) => {
@@ -126,6 +128,42 @@ const Schedule = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
+
+      <Helmet>
+        <title>2026 WEC Race Schedule | WEC Pitwall</title>
+        <meta name="description" content="Full 2026 FIA World Endurance Championship calendar. Dates, circuits and results for all 8 rounds including the 24 Hours of Le Mans." />
+        <meta property="og:title" content="2026 WEC Race Calendar & Schedule" />
+        <meta property="og:url" content="https://wec-pitwall.vercel.app/schedule" />
+        <link rel="canonical" href="https://wec-pitwall.vercel.app/schedule" />
+      </Helmet>
+
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "SportsEvent",
+        "name": "24 Hours of Le Mans 2026",
+        "startDate": "2026-06-13",
+        "endDate": "2026-06-14",
+        "location": {
+          "@type": "Place",
+          "name": "Circuit de la Sarthe",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Le Mans",
+            "addressCountry": "FR"
+          }
+        },
+        "sport": "Endurance Racing",
+        "organizer": {
+          "@type": "Organization",
+          "name": "Automobile Club de l'Ouest",
+          "url": "https://www.24h-lemans.com"
+        },
+        "url": "https://wec-pitwall.vercel.app/schedule",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
+      }} />
+
       <SEOHead
         title="Race Schedule"
         description="Full FIA WEC race calendar for the 2024, 2025 and 2026 seasons including session times."

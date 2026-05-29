@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
 import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useSeasonDrivers, useRaces, useSeasonStats, useCarSeasonStats } from '@/hooks/useWecData';
+import { Helmet } from "react-helmet-async";
 
 const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
 
@@ -245,6 +246,14 @@ export default function Championship() {
 
   return (
     <div className="min-h-screen bg-background">
+
+      <Helmet>
+        <title>Championship Battle | WEC Pitwall</title>
+        <meta name="description" content="WEC Championship progression charts — see how the title fights evolved round by round across 2024, 2025 and 2026." />
+        <meta property="og:title" content="WEC Championship Battle — Round by Round" />
+        <meta property="og:url" content="https://wec-pitwall.vercel.app/championship" />
+        <link rel="canonical" href="https://wec-pitwall.vercel.app/championship" />
+      </Helmet>
       <SEOHead
         title="Championship Battle"
         description="Round-by-round FIA WEC championship points progression for 2024, 2025 and 2026 seasons."

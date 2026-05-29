@@ -20,11 +20,57 @@
     <meta property="og:description" content="WEC Pitwall is the analytics platform for the FIA World Endurance Championship. Track standings, race strategy, stint data, teams and drivers." />
     <meta property="og:url" content="https://wec-pitwall.vercel.app" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WEC Pitwall" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- OG Image (file to be created manually — reference it now) -->
+    <!-- TODO: Replace /og-image.png with actual branded PNG 1200x630 -->
+    <!-- Placeholder SVG exists at /og-image.svg for reference -->
+    <meta property="og:image" content="https://wec-pitwall.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WEC Pitwall — FIA World Endurance Championship Analytics Platform" />
 
     <!-- Twitter/X -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="WEC Pitwall — Analytics Platform" />
     <meta name="twitter:description" content="Track WEC standings, race schedules, teams and drivers for the 2026 FIA World Endurance Championship season." />
+    <meta name="twitter:image" content="https://wec-pitwall.vercel.app/og-image.png" />
+    <meta name="twitter:site" content="@WECPitwall" />
+    <meta name="twitter:creator" content="@WECPitwall" />
+
+    <!-- Canonical + apple touch icon -->
+    <link rel="canonical" href="https://wec-pitwall.vercel.app" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "WEC Pitwall",
+      "url": "https://wec-pitwall.vercel.app",
+      "description": "Analytics platform for the FIA World Endurance Championship",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://wec-pitwall.vercel.app/drivers?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "WEC Pitwall",
+      "url": "https://wec-pitwall.vercel.app",
+      "description": "Fan-made analytics platform for FIA World Endurance Championship fans. Not affiliated with FIA or WEC.",
+      "logo": "https://wec-pitwall.vercel.app/favicon.svg"
+    }
+    </script>
   </head>
 
   <body>

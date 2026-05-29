@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { drivers2024, drivers2026, getDriversByClass } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Helmet } from "react-helmet-async";
 
 const Drivers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,6 +85,14 @@ const Drivers = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
+      <Helmet>
+        <title>WEC Drivers 2026 | WEC Pitwall</title>
+        <meta name="description" content="All 2026 FIA WEC Hypercar and LMGT3 drivers — career stats, team info, championship points and race history." />
+        <meta property="og:title" content="2026 WEC Drivers" />
+        <meta property="og:url" content="https://wec-pitwall.vercel.app/drivers" />
+        <link rel="canonical" href="https://wec-pitwall.vercel.app/drivers" />
+      </Helmet>
       <SEOHead
         title="Drivers"
         description="Complete FIA WEC driver lineup for 2026 including Hypercar and LMGT3 class drivers."
