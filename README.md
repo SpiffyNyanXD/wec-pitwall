@@ -2,7 +2,7 @@
 
 **Analytics platform for the FIA World Endurance Championship.**
 
-Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2026 WEC seasons — all in one place.
+Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2026 WEC seasons all in one place.
 
 🌐 **Live:** [wec-pitwall.vercel.app](https://wec-pitwall.vercel.app)
 
@@ -19,7 +19,7 @@ Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2
 - **Teams** — Team entries, car numbers, and manufacturer info
 - **Circuits** — Circuit details, lap records, and race history
 - **Manufacturers** — Championship standings and 2026 hypercar grid
-- **Season Timeline** — Round-by-round race winners and manufacturer dominance
+- **Season Timeline** — Round by round race winners and manufacturer dominance
 - **Championship Battle** — Point progression charts across the season
 - **Le Mans Hub** — Dedicated 24 Hours of Le Mans page
 - **Favourites** — Save your favourite teams and drivers
