@@ -10,7 +10,6 @@ import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, r
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
-import { Helmet } from "react-helmet-async";
 
 type SeasonYear = 2024 | 2025 | 2026;
 
@@ -294,16 +293,9 @@ const Standings = () => {
     <div className="min-h-screen bg-background">
 
 
-      <Helmet>
-        <title>Championship Standings 2026 | WEC Pitwall</title>
-        <meta name="description" content="2026 FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round." />
-        <meta property="og:title" content="2026 WEC Championship Standings" />
-        <meta property="og:url" content="https://wec-pitwall.vercel.app/standings" />
-        <link rel="canonical" href="https://wec-pitwall.vercel.app/standings" />
-      </Helmet>
-      <SEOHead
-        title="Championship Standings"
-        description="2025 FIA WEC Hypercar and LMGT3 driver and team championship standings."
+            <SEOHead
+        title="Championship Standings 2026 | WEC Pitwall"
+        description="2026 FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round."
         url="/standings"
       />
       {/* Background effects */}

@@ -9,7 +9,6 @@ import StandingsWidget from '@/components/widgets/StandingsWidget';
 import CalendarWidget from '@/components/widgets/CalendarWidget';
 import QuickStatsWidget from '@/components/widgets/QuickStatsWidget';
 import LastRaceWidget from '@/components/widgets/LastRaceWidget';
-import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   const [showBetaBanner, setShowBetaBanner] = useState(false);
@@ -31,17 +30,9 @@ const Index = () => {
 
 
 
-      <Helmet>
-        <title>WEC Pitwall — FIA World Endurance Championship</title>
-        <meta name="description" content="Track the 2026 FIA World Endurance Championship. Live standings, race results, team and driver stats, strategy data." />
-        <meta property="og:title" content="WEC Pitwall — FIA World Endurance Championship" />
-        <meta property="og:description" content="Track the 2026 FIA World Endurance Championship. Live standings, race results, team and driver stats." />
-        <meta property="og:url" content="https://wec-pitwall.vercel.app/" />
-        <link rel="canonical" href="https://wec-pitwall.vercel.app/" />
-      </Helmet>
-      <SEOHead
-        title="Dashboard"
-        description="Your fan-made companion for the FIA World Endurance Championship. Live countdowns, standings, and race info."
+            <SEOHead
+        title="WEC Pitwall — Fan-Made WEC Companion"
+        description="Track WEC standings, race schedules, teams and drivers for the FIA World Endurance Championship."
         url="/"
       />
       {/* Background effects */}
