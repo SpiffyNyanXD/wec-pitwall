@@ -7,7 +7,6 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { teams2025, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
-import { Helmet } from "react-helmet-async";
 
 const getClassBadge = (carClass: string) => {
   switch (carClass) {
@@ -112,16 +111,9 @@ const Teams = () => {
   return (
     <div className="min-h-screen bg-background">
 
-      <Helmet>
-        <title>WEC Teams 2026 | WEC Pitwall</title>
-        <meta name="description" content="All 2026 FIA WEC Hypercar and LMGT3 teams — entry lists, car specs, championship standings and results." />
-        <meta property="og:title" content="2026 WEC Teams" />
-        <meta property="og:url" content="https://wec-pitwall.vercel.app/teams" />
-        <link rel="canonical" href="https://wec-pitwall.vercel.app/teams" />
-      </Helmet>
-      <SEOHead
-        title="Teams"
-        description="All FIA WEC teams for the 2026 season — Hypercar and LMGT3 entries, car numbers and manufacturers."
+            <SEOHead
+        title="WEC Teams 2026 | WEC Pitwall"
+        description="All 2026 FIA WEC Hypercar and LMGT3 teams — entry lists, car specs, championship standings and results."
         url="/teams"
       />
       {/* Background effects */}

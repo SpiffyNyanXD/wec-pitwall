@@ -6,7 +6,6 @@ import { MapPin, Route, Calendar, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { circuits } from '@/data/wecData';
-import { Helmet } from "react-helmet-async";
 
 const Circuits = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,16 +22,9 @@ const Circuits = () => {
   return (
     <div className="min-h-screen bg-background">
 
-      <Helmet>
-        <title>WEC Circuits 2026 | WEC Pitwall</title>
-        <meta name="description" content="2026 WEC race circuits — track maps, lap records and race history for all rounds including Le Mans, Spa and Bahrain." />
-        <meta property="og:title" content="2026 WEC Race Circuits" />
-        <meta property="og:url" content="https://wec-pitwall.vercel.app/circuits" />
-        <link rel="canonical" href="https://wec-pitwall.vercel.app/circuits" />
-      </Helmet>
-      <SEOHead
-        title="Circuits"
-        description="WEC race circuits around the world — lap records, track details and race history."
+            <SEOHead
+        title="WEC Circuits 2026 | WEC Pitwall"
+        description="2026 WEC race circuits — track maps, lap records and race history for all rounds including Le Mans, Spa and Bahrain."
         url="/circuits"
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
