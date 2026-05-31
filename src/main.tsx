@@ -1,4 +1,6 @@
 import "./instrument";
+import posthog from 'posthog-js';
+
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -8,6 +10,14 @@ import { inject } from '@vercel/analytics';
 
 injectSpeedInsights();
 inject();
+
+posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
+  api_host: 'https://eu.i.posthog.com',
+  person_profiles: 'identified_only',
+  capture_pageview: true,
+  capture_pageleave: true,
+});
+
 
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
