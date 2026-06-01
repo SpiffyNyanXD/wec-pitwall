@@ -67,6 +67,8 @@ Fill in your `.env`:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+VITE_POSTHOG_PROJECT_TOKEN=your_posthog_project_api_key
+VITE_POSTHOG_HOST=https://eu.i.posthog.com
 ```
 
 ```sh
@@ -107,6 +109,8 @@ Environment variables required in Vercel project settings:
 ```
 VITE_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY
+VITE_POSTHOG_PROJECT_TOKEN
+VITE_POSTHOG_HOST
 ```
 
 ---
@@ -132,6 +136,18 @@ src/
 This is a personal fan project. Issues and suggestions welcome via GitHub Issues.
 
 If you find data errors (wrong race results, points, driver info), please open an issue with a source link.
+
+
+## PostHog Setup (React + Vite)
+
+PostHog is initialized from `src/lib/posthog.ts` and imported once in `src/main.tsx`.
+
+Set these client-side environment variables locally and in Vercel:
+
+- `VITE_POSTHOG_PROJECT_TOKEN` — your PostHog project API key/token
+- `VITE_POSTHOG_HOST` — `https://eu.i.posthog.com` for the EU region
+
+The app also supports the older `VITE_POSTHOG_KEY` name as a fallback, but new setup should use `VITE_POSTHOG_PROJECT_TOKEN`.
 
 ## Sentry Setup (React + Vite)
 
