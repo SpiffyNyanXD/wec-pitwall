@@ -1,5 +1,4 @@
 import SEOHead from "@/components/SEOHead";
-import { useMemo } from "react";
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
@@ -39,8 +38,14 @@ const DriverProfile = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString?: string) => {
+    const date = new Date(dateString);
+
+    if (!dateString || Number.isNaN(date.getTime())) {
+      return 'Unknown';
+    }
+
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -116,7 +121,7 @@ const DriverProfile = () => {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-4 h-4" />
-                  {driver.placeOfBirth}
+                  {driver.placeOfBirth || 'Unknown'}
                 </div>
               </div>
             </div>
