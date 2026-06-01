@@ -164,7 +164,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3">
             <WecLogo />
             <div className="hidden sm:block">
-              <p className="font-racing text-xl font-bold text-foreground tracking-wide" aria-label="WEC Pitwall">
+              <p className="font-racing text-xl font-bold text-foreground tracking-wide">
                 WEC <span className="text-primary">Pitwall</span>
               </p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
