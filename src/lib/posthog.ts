@@ -7,10 +7,9 @@ const posthogHost = import.meta.env.VITE_POSTHOG_HOST || "https://eu.i.posthog.c
 
 const posthogConfig = {
   api_host: posthogHost,
-  defaults: "2026-01-30",
   person_profiles: "identified_only",
-  capture_pageview: "history_change",
-  capture_pageleave: "if_capture_pageview",
+  capture_pageview: true,
+  capture_pageleave: true,
 } satisfies Partial<PostHogConfig>;
 
 if (posthogProjectToken) {
