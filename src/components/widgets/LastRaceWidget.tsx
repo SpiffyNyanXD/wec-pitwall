@@ -31,7 +31,7 @@ const LastRaceWidget = () => {
       className="glass-card p-5 group h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-racing text-lg font-bold flex items-center gap-2">
+        <h3 className="text-lg font-bold flex items-center gap-2">
           <HistoryIcon className="w-5 h-5 text-wec-gold" />
           Last Race Result
         </h3>
@@ -46,7 +46,7 @@ const LastRaceWidget = () => {
             {lastRace.flag}
           </div>
           <div>
-            <h4 className="font-racing text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+            <h4 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
               {lastRace.name}
             </h4>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">

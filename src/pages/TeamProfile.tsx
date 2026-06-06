@@ -100,7 +100,7 @@ const TeamProfile = () => {
         <Header />
         <main className="container py-8">
           <div className="text-center py-20">
-            <h1 className="font-racing text-2xl mb-4">Team not found</h1>
+            <h1 className="text-2xl mb-4">Team not found</h1>
             <Button asChild className="tap-highlight">
               <Link to="/teams">Back to Teams</Link>
             </Button>
@@ -253,7 +253,7 @@ const TeamProfile = () => {
                   </Button>
                 </div>
 
-                <h1 className="font-racing text-4xl md:text-5xl font-bold text-foreground mb-2">
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
                   {team.name}
                 </h1>
                 <p className="text-lg text-muted-foreground mb-1">{teamData.chassis}</p>
@@ -297,7 +297,7 @@ const TeamProfile = () => {
           >
             {/* Team Details */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Wrench className="w-5 h-5 text-primary" />
                 Team Details
               </h2>
@@ -362,7 +362,7 @@ const TeamProfile = () => {
 
             {/* Championships */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-wec-gold" />
                 Achievements
               </h2>
@@ -399,13 +399,13 @@ const TeamProfile = () => {
           >
             {/* About */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4">About</h2>
+              <h2 className="text-lg font-bold mb-4">About</h2>
               <p className="text-muted-foreground leading-relaxed">{teamData.about}</p>
             </div>
 
             {/* Team Facts */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Quote className="w-5 h-5 text-primary" />
                 Team Facts
               </h2>
@@ -427,7 +427,7 @@ const TeamProfile = () => {
 
             {/* Drivers Grid */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
                 Current Drivers
               </h2>

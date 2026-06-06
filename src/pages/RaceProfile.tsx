@@ -5,6 +5,8 @@ import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lu
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
+import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
 import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
@@ -67,18 +69,6 @@ const RaceProfile = () => {
     return start.toLocaleDateString('en-US', options);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Completed</Badge>;
-      case 'live':
-        return <Badge className="bg-secondary text-secondary-foreground animate-pulse">LIVE</Badge>;
-      case 'upcoming':
-        return <Badge className="bg-primary/20 text-primary border-primary/30">Upcoming</Badge>;
-      default:
-        return null;
-    }
-  };
 
   // Circuit data with comprehensive facts
   const circuitDetails: Record<string, CircuitFacts> = {
@@ -299,10 +289,10 @@ const RaceProfile = () => {
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <Badge variant="outline" className="text-xs">Round {race.round}</Badge>
                 <Badge variant="outline" className="text-xs">{race.season} Season</Badge>
-                {getStatusBadge(race.status)}
+                {raceStatus && <RaceBadge status={raceStatus} />}
               </div>
               
-              <h1 className="font-racing text-2xl md:text-4xl font-bold mb-2">
+              <h1 className="text-2xl md:text-4xl font-bold mb-2">
                 <span className="text-gradient">{race.name}</span>
               </h1>
               
@@ -333,7 +323,7 @@ const RaceProfile = () => {
           >
             <Card className="glass-card border-glass-border h-full">
               <CardHeader>
-                <CardTitle className="font-racing flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                   <Route className="w-5 h-5 text-primary" />
                   Circuit Details
                 </CardTitle>
@@ -393,7 +383,7 @@ const RaceProfile = () => {
           >
             <Card className="glass-card border-glass-border h-full">
               <CardHeader>
-                <CardTitle className="font-racing flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                   <Trophy className="w-5 h-5 text-wec-gold" />
                   {race.status === 'completed' ? 'Race Results' : 'Race Information'}
                 </CardTitle>
@@ -452,7 +442,7 @@ const RaceProfile = () => {
             >
               <Card className="glass-card border-glass-border">
                 <CardHeader>
-                  <CardTitle className="font-racing flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-wec-gold" />
                     Full Race Results — All Classes
                   </CardTitle>
@@ -646,7 +636,7 @@ const RaceProfile = () => {
             >
               <Card className="glass-card border-glass-border h-full">
                 <CardHeader>
-                  <CardTitle className="font-racing flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2">
                     <Timer className="w-5 h-5 text-secondary" />
                     Lap Records
                   </CardTitle>
@@ -705,7 +695,7 @@ const RaceProfile = () => {
             >
               <Card className="glass-card border-glass-border h-full">
                 <CardHeader>
-                  <CardTitle className="font-racing flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2">
                     <History className="w-5 h-5 text-wec-gold" />
                     Notable Winners
                   </CardTitle>
@@ -734,7 +724,7 @@ const RaceProfile = () => {
             >
               <Card className="glass-card border-glass-border">
                 <CardHeader>
-                  <CardTitle className="font-racing flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2">
                     <Flag className="w-5 h-5 text-primary" />
                     Schedule
                   </CardTitle>

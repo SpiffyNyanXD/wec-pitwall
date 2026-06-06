@@ -239,7 +239,7 @@ const Auth = () => {
 
         {/* Auth Card */}
         <div className="glass-card p-8">
-          <h2 className="text-xl font-racing text-center mb-6">
+          <h2 className="text-xl text-center mb-6">
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h2>
 

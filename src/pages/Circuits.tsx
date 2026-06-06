@@ -40,7 +40,7 @@ const Circuits = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
             <span className="text-gradient">Circuits</span>
           </h1>
           <p className="text-muted-foreground">FIA World Endurance Championship venues</p>
@@ -87,7 +87,7 @@ const Circuits = () => {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-racing text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                     {circuit.name}
                   </h3>
                   <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">

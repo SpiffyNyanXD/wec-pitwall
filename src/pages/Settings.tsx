@@ -184,7 +184,7 @@ const SettingsPage = () => {
             className="max-w-md mx-auto text-center glass-card p-8"
           >
             <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="font-racing text-xl mb-2">Sign In Required</h2>
+            <h2 className="text-xl mb-2">Sign In Required</h2>
             <p className="text-muted-foreground mb-6">
               Please sign in to access your settings and preferences.
             </p>
@@ -211,12 +211,12 @@ const SettingsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl mx-auto"
         >
-          <h1 className="font-racing text-3xl font-bold mb-6">Settings</h1>
+          <h1 className="text-3xl font-bold mb-6">Settings</h1>
 
           {/* Account */}
           {user && (
             <div className="glass-card p-6 mb-6">
-              <h3 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-primary" />
                 Account
               </h3>
@@ -290,7 +290,7 @@ const SettingsPage = () => {
           <div className="glass-card p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Settings className="w-5 h-5 text-primary" />
-              <h2 className="font-racing text-lg">Preferences</h2>
+              <h2 className="text-lg">Preferences</h2>
             </div>
 
             <div className="space-y-4">
@@ -367,7 +367,7 @@ const SettingsPage = () => {
 
           {/* Theme */}
           <div className="glass-card p-6 mb-6">
-            <h3 className="font-racing text-lg font-bold mb-4">Theme</h3>
+            <h3 className="text-lg font-bold mb-4">Theme</h3>
             <div className="flex gap-3">
               <Button
                 variant={theme === 'dark' ? 'default' : 'outline'}
@@ -390,7 +390,7 @@ const SettingsPage = () => {
           <div className="glass-card p-6 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Bell className="w-5 h-5 text-primary" />
-              <h2 className="font-racing text-lg">Notifications</h2>
+              <h2 className="text-lg">Notifications</h2>
             </div>
             
             <div className="space-y-4">

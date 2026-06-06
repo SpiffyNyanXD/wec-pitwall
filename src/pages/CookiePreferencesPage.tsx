@@ -20,7 +20,7 @@ const CookiePreferencesPage = () => {
             Back to Home
           </Link>
 
-          <h1 className="font-racing text-3xl md:text-4xl font-bold mb-4">Cookie Preferences</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Cookie Preferences</h1>
           <p className="text-muted-foreground">
             Manage your cookie and consent preferences for WEC Pitwall. Your choices will be saved and applied across the platform.
           </p>

@@ -20,7 +20,7 @@ const QuickStatsWidget = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
     >
-      <h3 className="font-racing text-lg font-bold mb-4">Season Stats</h3>
+      <h3 className="text-lg font-bold mb-4">Season Stats</h3>
       
       <div className="grid grid-cols-2 gap-3">
         {stats.map((stat, index) => (

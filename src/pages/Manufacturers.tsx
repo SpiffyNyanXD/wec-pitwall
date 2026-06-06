@@ -73,7 +73,7 @@ const Manufacturers = () => {
               <Car className="w-3 h-3 mr-2" />
               World Endurance Championship
             </Badge>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-racing font-bold mb-4 tracking-wide text-gradient break-words">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-wide text-gradient break-words">
               MANUFACTURERS
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl">
@@ -168,7 +168,7 @@ const Manufacturers = () => {
         {/* Season Standings Section */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-racing font-bold tracking-wide">
+            <h2 className="text-2xl font-bold tracking-wide">
               Championship Standings
             </h2>
             <Tabs value={activeSeason} onValueChange={setActiveSeason} className="w-[200px]">
@@ -238,7 +238,7 @@ const Manufacturers = () => {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Calendar className="w-6 h-6 text-primary" />
-            <h2 className="text-2xl font-racing font-bold tracking-wide">
+            <h2 className="text-2xl font-bold tracking-wide">
               2026 Hypercar Grid
             </h2>
           </div>
@@ -257,7 +257,7 @@ const Manufacturers = () => {
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: manufacturerColors[manufacturer] || '#666' }}
                   />
-                  <h3 className="font-racing text-xl font-bold">{manufacturer}</h3>
+                  <h3 className="text-xl font-bold">{manufacturer}</h3>
                 </div>
 
                 <div className="space-y-3">

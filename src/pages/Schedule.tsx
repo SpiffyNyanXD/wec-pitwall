@@ -1,15 +1,26 @@
 import SEOHead from "@/components/SEOHead";
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
-import { Badge } from '@/components/ui/badge';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
+import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
 
 const Schedule = () => {
+  const allRaces = [...races2026, ...races2025, ...races2024];
+  const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
+    allRaces.map(r => ({
+      id: r.id,
+      scheduled_date: r.date,
+      duration_hours: parseInt(r.duration) || 6,
+      status: r.status as any
+    }))
+  ), [allRaces]);
+
   const formatDate = (dateString: string, endDate?: string) => {
     const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
     const start = parseDate(dateString);
@@ -22,29 +33,7 @@ const Schedule = () => {
     return `${start.toLocaleDateString('en-US', { ...options, year: 'numeric' })}`;
   };
 
-  const getStatusBadge = (race: Race) => {
-    if (race.status === 'completed') {
-      return <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-muted text-xs">Done</Badge>;
-    } else if (race.status === 'cancelled' || race.status === 'postponed') {
-      return <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30">Postponed</Badge>;
-    } else if (race.status === 'live') {
-      return <Badge variant="outline" className="bg-secondary/20 text-secondary border-secondary/30 animate-pulse">LIVE</Badge>;
-    } else if (race.status === 'scheduled') {
-      // Find the first upcoming scheduled race to highlight
-      const now = new Date();
-      const upcomingRaces = races
-        .filter((r) => r.status === 'scheduled')
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-      const isNext = upcomingRaces.length > 0 && upcomingRaces[0].id === race.id;
-
-      if (isNext) {
-        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 text-xs">Next</Badge>;
-      }
-      return <Badge variant="outline" className="bg-muted/20 text-muted-foreground border-muted/30 text-xs">Upcoming</Badge>;
-    }
-    return null;
-  };
 
   const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => (
     <Link to={`/race/${race.id}`}>
@@ -67,7 +56,7 @@ const Schedule = () => {
               <p className="font-racing text-base font-bold truncate">{race.name}</p>
             </div>
             <div className="md:hidden">
-              {getStatusBadge(race)}
+              {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
             </div>
           </div>
 
@@ -77,7 +66,7 @@ const Schedule = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
                 {race.round !== null ? `Round ${race.round}` : 'Postponed — TBC'}
               </p>
-              <h3 className="font-racing text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
+              <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
                 {race.name}
               </h3>
             </div>
@@ -100,7 +89,7 @@ const Schedule = () => {
 
           {/* Status & Winner */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            {getStatusBadge(race)}
+            {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
             
             {race.winner && (
               <div className="flex items-center gap-2 text-sm">
@@ -175,7 +164,7 @@ const Schedule = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 md:mb-8"
         >
-          <h1 className="font-racing text-2xl md:text-4xl font-bold mb-1 md:mb-2">
+          <h1 className="text-2xl md:text-4xl font-bold mb-1 md:mb-2">
             <span className="text-gradient">Race Calendar</span>
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">FIA World Endurance Championship</p>
@@ -183,9 +172,9 @@ const Schedule = () => {
 
         <Tabs defaultValue="2026" className="w-full">
           <TabsList className="grid w-full max-w-xs md:max-w-md grid-cols-3 mb-6 md:mb-8">
-            <TabsTrigger value="2026" className="font-racing text-sm md:text-base">2026</TabsTrigger>
-            <TabsTrigger value="2025" className="font-racing text-sm md:text-base">2025</TabsTrigger>
-            <TabsTrigger value="2024" className="font-racing text-sm md:text-base">2024</TabsTrigger>
+            <TabsTrigger value="2026" className="text-sm md:text-base">2026</TabsTrigger>
+            <TabsTrigger value="2025" className="text-sm md:text-base">2025</TabsTrigger>
+            <TabsTrigger value="2024" className="text-sm md:text-base">2024</TabsTrigger>
           </TabsList>
 
           <TabsContent value="2026">

@@ -22,12 +22,12 @@ const Notifications = () => {
         >
           <div className="flex items-center gap-3 mb-8">
             <Bell className="w-6 h-6 text-primary" />
-            <h1 className="font-racing text-2xl font-bold">Notifications</h1>
+            <h1 className="text-2xl font-bold">Notifications</h1>
           </div>
 
           <div className="glass-card p-12 text-center">
             <BellOff className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="font-racing text-xl mb-2">No notifications yet</h2>
+            <h2 className="text-xl mb-2">No notifications yet</h2>
             <p className="text-muted-foreground text-sm">
               Race reminders and session alerts will appear here.
               Check back closer to race weekends.

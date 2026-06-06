@@ -19,7 +19,7 @@ const DriverProfile = () => {
         <Header />
         <main className="container py-8">
           <div className="text-center py-20">
-            <h1 className="font-racing text-2xl mb-4">Driver not found</h1>
+            <h1 className="text-2xl mb-4">Driver not found</h1>
             <Button asChild className="tap-highlight">
               <Link to="/drivers">Back to Drivers</Link>
             </Button>
@@ -103,7 +103,7 @@ const DriverProfile = () => {
                 <span className="font-racing text-xl text-primary">{driver.carNumber}</span>
               </div>
 
-              <h1 className="font-racing text-4xl md:text-5xl font-bold mb-2">
+              <h1 className="text-4xl md:text-5xl font-bold mb-2">
                 <span className="text-muted-foreground">{driver.firstName}</span>{' '}
                 <span className="text-foreground">{driver.lastName}</span>
               </h1>
@@ -138,7 +138,7 @@ const DriverProfile = () => {
           >
             {/* Career Stats */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-wec-gold" />
                 Career Statistics
               </h2>
@@ -170,7 +170,7 @@ const DriverProfile = () => {
             {/* Current Team */}
             {team && (
               <div className="glass-card p-6">
-                <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                   <Users className="w-5 h-5 text-primary" />
                   Current Team
                 </h2>
@@ -195,13 +195,13 @@ const DriverProfile = () => {
           >
             {/* Biography */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4">Biography</h2>
+              <h2 className="text-lg font-bold mb-4">Biography</h2>
               <p className="text-muted-foreground leading-relaxed">{driver.biography}</p>
             </div>
 
             {/* Career Highlights */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Medal className="w-5 h-5 text-wec-gold" />
                 Career Highlights
               </h2>
@@ -223,7 +223,7 @@ const DriverProfile = () => {
 
             {/* Fun Facts */}
             <div className="glass-card p-6">
-              <h2 className="font-racing text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <Quote className="w-5 h-5 text-primary" />
                 Facts & Trivia
               </h2>

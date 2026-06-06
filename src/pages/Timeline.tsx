@@ -137,7 +137,7 @@ const Timeline = () => {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h1 className="font-racing text-3xl md:text-4xl font-bold">
+            <h1 className="text-3xl md:text-4xl font-bold">
               <span className="text-gradient">Season Timeline</span>
             </h1>
 
@@ -146,8 +146,8 @@ const Timeline = () => {
               onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
             >
               <TabsList className="grid w-full max-w-[200px] grid-cols-2">
-                <TabsTrigger value="2025" className="font-racing text-sm md:text-base">2025</TabsTrigger>
-                <TabsTrigger value="2024" className="font-racing text-sm md:text-base">2024</TabsTrigger>
+                <TabsTrigger value="2025" className="text-sm md:text-base">2025</TabsTrigger>
+                <TabsTrigger value="2024" className="text-sm md:text-base">2024</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -190,7 +190,7 @@ const Timeline = () => {
                           <span className="text-xl">{race.flag}</span>
                         </div>
 
-                        <h3 className="font-racing text-lg font-bold truncate mb-1">{race.name}</h3>
+                        <h3 className="text-lg font-bold truncate mb-1">{race.name}</h3>
                         <p className="text-sm text-muted-foreground mb-4">{formatDate(race.date)}</p>
 
                         <div className="pt-3 border-t border-border/50">
@@ -224,7 +224,7 @@ const Timeline = () => {
             transition={{ delay: 0.3 }}
             className="mb-12 glass-card p-6"
           >
-            <h2 className="font-racing text-2xl font-bold mb-6">Manufacturer Dominance</h2>
+            <h2 className="text-2xl font-bold mb-6">Manufacturer Dominance</h2>
             <div className="space-y-4">
               {manufacturerWins.map(([manufacturer, data]) => (
                 <div key={manufacturer} className="flex items-center gap-4">
@@ -255,7 +255,7 @@ const Timeline = () => {
             transition={{ delay: 0.4 }}
             className="glass-card p-6 overflow-x-auto"
           >
-            <h2 className="font-racing text-2xl font-bold mb-6">Championship Progression (Top 5)</h2>
+            <h2 className="text-2xl font-bold mb-6">Championship Progression (Top 5)</h2>
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
                 <tr>
