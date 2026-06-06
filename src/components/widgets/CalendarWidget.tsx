@@ -1,35 +1,25 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { races2025, races2026 } from '@/data/wecData';
-import { Badge } from '@/components/ui/badge';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
+import { RaceBadge } from '@/components/RaceBadge';
 import { Link } from 'react-router-dom';
 
 const CalendarWidget = () => {
-  const getStatusBadge = (race: import('@/data/wecData').Race, currentSeasonRaces: import('@/data/wecData').Race[]) => {
-    if (race.status === 'completed') {
-      return <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-muted text-xs">Done</Badge>;
-    } else if (race.status === 'cancelled' || race.status === 'postponed') {
-      return <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30">Postponed</Badge>;
-    } else if (race.status === 'live') {
-      return <Badge className="bg-secondary text-secondary-foreground animate-pulse text-xs">LIVE</Badge>;
-    } else if (race.status === 'scheduled') {
-      const upcomingRaces = currentSeasonRaces
-        .filter((r) => r.status === 'scheduled')
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-      const isNext = upcomingRaces.length > 0 && upcomingRaces[0].id === race.id;
-
-      if (isNext) {
-        return <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 text-xs">Next</Badge>;
-      }
-      return null; // Don't show anything if it's just upcoming but not next
-    }
-    return null;
-  };
 
   // Determine which season to show based on current date or status
   const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
+
+  const raceStatuses = computeAllRaceStatuses(
+    currentSeasonRaces.map(r => ({
+      id: r.id,
+      scheduled_date: r.date,
+      duration_hours: parseInt(r.duration), // roughly 6 or 24 or 8
+      status: r.status as 'scheduled' | 'completed' | 'cancelled' // assume postponed is cancelled for data typing
+    }))
+  );
 
   return (
     <motion.div 
@@ -41,7 +31,7 @@ const CalendarWidget = () => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-primary" />
-          <h3 className="font-racing text-lg font-bold">{currentYear} Calendar</h3>
+          <h3 className="text-lg font-bold">{currentYear} Calendar</h3>
         </div>
         <Link to="/schedule" className="text-xs text-primary hover:underline">View All</Link>
       </div>
@@ -71,7 +61,7 @@ const CalendarWidget = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                  {getStatusBadge(race, currentSeasonRaces)}
+                  {raceStatuses.has(race.id) && <RaceBadge status={raceStatuses.get(race.id)!} />}
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
               </div>

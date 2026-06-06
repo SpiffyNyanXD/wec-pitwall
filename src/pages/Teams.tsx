@@ -57,7 +57,7 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
                 <span className="text-lg">{team.countryFlag}</span>
               </div>
               
-              <h3 className="font-racing text-lg font-bold text-foreground group-hover:text-primary transition-colors truncate">
+              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors truncate">
                 {team.name}
               </h3>
               <p className="text-sm text-muted-foreground">{team.manufacturer}</p>
@@ -130,7 +130,7 @@ const Teams = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="font-racing text-4xl font-bold mb-2">
+          <h1 className="text-4xl font-bold mb-2">
             WEC <span className="text-primary">Teams</span>
           </h1>
           <p className="text-muted-foreground">Season Teams & Manufacturers</p>
@@ -157,9 +157,9 @@ const Teams = () => {
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
           <TabsList className="grid w-full max-w-lg grid-cols-3 mb-8 h-12">
-            <TabsTrigger value="HYPERCAR" className="font-racing h-10 px-4">Hypercar</TabsTrigger>
-            <TabsTrigger value="LMP2" className="font-racing h-10 px-4">LMP2</TabsTrigger>
-            <TabsTrigger value="LMGT3" className="font-racing h-10 px-4">LMGT3</TabsTrigger>
+            <TabsTrigger value="HYPERCAR" className="h-10 px-4">Hypercar</TabsTrigger>
+            <TabsTrigger value="LMP2" className="h-10 px-4">LMP2</TabsTrigger>
+            <TabsTrigger value="LMGT3" className="h-10 px-4">LMGT3</TabsTrigger>
           </TabsList>
 
           <TabsContent value="HYPERCAR">

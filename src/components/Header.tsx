@@ -31,7 +31,6 @@ const primaryNav = [
 
 const secondaryNav = [
   { to: '/championship', label: 'Championship', icon: Trophy },
-  { to: '/le-mans', label: 'Le Mans', icon: MapPin },
   { to: '/timeline', label: 'Timeline', icon: Milestone },
   { to: '/circuits', label: 'Circuits', icon: MapPin },
   { to: '/manufacturers', label: 'Manufacturers', icon: Factory },
@@ -77,7 +76,7 @@ const Header = () => {
                   >
                     <WecLogo />
                     <div>
-                      <span className="font-racing text-xl font-bold text-foreground tracking-wide">
+                      <span className="text-xl font-bold text-foreground tracking-wide">
                         WEC <span className="text-primary">Pitwall</span>
                       </span>
                     </div>
@@ -164,7 +163,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3">
             <WecLogo />
             <div className="hidden sm:block">
-              <p className="font-racing text-xl font-bold text-foreground tracking-wide">
+              <p className="text-xl font-bold text-foreground tracking-wide">
                 WEC <span className="text-primary">Pitwall</span>
               </p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">

@@ -142,7 +142,7 @@ const LeMans = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-racing text-5xl md:text-7xl font-bold text-gradient pb-2 bg-gradient-to-r from-wec-gold via-yellow-300 to-wec-gold bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-bold text-gradient pb-2 bg-gradient-to-r from-wec-gold via-yellow-300 to-wec-gold bg-clip-text text-transparent">
             24 HOURS OF LE MANS
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground font-medium uppercase tracking-widest">
@@ -189,7 +189,7 @@ const LeMans = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="font-racing text-2xl font-bold text-wec-gold mb-4">The Legend</h2>
+          <h2 className="text-2xl font-bold text-wec-gold mb-4">The Legend</h2>
           <p className="text-lg leading-relaxed text-foreground/90">
             The 24 Hours of Le Mans has been run since 1923 on the Circuit de la Sarthe — a unique combination of permanent racing sections and public roads closed for the event. The legendary Mulsanne Straight once allowed cars to exceed 400 km/h before chicanes were added in 1990. Modern Hypercars now lap in under 3 minutes 24 seconds. Winning Le Mans is considered the pinnacle of motorsport endurance.
           </p>
@@ -202,7 +202,7 @@ const LeMans = () => {
           transition={{ delay: 0.3 }}
           className="space-y-4"
         >
-          <h2 className="font-racing text-2xl font-bold flex items-center gap-2">
+          <h2 className="text-2xl font-bold flex items-center gap-2">
             <Trophy className="w-6 h-6 text-wec-gold" />
             Recent Winners
           </h2>
@@ -249,7 +249,7 @@ const LeMans = () => {
           transition={{ delay: 0.4 }}
         >
           <div className="glass-card p-6">
-            <h3 className="font-racing text-xl font-bold text-wec-gold mb-4">Circuit Details</h3>
+            <h3 className="text-xl font-bold text-wec-gold mb-4">Circuit Details</h3>
             <ul className="space-y-3">
               <li className="flex justify-between border-b border-border/30 pb-2">
                 <span className="text-muted-foreground">Track Length</span>
@@ -271,7 +271,7 @@ const LeMans = () => {
           </div>
 
           <div className="glass-card p-6">
-            <h3 className="font-racing text-xl font-bold text-wec-gold mb-4">Race Facts</h3>
+            <h3 className="text-xl font-bold text-wec-gold mb-4">Race Facts</h3>
             <ul className="space-y-3">
               <li className="flex justify-between border-b border-border/30 pb-2">
                 <span className="text-muted-foreground">First Race</span>
@@ -315,7 +315,7 @@ const LeMans = () => {
 
                   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                     <div>
-                      <h2 className="font-racing text-2xl md:text-3xl font-bold text-foreground mb-2 group-hover:text-wec-gold transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 group-hover:text-wec-gold transition-colors">
                         {nextRace.name}
                       </h2>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">

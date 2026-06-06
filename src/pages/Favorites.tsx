@@ -123,7 +123,7 @@ const FavoritesPage = () => {
             className="max-w-md mx-auto text-center glass-card p-8"
           >
             <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="font-racing text-xl mb-2">Sign In Required</h2>
+            <h2 className="text-xl mb-2">Sign In Required</h2>
             <p className="text-muted-foreground mb-6">
               Please sign in to manage your favorite teams and drivers.
             </p>
@@ -149,13 +149,13 @@ const FavoritesPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-racing text-3xl font-bold mb-2">Your Favorites</h1>
+          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
           <p className="text-muted-foreground mb-8">Select your favorite teams to follow</p>
 
           {/* Current Favorites */}
           {favoriteTeams.length > 0 && (
             <div className="mb-8">
-              <h2 className="font-racing text-lg mb-4 flex items-center gap-2">
+              <h2 className="text-lg mb-4 flex items-center gap-2">
                 <Star className="w-5 h-5 text-wec-gold" />
                 Your Favorites
               </h2>
@@ -182,7 +182,7 @@ const FavoritesPage = () => {
           )}
 
           {/* All Teams */}
-          <h2 className="font-racing text-lg mb-4">All Teams</h2>
+          <h2 className="text-lg mb-4">All Teams</h2>
           {teamsList.length === 0 ? (
             <div className="text-center p-8 text-muted-foreground glass-card">
               Team browser coming soon with live data.

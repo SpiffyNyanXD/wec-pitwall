@@ -36,7 +36,7 @@ const Drivers = () => {
               {driver.countryFlag}
             </div>
             <div>
-              <h3 className="font-racing text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                 {driver.name}
               </h3>
               <p className="text-sm text-muted-foreground">{driver.team}</p>
@@ -106,7 +106,7 @@ const Drivers = () => {
           className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
         >
           <div>
-            <h1 className="font-racing text-3xl md:text-4xl font-bold mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
               <span className="text-gradient">Drivers</span>
             </h1>
             <p className="text-muted-foreground">FIA World Endurance Championship drivers</p>
@@ -134,9 +134,9 @@ const Drivers = () => {
 
         <Tabs defaultValue="HYPERCAR" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-3 mb-8">
-            <TabsTrigger value="HYPERCAR" className="font-racing">Hypercar</TabsTrigger>
-            <TabsTrigger value="LMP2" className="font-racing">LMP2</TabsTrigger>
-            <TabsTrigger value="LMGT3" className="font-racing">LMGT3</TabsTrigger>
+            <TabsTrigger value="HYPERCAR" className="">Hypercar</TabsTrigger>
+            <TabsTrigger value="LMP2" className="">LMP2</TabsTrigger>
+            <TabsTrigger value="LMGT3" className="">LMGT3</TabsTrigger>
           </TabsList>
 
           {(['HYPERCAR', 'LMP2', 'LMGT3'] as const).map((carClass) => {

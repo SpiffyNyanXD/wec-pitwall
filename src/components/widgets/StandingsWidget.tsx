@@ -132,7 +132,7 @@ const StandingsWidget = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-wec-gold" />
-            <h3 className="font-racing text-lg font-bold">Hypercar</h3>
+            <h3 className="text-lg font-bold">Hypercar</h3>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
