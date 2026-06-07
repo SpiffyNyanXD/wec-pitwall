@@ -16,8 +16,8 @@ const Schedule = () => {
     allRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: parseInt(r.duration) || 6,
-      status: r.status as any
+      duration_hours: r.duration_hours ?? (r.duration.includes('km') ? 10 : parseInt(r.duration) || 6),
+      status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   ), [allRaces]);
 

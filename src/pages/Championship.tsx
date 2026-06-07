@@ -253,7 +253,7 @@ export default function Championship() {
         url="/championship"
       />
       <Header />
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 mx-auto px-4 py-8">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
         <AuthGate featureName="Championship Battle">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

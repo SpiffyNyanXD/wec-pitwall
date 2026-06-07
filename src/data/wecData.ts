@@ -77,6 +77,7 @@ export interface Session {
   startTime: string;
   endTime: string;
   duration: string;
+  duration_hours?: number;
 }
 
 export interface RaceResult {
@@ -113,6 +114,7 @@ export interface Race {
   date: string;
   endDate?: string;
   duration: string;
+  duration_hours?: number;
   status: 'upcoming' | 'live' | 'completed' | 'postponed';
   flag: string;
   season: number;
