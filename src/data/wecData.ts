@@ -77,7 +77,7 @@ export interface Session {
   startTime: string;
   endTime: string;
   duration: string;
-  duration_hours: number;
+  duration_hours?: number;
 }
 
 export interface RaceResult {
