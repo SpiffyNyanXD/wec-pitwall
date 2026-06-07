@@ -1,13 +1,18 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award, ChevronDown } from 'lucide-react';
+import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { AuthModal } from '@/components/AuthModal';
 import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
 const StandingsWidget = () => {
   const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
+  const { user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const navigate = useNavigate();
   
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
   const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
@@ -95,31 +100,48 @@ const StandingsWidget = () => {
           </span>
           <span className="text-xs text-muted-foreground ml-0.5">pts</span>
         </div>
-      </motion.div>
+        {showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
+    </motion.div>
     </Link>
   );
 
-  const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => (
-    <Link to={`/drivers/${driver.id.replace('-2025', '')}`}>
-      <motion.div
-        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: index * 0.1 }}
-      >
-        <div className="flex items-center w-6">
-          {getMedalIcon(index + 1) || (
-            <span className={`font-racing text-sm ${getMedalColor(index + 1)}`}>
-              {index + 1}
-            </span>
-          )}
-        </div>
-        <span className="text-sm">{driver.countryFlag}</span>
-        <span className="flex-1 text-foreground text-sm truncate">{driver.displayName}</span>
-        <span className="font-racing text-sm font-bold">{driver.points} <span className="text-xs text-muted-foreground">pts</span></span>
-      </motion.div>
-    </Link>
-  );
+  const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
+    const handleClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!user) {
+        setShowAuthModal(true);
+      } else {
+        navigate(`/drivers/${driver.id.replace('-2025', '')}`);
+      }
+    };
+
+    return (
+      <div onClick={handleClick} className="cursor-pointer relative">
+        <motion.div
+          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${!user ? 'opacity-80' : ''}`}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          <div className="flex items-center w-6">
+            {getMedalIcon(index + 1) || (
+              <span className={`font-racing text-sm ${getMedalColor(index + 1)}`}>
+                {index + 1}
+              </span>
+            )}
+          </div>
+          <span className="text-sm">{driver.countryFlag}</span>
+          <span className="flex-1 text-foreground text-sm truncate">{driver.displayName}</span>
+          <span className="font-racing text-sm font-bold">{driver.points} <span className="text-xs text-muted-foreground">pts</span></span>
+        </motion.div>
+        {!user && (
+          <div className="absolute top-2 right-2">
+            <Lock className="w-3 h-3 text-zinc-400" />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <motion.div 

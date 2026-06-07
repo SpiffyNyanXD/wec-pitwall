@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { AuthGate } from "@/components/AuthGate";
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import { drivers2025 } from '@/data/wecData';
@@ -38,7 +39,8 @@ const DriverComparison = () => {
         url="/compare"
       />
       <Header />
-      <main className="container py-8 px-4">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
+        <AuthGate featureName="Driver Comparison">
         <div className="mb-8 pt-2">
           <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-foreground">
             Driver Comparison
@@ -166,6 +168,7 @@ const DriverComparison = () => {
             Select two drivers above to compare their 2025 season stats
           </div>
         )}
+      </AuthGate>
       </main>
     </div>
   );

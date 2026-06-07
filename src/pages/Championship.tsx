@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuthGate } from "@/components/AuthGate";
 import Header from '@/components/Header';
 import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
@@ -252,7 +253,8 @@ export default function Championship() {
         url="/championship"
       />
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 mx-auto px-4 py-8">
+        <AuthGate featureName="Championship Battle">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -313,6 +315,7 @@ export default function Championship() {
             </motion.div>
           </div>
         </motion.div>
+      </AuthGate>
       </main>
     </div>
   );

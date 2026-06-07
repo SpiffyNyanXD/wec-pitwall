@@ -169,7 +169,7 @@ const Schedule = () => {
 
       <Header />
 
-      <main className="container py-6 md:py-8 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 md:py-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -189,7 +189,7 @@ const Schedule = () => {
           </TabsList>
 
           <TabsContent value="2026">
-            <div className="space-y-3 md:space-y-4">
+            <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
               {races2026
                 .slice()
                 .sort((a, b) => {
@@ -204,7 +204,7 @@ const Schedule = () => {
           </TabsContent>
 
           <TabsContent value="2025">
-            <div className="space-y-3 md:space-y-4">
+            <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
               {races2025.map((race, index) => (
                 <RaceCard key={race.id} race={race} index={index} />
               ))}
@@ -212,7 +212,7 @@ const Schedule = () => {
           </TabsContent>
 
           <TabsContent value="2024">
-            <div className="space-y-3 md:space-y-4">
+            <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
               {races2024.map((race, index) => (
                 <RaceCard key={race.id} race={race} index={index} />
               ))}

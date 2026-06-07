@@ -22,7 +22,7 @@ const CircuitDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="container py-8">
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
             <h1 className="font-racing text-2xl mb-4">Circuit not found</h1>
             <Link to="/circuits" className="text-primary hover:underline">Back to Circuits</Link>
@@ -41,7 +41,7 @@ const CircuitDetail = () => {
 
       <Header />
 
-      <main className="container py-8 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}

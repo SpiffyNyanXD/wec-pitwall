@@ -10,6 +10,25 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply text-sm md:text-base;
+  }
+  h1 {
+    @apply text-xl md:text-2xl lg:text-3xl 3xl:text-4xl;
+  }
+  .card-title, h2, h3 {
+    @apply text-base md:text-lg;
+  }
+}
+
+@media (max-width: 767px) {
+  button, [role="button"], .nav-link, select, input {
+    min-height: 44px;
+  }
+}
+
+
+@layer base {
   :root {
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;

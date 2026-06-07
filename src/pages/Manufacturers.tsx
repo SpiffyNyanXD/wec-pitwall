@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
+import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { standings2024, standings2025, hypercars2026 } from '@/data/wecData';
 
@@ -166,7 +167,9 @@ const Manufacturers = () => {
         </section>
 
         {/* Season Standings Section */}
-        <section>
+
+        <AuthGate featureName="Historical Data">
+          <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-racing font-bold tracking-wide">
               Championship Standings
@@ -233,6 +236,8 @@ const Manufacturers = () => {
             </CardContent>
           </Card>
         </section>
+        </AuthGate>
+
 
         {/* 2026 Entry List Section */}
         <section>

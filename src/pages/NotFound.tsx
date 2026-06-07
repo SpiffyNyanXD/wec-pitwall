@@ -27,7 +27,7 @@ const NotFound = () => {
 
       <Header />
 
-      <main className="container py-12 px-4 relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

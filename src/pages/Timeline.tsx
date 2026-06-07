@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
+import { AuthGate } from '@/components/AuthGate';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { raceResults, races2024, races2025 } from '@/data/wecData';
 import { Badge } from '@/components/ui/badge';
@@ -130,7 +131,8 @@ const Timeline = () => {
 
       <Header />
 
-      <main className="container py-8 px-4 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4 relative z-10">
+        <AuthGate featureName="Historical Data">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -287,6 +289,7 @@ const Timeline = () => {
           </motion.div>
         )}
 
+      </AuthGate>
       </main>
     </div>
   );
