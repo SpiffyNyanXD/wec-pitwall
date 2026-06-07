@@ -13,6 +13,11 @@ export default {
       },
     },
     extend: {
+      screens: {
+        'xs': '320px',
+        '3xl': '1920px',
+        '4xl': '2560px',
+      },
       fontFamily: {
         racing: ['Orbitron', 'sans-serif'],
         body: ['Inter', 'sans-serif'],

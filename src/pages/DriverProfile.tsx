@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
 import Header from '@/components/Header';
+import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ const DriverProfile = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="container py-8">
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
             <h1 className="text-2xl mb-4">Driver not found</h1>
             <Button asChild className="tap-highlight">
@@ -67,7 +68,10 @@ const DriverProfile = () => {
 
       <Header />
 
-      <main className="container py-8 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+        <AuthGate featureName="Driver Profiles">
+
+
         {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -243,6 +247,7 @@ const DriverProfile = () => {
             </div>
           </motion.div>
         </div>
+      </AuthGate>
       </main>
     </div>
   );

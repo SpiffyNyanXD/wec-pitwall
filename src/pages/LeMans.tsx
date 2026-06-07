@@ -126,7 +126,7 @@ const LeMans = () => {
 
       <Header />
 
-      <main className="container py-8 px-4 relative z-10 max-w-6xl mx-auto space-y-8">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4 relative z-10 max-w-6xl mx-auto space-y-8">
 
         {/* Navigation */}
         <motion.div

@@ -98,7 +98,7 @@ const TeamProfile = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="container py-8">
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
             <h1 className="text-2xl mb-4">Team not found</h1>
             <Button asChild className="tap-highlight">
@@ -188,7 +188,7 @@ const TeamProfile = () => {
 
       <Header />
 
-      <main className="container py-8 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}

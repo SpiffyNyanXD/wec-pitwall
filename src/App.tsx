@@ -109,9 +109,9 @@ const App = () => (
               <Route path="/le-mans" element={<LeMans />} />
               <Route path="/manufacturers" element={<Manufacturers />} />
               <Route path="/notifications" element={
-                <RequireAuth>
+                <Suspense fallback={<><Header /><PageLoader /></>}>
                   <Notifications />
-                </RequireAuth>
+                </Suspense>
               } />
               <Route path="/privacy" element={
                 <Suspense fallback={<><Header /></>}>

@@ -59,7 +59,7 @@ const CountdownWidget = () => {
       className="flex flex-col items-center"
       whileHover={{ scale: 1.05 }}
     >
-      <div className="glass-card px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px] text-center border-primary/30">
+      <div className="glass-card px-2 py-2 md:px-6 md:py-4 min-w-[55px] md:min-w-[90px] text-center border-primary/30">
         <span className="font-racing text-2xl md:text-4xl font-bold text-foreground">
           {value.toString().padStart(2, '0')}
         </span>
@@ -164,7 +164,7 @@ const CountdownWidget = () => {
               </div>
             </div>
             
-            <div className="flex gap-3 md:gap-4">
+            <div className="flex gap-2 justify-between md:gap-4">
               <TimeBlock value={timeLeft.days} label="Days" />
               <TimeBlock value={timeLeft.hours} label="Hours" />
               <TimeBlock value={timeLeft.minutes} label="Mins" />

@@ -51,8 +51,16 @@ const Header = () => {
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
+    <>
+
+      <style>{`
+        @media (min-width: 768px) { body { padding-left: 5rem; } }
+        @media (min-width: 1024px) { body { padding-left: 16rem; } }
+        @media (min-width: 1920px) { body { padding-left: 18rem; } }
+      `}</style>
+
     <motion.header 
-      className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl"
+      className="md:hidden sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -278,6 +286,113 @@ const Header = () => {
         </div>
       </div>
     </motion.header>
+
+      {/* Desktop Sidebar (>=768px) */}
+      <div className="hidden md:flex fixed top-0 left-0 h-screen bg-background border-r border-border/50 z-40 flex-col transition-all duration-300 w-20 lg:w-64 3xl:w-72">
+        <div className="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-border/50 shrink-0">
+          <Link to="/" className="flex items-center gap-3">
+            <WecLogo className="w-8 h-8" />
+            <div className="hidden lg:block">
+              <p className="font-racing text-lg font-bold text-foreground tracking-wide">
+                WEC <span className="text-primary">Pitwall</span>
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3 lg:px-4">
+          {[...primaryNav, ...secondaryNav].map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+                isActive(item.to)
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+              }`}
+              title={item.label}
+            >
+              <item.icon className="w-5 h-5 shrink-0" />
+              <span className="font-medium hidden lg:block whitespace-nowrap">{item.label}</span>
+            </Link>
+          ))}
+
+          <div className="my-4 border-t border-border/50" />
+
+          {user && (
+            <Link
+              to="/favorites"
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+                isActive('/favorites')
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+              }`}
+              title="Favorites"
+            >
+              <Heart className="w-5 h-5 shrink-0" />
+              <span className="font-medium hidden lg:block whitespace-nowrap">Favorites</span>
+            </Link>
+          )}
+
+          <Link
+            to="/settings"
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+              isActive('/settings')
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+            }`}
+            title="Settings"
+          >
+            <Settings className="w-5 h-5 shrink-0" />
+            <span className="font-medium hidden lg:block whitespace-nowrap">Settings</span>
+          </Link>
+        </div>
+
+        {/* User / Sign In at bottom */}
+        <div className="p-4 border-t border-border/50 shrink-0">
+          {!loading && (
+            <>
+              {user ? (
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-center lg:justify-start gap-3 px-2 py-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-bold text-primary">
+                        {profile?.username
+                          ? profile.username[0].toUpperCase()
+                          : profile?.display_name
+                            ? profile.display_name[0].toUpperCase()
+                            : user?.email?.[0].toUpperCase() ?? 'U'}
+                      </span>
+                    </div>
+                    <div className="hidden lg:block overflow-hidden">
+                      <p className="font-medium text-sm truncate">{profile?.username ? `@${profile.username}` : profile?.display_name ?? 'Account'}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-destructive hover:bg-destructive/10 transition-all mt-2 w-full justify-center lg:justify-start"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-5 h-5 shrink-0" />
+                    <span className="font-medium hidden lg:block whitespace-nowrap">Sign Out</span>
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-lg racing-gradient text-primary-foreground"
+                  title="Sign In"
+                >
+                  <LogIn className="w-5 h-5 shrink-0" />
+                  <span className="font-medium hidden lg:block whitespace-nowrap">Sign In</span>
+                </Link>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 

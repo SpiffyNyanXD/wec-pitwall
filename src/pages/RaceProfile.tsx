@@ -46,7 +46,7 @@ const RaceProfile = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="container py-8">
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Race Not Found</h1>
             <Link to="/schedule" className="text-primary hover:underline">
@@ -264,7 +264,7 @@ const RaceProfile = () => {
 
       <Header />
 
-      <main className="container py-6 md:py-8 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 md:py-8 relative z-10">
         {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}

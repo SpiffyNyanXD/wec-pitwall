@@ -142,11 +142,11 @@ const Standings = () => {
     >
       <Link
         to={`/drivers/${driver.id}`}
-        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
+        className="flex items-center gap-3 p-3 3xl:p-5 3xl:text-lg rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
       >
         <div className="flex items-center gap-2 w-12">
           {getMedalIcon(position) || (
-            <span className={`font-racing text-lg w-6 text-center ${getMedalColor(position)}`}>
+            <span className={`font-racing text-lg 3xl:text-2xl w-6 text-center ${getMedalColor(position)}`}>
               {position}
             </span>
           )}
@@ -164,7 +164,7 @@ const Standings = () => {
         </div>
 
         <div className="text-right">
-          <span className="font-racing text-lg font-bold text-foreground">{driver.points}</span>
+          <span className="font-racing text-lg 3xl:text-2xl font-bold text-foreground">{driver.points}</span>
           <span className="text-xs text-muted-foreground ml-1">pts</span>
         </div>
       </Link>
@@ -179,11 +179,11 @@ const Standings = () => {
     >
       <Link
         to={`/teams/${team.id}`}
-        className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
+        className="flex items-center gap-3 p-3 3xl:p-5 3xl:text-lg rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all group tap-highlight"
       >
         <div className="flex items-center gap-2 w-12">
           {getMedalIcon(position) || (
-            <span className={`font-racing text-lg w-6 text-center ${getMedalColor(position)}`}>
+            <span className={`font-racing text-lg 3xl:text-2xl w-6 text-center ${getMedalColor(position)}`}>
               {position}
             </span>
           )}
@@ -222,7 +222,7 @@ const Standings = () => {
         </div>
 
         <div className="text-right">
-          <span className="font-racing text-lg font-bold text-foreground">{team.points}</span>
+          <span className="font-racing text-lg 3xl:text-2xl font-bold text-foreground">{team.points}</span>
           <span className="text-xs text-muted-foreground ml-1">pts</span>
         </div>
       </Link>
@@ -234,11 +234,11 @@ const Standings = () => {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: position * 0.03 }}
-      className="flex items-center gap-3 p-3 rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all tap-highlight"
+      className="flex items-center gap-3 p-3 3xl:p-5 3xl:text-lg rounded-lg bg-card/50 hover:bg-card/80 border border-border/50 transition-all tap-highlight"
     >
       <div className="flex items-center gap-2 w-12">
         {getMedalIcon(position) || (
-          <span className={`font-racing text-lg w-6 text-center ${getMedalColor(position)}`}>
+          <span className={`font-racing text-lg 3xl:text-2xl w-6 text-center ${getMedalColor(position)}`}>
             {position}
           </span>
         )}
@@ -260,7 +260,7 @@ const Standings = () => {
       </div>
 
       <div className="text-right">
-        <span className="font-racing text-lg font-bold text-foreground">{manufacturer.points}</span>
+        <span className="font-racing text-lg 3xl:text-2xl font-bold text-foreground">{manufacturer.points}</span>
         <span className="text-xs text-muted-foreground ml-1">pts</span>
       </div>
     </motion.div>
@@ -306,7 +306,7 @@ const Standings = () => {
 
       <Header />
 
-      <main className="container py-8 px-4 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

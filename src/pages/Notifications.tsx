@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, BellOff } from 'lucide-react';
 import Header from '@/components/Header';
+import { AuthGate } from '@/components/AuthGate';
 import { Button } from '@/components/ui/button';
 
 const Notifications = () => {
@@ -14,7 +15,8 @@ const Notifications = () => {
     <div className="min-h-screen bg-background">
       <SEOHead title="Notifications" url="/notifications" noIndex={true} />
       <Header />
-      <main className="container py-12 px-4 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10">
+        <AuthGate featureName="Notifications">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,6 +36,7 @@ const Notifications = () => {
             </p>
           </div>
         </motion.div>
+      </AuthGate>
       </main>
     </div>
   );
