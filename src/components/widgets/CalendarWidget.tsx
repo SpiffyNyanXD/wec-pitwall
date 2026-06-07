@@ -16,7 +16,7 @@ const CalendarWidget = () => {
     currentSeasonRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: parseInt(r.duration), // roughly 6 or 24 or 8
+      duration_hours: r.duration_hours, // roughly 6 or 24 or 8
       status: r.status as 'scheduled' | 'completed' | 'cancelled' // assume postponed is cancelled for data typing
     }))
   );

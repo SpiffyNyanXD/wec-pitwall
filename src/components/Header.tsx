@@ -53,11 +53,6 @@ const Header = () => {
   return (
     <>
 
-      <style>{`
-        @media (min-width: 768px) { body { padding-left: 5rem; } }
-        @media (min-width: 1024px) { body { padding-left: 16rem; } }
-        @media (min-width: 1920px) { body { padding-left: 18rem; } }
-      `}</style>
 
     <motion.header 
       className="md:hidden sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl"

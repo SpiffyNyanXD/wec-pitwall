@@ -43,7 +43,7 @@ const Index = () => {
       
       <Header />
       
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 px-4 relative z-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 relative z-10">
         <h1 className="sr-only">WEC Pitwall Dashboard - FIA World Endurance Championship Companion</h1>
         <motion.div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
