@@ -55,7 +55,7 @@ const NotFound = () => {
             />
             {/* 404 number overlaid at top of GIF */}
             <div className="absolute top-4 left-0 right-0 flex justify-center">
-              <span className="font-racing text-7xl md:text-8xl font-bold text-foreground/80">
+              <span className="text-7xl md:text-8xl font-bold text-foreground/80">
                 404
               </span>
             </div>
@@ -65,7 +65,7 @@ const NotFound = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="font-racing text-2xl md:text-3xl font-bold text-foreground mb-3"
+            className="text-2xl md:text-3xl font-bold text-foreground mb-3"
           >
             Off the Racing Line
           </motion.h1>
@@ -97,7 +97,7 @@ const NotFound = () => {
           >
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl racing-gradient text-primary-foreground font-racing font-semibold text-sm hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl racing-gradient text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard

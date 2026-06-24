@@ -53,7 +53,7 @@ const Schedule = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 {race.round !== null ? `Round ${race.round}` : 'Postponed'}
               </p>
-              <p className="font-racing text-base font-bold truncate">{race.name}</p>
+              <p className="text-base font-bold truncate">{race.name}</p>
             </div>
             <div className="md:hidden">
               {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
