@@ -101,7 +101,7 @@ const LeMans = () => {
       whileHover={{ scale: 1.05 }}
     >
       <div className="glass-card px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px] text-center border-wec-gold/30">
-        <span className="font-racing text-2xl md:text-4xl font-bold text-foreground">
+        <span className="text-2xl md:text-4xl font-bold text-foreground">
           {value.toString().padStart(2, '0')}
         </span>
       </div>

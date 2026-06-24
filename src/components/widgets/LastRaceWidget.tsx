@@ -68,7 +68,7 @@ const LastRaceWidget = () => {
               <Trophy className="w-3.5 h-3.5 text-wec-gold" />
               <span>Overall Winner</span>
             </div>
-            <p className="font-racing text-lg font-bold text-primary">{lastRace.winner}</p>
+            <p className="font-bold text-lg text-primary">{lastRace.winner}</p>
             <p className="text-sm text-muted-foreground mt-0.5">{lastRace.winningTeam}</p>
           </div>
         )}

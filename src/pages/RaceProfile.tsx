@@ -562,7 +562,7 @@ const RaceProfile = () => {
                   <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
                     Winning Margin
                   </p>
-                  <p className="font-racing text-2xl font-bold text-foreground">
+                  <p className="text-2xl font-bold text-foreground">
                     {raceResult.results[1]?.gap ?? 'N/A'}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">P1 gap to P2</p>
@@ -577,14 +577,14 @@ const RaceProfile = () => {
                     const totalLaps = raceResult.results[0]?.laps || 1;
                     const marginStr = raceResult.results[1]?.gap || '';
                     const match = marginStr.match(/\+?(\d+):?(\d+\.?\d*)/);
-                    if (!match) return <p className="font-racing text-2xl font-bold text-foreground">N/A</p>;
+                    if (!match) return <p className="text-2xl font-bold text-foreground">N/A</p>;
                     const totalSeconds = match[1].includes(':')
                       ? parseInt(match[1]) * 60 + parseFloat(match[2])
                       : parseFloat(match[1] + '.' + (match[2] || '0'));
                     const avgDelta = totalSeconds / totalLaps;
                     return (
                       <>
-                        <p className="font-racing text-2xl font-bold text-primary">
+                        <p className="text-2xl font-bold text-primary">
                           +{avgDelta.toFixed(3)}s
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">per lap average</p>
@@ -598,7 +598,7 @@ const RaceProfile = () => {
                   <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
                     Fastest Lap
                   </p>
-                  <p className="font-racing text-2xl font-bold text-foreground">
+                  <p className="text-2xl font-bold text-foreground">
                     {raceResult.fastestLapTime}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
