@@ -182,7 +182,7 @@ const DriverProfile = () => {
                   className="p-4 rounded-lg border-l-4"
                   style={{ borderColor: team.color, background: `${team.color}10` }}
                 >
-                  <p className="font-racing font-bold text-foreground">{team.name}</p>
+                  <p className="font-bold text-foreground">{team.name}</p>
                   <p className="text-sm text-muted-foreground">{team.manufacturer} • {team.carNumber}</p>
                   <p className="text-xs text-muted-foreground mt-1">{team.countryFlag} {team.country}</p>
                 </div>
