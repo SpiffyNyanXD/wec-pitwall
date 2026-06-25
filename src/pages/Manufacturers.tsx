@@ -101,7 +101,7 @@ const Manufacturers = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Porsche</div>
+                  <div className="font-racing text-2xl font-bold">Porsche</div>
                   <p className="text-sm text-muted-foreground mt-1">20 victories</p>
                 </CardContent>
               </Card>
@@ -120,7 +120,7 @@ const Manufacturers = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Ferrari</div>
+                  <div className="font-racing text-2xl font-bold">Ferrari</div>
                   <p className="text-sm text-muted-foreground mt-1">2025</p>
                 </CardContent>
               </Card>
@@ -139,7 +139,7 @@ const Manufacturers = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">AF Corse</div>
+                  <div className="font-racing text-2xl font-bold">AF Corse</div>
                   <p className="text-sm text-muted-foreground mt-1">Ferrari 499P</p>
                 </CardContent>
               </Card>
@@ -158,7 +158,7 @@ const Manufacturers = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Audi</div>
+                  <div className="font-racing text-2xl font-bold">Audi</div>
                   <p className="text-sm text-muted-foreground mt-1">7 titles (LMP1 era)</p>
                 </CardContent>
               </Card>
@@ -207,7 +207,7 @@ const Manufacturers = () => {
                         <div className={`text-2xl font-racing font-bold w-8 text-center ${getPositionColor(manufacturer.position)}`}>
                           P{manufacturer.position}
                         </div>
-                        <div className="text-xl font-bold tracking-wide flex items-center gap-2">
+                        <div className="font-racing text-xl font-bold tracking-wide flex items-center gap-2">
                           {manufacturer.manufacturer}
                           {manufacturer.manufacturer === 'Ferrari' && activeSeason === '2025' && (
                             <span title="Champion" className="text-xl">🏆</span>
@@ -225,7 +225,7 @@ const Manufacturers = () => {
                             style={{ backgroundColor: color }}
                           />
                         </div>
-                        <div className="text-2xl font-bold w-16 text-right tabular-nums">
+                        <div className="font-racing text-2xl font-bold w-16 text-right tabular-nums">
                           {manufacturer.points}
                         </div>
                       </div>

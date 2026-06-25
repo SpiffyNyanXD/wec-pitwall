@@ -218,7 +218,7 @@ const TeamProfile = () => {
                 style={{ background: `${team.color}30`, border: `2px solid ${team.color}` }}
               >
                 <span
-                  className="font-bold"
+                  className="font-racing font-bold"
                   style={{
                     color: team.color,
                     fontSize: team.carNumber.length > 3 ? '2.5rem' : '3.75rem'
@@ -446,7 +446,7 @@ const TeamProfile = () => {
                       <div className="flex items-center gap-3 mb-3">
                         <span className="text-3xl">{driver?.countryFlag}</span>
                         <div>
-                          <p className="font-bold text-foreground">{driver?.name}</p>
+                          <p className="font-racing font-bold text-foreground">{driver?.name}</p>
                           <p className="text-xs text-muted-foreground">{driver?.nationality}</p>
                         </div>
                       </div>

@@ -198,7 +198,7 @@ const Timeline = () => {
                         <div className="pt-3 border-t border-border/50">
                           {isUpcoming ? (
                             <div className="flex items-center gap-2 text-muted-foreground">
-                              <span className="text-sm">TBD</span>
+                              <span className="font-racing text-sm">TBD</span>
                             </div>
                           ) : (
                             <div className="flex items-center gap-2">
@@ -267,7 +267,7 @@ const Timeline = () => {
                       R{index + 1}
                     </th>
                   ))}
-                  <th className="px-4 py-3 text-center rounded-tr-lg font-bold">Total</th>
+                  <th className="px-4 py-3 font-racing text-center rounded-tr-lg">Total</th>
                 </tr>
               </thead>
               <tbody>

@@ -33,7 +33,7 @@ const QuickStatsWidget = () => {
             whileHover={{ scale: 1.05 }}
           >
             <stat.icon className={`w-5 h-5 mx-auto mb-2 ${stat.color}`} />
-            <div className="text-2xl font-bold text-foreground">
+            <div className="font-racing text-2xl font-bold text-foreground">
               {stat.value}
               {stat.unit && <span className="text-xs text-muted-foreground ml-0.5">{stat.unit}</span>}
             </div>

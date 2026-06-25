@@ -288,7 +288,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3">
             <WecLogo className="w-8 h-8" />
             <div className="hidden lg:block">
-              <p className="text-lg font-bold text-foreground tracking-wide">
+              <p className="font-racing text-lg font-bold text-foreground tracking-wide">
                 WEC <span className="text-primary">Pitwall</span>
               </p>
             </div>
