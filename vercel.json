@@ -1,6 +1,0 @@
-{
-  "installCommand": "pnpm install",
-  "buildCommand": "pnpm --filter @workspace/wec-pitwall run build",
-  "outputDirectory": "artifacts/wec-pitwall/dist/public",
-  "framework": null
-}
