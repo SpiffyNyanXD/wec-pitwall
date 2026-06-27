@@ -1,0 +1,35 @@
+name: Sentry Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  sentry-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Sentry CLI
+        run: curl -sL https://sentry.io/get-cli/ | bash
+
+      - name: Create Sentry Release
+        env:
+          SENTRY_AUTH_TOKEN: a06cdeafa8fb3b012ab03d6580652130d60a43d926888e16dec7ae0910a6edf4
+          SENTRY_ORG: anshul-d6
+          SENTRY_PROJECT: javascript-react
+        run: |
+          VERSION=$(sentry-cli releases propose-version)
+          echo "Creating release for version: $VERSION"
+          sentry-cli releases new "$VERSION"
+          sentry-cli releases set-commits "$VERSION" --auto
+          sentry-cli releases finalize "$VERSION"
+          echo "Release $VERSION created and finalized"
