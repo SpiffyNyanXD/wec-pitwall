@@ -1,0 +1,21 @@
+name: Jules Weekly Cleanup
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight UTC
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Jules Cleanup Agent
+        uses: google-labs-code/jules-action@v1
+        with:
+          prompt: "Scan the repo for unused components, orphaned files, or dead CSS/JS code. Safely remove them and create a pull request with the cleanup."
+          jules_api_key: ${{ secrets.JULES_API_KEY }}
