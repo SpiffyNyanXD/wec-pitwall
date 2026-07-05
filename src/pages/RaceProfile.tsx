@@ -576,11 +576,19 @@ const RaceProfile = () => {
                   {(() => {
                     const totalLaps = raceResult.results[0]?.laps || 1;
                     const marginStr = raceResult.results[1]?.gap || '';
-                    const match = marginStr.match(/\+?(\d+):?(\d+\.?\d*)/);
-                    if (!match) return <p className="text-2xl font-bold text-foreground">N/A</p>;
-                    const totalSeconds = match[1].includes(':')
-                      ? parseInt(match[1]) * 60 + parseFloat(match[2])
-                      : parseFloat(match[1] + '.' + (match[2] || '0'));
+                    const match = marginStr.match(/\+?\d+/);
+                    if (!match || marginStr.toLowerCase().includes('lap')) return <p className="text-2xl font-bold text-foreground">N/A</p>;
+
+                    const cleanStr = marginStr.replace('+', '').replace('s', '').trim();
+                    const hasColon = cleanStr.includes(':');
+
+                    let totalSeconds = 0;
+                    if (hasColon) {
+                      const parts = cleanStr.split(':');
+                      totalSeconds = parseInt(parts[0]) * 60 + parseFloat(parts[1]);
+                    } else {
+                      totalSeconds = parseFloat(cleanStr);
+                    }
                     const avgDelta = totalSeconds / totalLaps;
                     return (
                       <>
