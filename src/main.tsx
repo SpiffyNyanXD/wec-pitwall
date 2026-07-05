@@ -1,3 +1,4 @@
+import "./instrument";
 import "./lib/posthog";
 
 import { createRoot } from "react-dom/client";
