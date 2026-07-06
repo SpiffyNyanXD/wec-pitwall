@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 
 type SeasonYear = 2024 | 2025 | 2026;
@@ -20,6 +21,15 @@ const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: type
   2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
   2026: { drivers: [], teams: [...hypercars2026, ...lmgt3Teams2026], races: races2026, status: 'in-progress' },
 };
+
+
+// Empty state component
+const StandingsEmptyState = ({ message }: { message: string }) => (
+  <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
+    <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
+    <p className="text-muted-foreground">{message}</p>
+  </div>
+);
 
 const Standings = () => {
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
@@ -266,13 +276,7 @@ const Standings = () => {
     </motion.div>
   );
 
-  // Empty state component
-  const StandingsEmptyState = ({ message }: { message: string }) => (
-    <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
-      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
-      <p className="text-muted-foreground">{message}</p>
-    </div>
-  );
+
 
   const hypercarDrivers = useMemo(
     () => getDriversStandings('HYPERCAR'),
@@ -313,7 +317,7 @@ const Standings = () => {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold">
+            <h1 className="text-xl md:text-2xl lg:text-3xl 3xl:text-4xl font-bold">
               <span className="text-gradient">Championship Standings</span>
             </h1>
             
@@ -322,7 +326,7 @@ const Standings = () => {
               value={selectedSeason.toString()} 
               onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
             >
-              <SelectTrigger className="w-[140px] bg-card border-border">
+              <SelectTrigger className="w-[140px] bg-card border-border min-h-[44px] md:min-h-0">
                 <Calendar className="w-4 h-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
@@ -343,7 +347,12 @@ const Standings = () => {
           </div>
         </motion.div>
 
-        {/* Hypercar Championships */}
+
+        {selectedSeason < 2026 ? (
+          <AuthGate featureName="Historical Data">
+            <div className="space-y-10">
+              {/* Hypercar Championships */}
+
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-wec-gold" />
@@ -355,7 +364,7 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
-              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
@@ -480,11 +489,11 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
-              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
-              <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
                 <Users className="w-3 h-3" />
                 Teams
               </TabsTrigger>
@@ -557,11 +566,11 @@ const Standings = () => {
             {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
               <Tabs defaultValue="teams" className="w-full">
                 <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
-                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
                     <Users className="w-3 h-3" />
                     Teams
                   </TabsTrigger>
-                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
                     <User className="w-3 h-3" />
                     Drivers
                   </TabsTrigger>
@@ -621,6 +630,293 @@ const Standings = () => {
           </div>
         </div>
 
+
+            </div>
+          </AuthGate>
+        ) : (
+          <div className="space-y-10">
+            {/* Hypercar Championships */}
+
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-wec-gold" />
+            <h2 className="text-2xl font-bold">Hypercar</h2>
+            <Badge className="bg-primary/20 text-primary border-primary/30">
+              {CLASS_BADGES.HYPERCAR}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="entries" className="gap-2 text-xs font-bold">
+                <Users className="w-3 h-3" />
+                Entries
+              </TabsTrigger>
+              <TabsTrigger value="manufacturers" className="gap-2 text-xs font-bold">
+                <Factory className="w-3 h-3" />
+                Manufacturers
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : hypercarDrivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarDrivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                          <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="entries">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
+                  </span>
+                </div>
+                {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {hypercarEntries.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  </>
+                ) : hypercarEntries.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarEntries.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                          <span className="font-medium text-sm">{String(team.team)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(team.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="manufacturers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : manufacturersStandings.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {manufacturersStandings.map((manufacturer, index) => (
+                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMGT3 Championship */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-green-400" />
+            <h2 className="text-2xl font-bold">LMGT3</h2>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              {CLASS_BADGES.LMGT3}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <Users className="w-3 h-3" />
+                Teams
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_DRIVERS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Drivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Drivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="teams">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_TEAMS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Teams.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Teams.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMP2 - Le Mans Only */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-blue-400" />
+            <h2 className="text-2xl font-bold">LMP2</h2>
+            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+              {CLASS_BADGES.LMP2}
+            </Badge>
+          </div>
+
+          <div className="glass-card p-4 md:p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">
+                {POINTS_INFO.LMP2_NOTE}
+              </span>
+            </div>
+
+            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
+              <Tabs defaultValue="teams" className="w-full">
+                <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <Users className="w-3 h-3" />
+                    Teams
+                  </TabsTrigger>
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <User className="w-3 h-3" />
+                    Drivers
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="teams">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                            <span className="font-medium text-sm">{String(team.team)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Teams.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Teams.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+
+                <TabsContent value="drivers">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Drivers.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Drivers.map((driver, index) => (
+                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+            )}
+          </div>
+        </div>
+
+
+          </div>
+        )}
         {/* Legend */}
         <motion.div 
           initial={{ opacity: 0 }}
