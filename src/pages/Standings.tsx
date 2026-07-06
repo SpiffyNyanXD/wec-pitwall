@@ -22,6 +22,15 @@ const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: type
   2026: { drivers: [], teams: [...hypercars2026, ...lmgt3Teams2026], races: races2026, status: 'in-progress' },
 };
 
+
+// Empty state component
+const StandingsEmptyState = ({ message }: { message: string }) => (
+  <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
+    <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
+    <p className="text-muted-foreground">{message}</p>
+  </div>
+);
+
 const Standings = () => {
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
   
@@ -267,13 +276,7 @@ const Standings = () => {
     </motion.div>
   );
 
-  // Empty state component
-  const StandingsEmptyState = ({ message }: { message: string }) => (
-    <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
-      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
-      <p className="text-muted-foreground">{message}</p>
-    </div>
-  );
+
 
   const hypercarDrivers = useMemo(
     () => getDriversStandings('HYPERCAR'),
