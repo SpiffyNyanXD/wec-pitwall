@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { MapPin, Route, Calendar, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
-import { circuits } from '@/data/circuitData';
 import { circuits as oldCircuits } from '@/data/wecData';
 
 const Circuits = () => {
