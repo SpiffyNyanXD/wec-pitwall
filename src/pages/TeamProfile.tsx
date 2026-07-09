@@ -223,10 +223,11 @@ const TeamProfile = () => {
   const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
 
   // Use DB drivers instead of static data for current drivers list
+  // Use DB drivers instead of static data for current drivers list
   const { data: dbDrivers } = useQuery({
     queryKey: ['team-drivers', team?.name],
     queryFn: async () => {
-      if (!team?.name) return [];
+      if (!supabase || !team?.name) return [];
       const { data, error } = await supabase
         .from('drivers')
         .select(`
@@ -238,7 +239,7 @@ const TeamProfile = () => {
       if (error) return [];
       return data || [];
     },
-    enabled: !!team?.name
+    enabled: !!team?.name && !!supabase
   });
 
   const [isFavorite, setIsFavorite] = useState(false);
