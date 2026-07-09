@@ -39,6 +39,15 @@ const DriverProfile = () => {
     }
   };
 
+
+  const getFlagEmoji = (code: string): string => {
+    return code
+      .toUpperCase()
+      .split('')
+      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
+      .join('');
+  };
+
   const formatDate = (dateString?: string) => {
     const date = new Date(dateString);
 
@@ -56,8 +65,8 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={driver ? `${driver.name}` : 'Driver'}
-        description={driver ? `${driver.name} — FIA WEC driver profile, stats and race history.` : ''}
+        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
+        description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
         url={driver ? `/drivers/${driver.id}` : '/drivers'}
       />
       {/* Background effects */}
@@ -96,7 +105,7 @@ const DriverProfile = () => {
           <div className="relative flex flex-col md:flex-row gap-8 items-start">
             {/* Driver Avatar */}
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-6xl md:text-7xl shrink-0">
-              {driver.countryFlag}
+              {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
             </div>
 
             <div className="flex-1">
@@ -117,16 +126,18 @@ const DriverProfile = () => {
               <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-4 h-4" />
-                  {driver.nationality}
+                  {profile?.nationality || driver.nationality}
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Calendar className="w-4 h-4" />
-                  Born: {formatDate(driver.dateOfBirth)}
+                  Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : (formatDate(driver.dateOfBirth) || 'Unknown')} {age ? `(Age ${age})` : ''}
                 </div>
+                {driver.placeOfBirth && (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-4 h-4" />
                   {driver.placeOfBirth || 'Unknown'}
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -140,54 +151,23 @@ const DriverProfile = () => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-1 space-y-6"
           >
-            {/* Career Stats */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-wec-gold" />
-                Career Statistics
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">World Championships</span>
-                  <span className="font-racing text-2xl text-wec-gold">{driver.championships}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">Le Mans Wins</span>
-                  <span className="font-racing text-2xl text-secondary">{driver.leMansWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">WEC Race Wins</span>
-                  <span className="font-racing text-2xl text-primary">{driver.wecWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">2024 Points</span>
-                  <span className="font-racing text-2xl text-foreground">{driver.points}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">2024 Position</span>
-                  <span className="font-racing text-2xl text-foreground">P{driver.position}</span>
-                </div>
-              </div>
-            </div>
 
             {/* Current Team */}
-            {team && (
-              <div className="glass-card p-6">
-                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-primary" />
-                  Current Team
-                </h2>
-                <div 
-                  className="p-4 rounded-lg border-l-4"
-                  style={{ borderColor: team.color, background: `${team.color}10` }}
-                >
-                  <p className="font-bold text-foreground">{team.name}</p>
-                  <p className="text-sm text-muted-foreground">{team.manufacturer} • {team.carNumber}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{team.countryFlag} {team.country}</p>
-                </div>
+            <div className="glass-card p-6">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                CAR / TEAM
+              </h2>
+              <div
+                className="p-4 rounded-lg border-l-4"
+                style={{ borderColor: team?.color || 'hsl(var(--primary))', background: `${team?.color || 'hsl(var(--primary))'}10` }}
+              >
+                <p className="font-bold text-foreground">#{driver.carNumber} &middot; {driver.team} &middot; {driver.class}</p>
+                {team && (
+                  <p className="text-xs text-muted-foreground mt-1">{team.countryFlag} {team.country} &middot; {team.manufacturer}</p>
+                )}
               </div>
-            )}
+            </div>
           </motion.div>
 
           {/* Biography & Details */}
@@ -197,54 +177,98 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            {/* Biography */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4">Biography</h2>
-              <p className="text-muted-foreground leading-relaxed">{driver.biography}</p>
-            </div>
-
-            {/* Career Highlights */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Medal className="w-5 h-5 text-wec-gold" />
-                Career Highlights
-              </h2>
-              <ul className="space-y-3">
-                {driver.careerHighlights.map((highlight, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-muted/30"
-                  >
-                    <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
-                    <span className="text-foreground">{highlight}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Fun Facts */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Quote className="w-5 h-5 text-primary" />
-                Facts & Trivia
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {driver.facts.map((fact, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="p-4 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-border/50"
-                  >
-                    <p className="text-sm text-muted-foreground">{fact}</p>
-                  </motion.div>
-                ))}
+            {!profile && !isProfileLoading ? (
+              <div className="glass-card p-12 text-center">
+                <h2 className="text-2xl font-bold mb-2">Extended profile coming soon.</h2>
+                <p className="text-muted-foreground">Check back later for detailed career statistics, biography, and more.</p>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* WEC Career Stats Grid */}
+                <div className="glass-card p-6">
+                  <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-wec-gold" />
+                    WEC Career
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 rounded-lg bg-muted/30">
+                      <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_wec_starts}</p>
+                      <p className="text-xs text-muted-foreground uppercase mt-1">Starts</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-muted/30">
+                      <p className="font-racing text-3xl font-bold text-primary">{profile?.total_wec_wins}</p>
+                      <p className="text-xs text-muted-foreground uppercase mt-1">Wins</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-muted/30">
+                      <p className="font-racing text-3xl font-bold text-secondary">{profile?.total_wec_podiums}</p>
+                      <p className="text-xs text-muted-foreground uppercase mt-1">Podiums</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-muted/30">
+                      <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_le_mans_starts}</p>
+                      <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Starts</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-muted/30">
+                      <p className="font-racing text-3xl font-bold text-wec-gold">{profile?.total_le_mans_wins}</p>
+                      <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Wins</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Biography */}
+                {profile?.bio && (
+                  <div className="glass-card p-6">
+                    <h2 className="text-lg font-bold mb-4">Biography</h2>
+                    <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile.bio}</p>
+                  </div>
+                )}
+
+                {/* Career Highlights */}
+                {profile?.career_highlights && profile.career_highlights.length > 0 && (
+                  <div className="glass-card p-6">
+                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <Medal className="w-5 h-5 text-wec-gold" />
+                      Highlights
+                    </h2>
+                    <ul className="space-y-3 list-disc list-inside text-muted-foreground">
+                      {profile.career_highlights.map((highlight: string, index: number) => (
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + index * 0.1 }}
+                        >
+                          <span className="text-foreground">{highlight}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Fallback to static highlights if no profile highlights */}
+                {(!profile?.career_highlights || profile.career_highlights.length === 0) && driver.careerHighlights && driver.careerHighlights.length > 0 && (
+                  <div className="glass-card p-6">
+                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <Medal className="w-5 h-5 text-wec-gold" />
+                      Career Highlights
+                    </h2>
+                    <ul className="space-y-3">
+                      {driver.careerHighlights.map((highlight, index) => (
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + index * 0.1 }}
+                          className="flex items-start gap-3 p-3 rounded-lg bg-muted/30"
+                        >
+                          <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
+                          <span className="text-foreground">{highlight}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
           </motion.div>
         </div>
       </AuthGate>

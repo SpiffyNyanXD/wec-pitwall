@@ -1,5 +1,10 @@
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
+
+import { useTeamProfile } from '@/hooks/useTeamProfile';
+import { Helmet } from 'react-helmet-async';
+import { useQuery } from '@tanstack/react-query';
+
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
 import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
@@ -20,6 +25,28 @@ const TeamProfile = () => {
     [team]
   );
   const { user } = useAuth();
+
+  const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
+
+  // Use DB drivers instead of static data for current drivers list
+  const { data: dbDrivers } = useQuery({
+    queryKey: ['team-drivers', team?.name],
+    queryFn: async () => {
+      if (!team?.name) return [];
+      const { data, error } = await supabase
+        .from('drivers')
+        .select(`
+          full_name,
+          cars!inner(team_name)
+        `)
+        .eq('cars.team_name', team.name);
+
+      if (error) return [];
+      return data || [];
+    },
+    enabled: !!team?.name
+  });
+
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
 
@@ -266,11 +293,11 @@ const TeamProfile = () => {
                     <p className="text-xs text-muted-foreground uppercase">Points</p>
                   </div>
                   <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-wec-gold">{teamData.wecWins}</p>
+                    <p className="font-racing text-3xl font-bold text-wec-gold">{profile?.total_wec_wins ?? teamData.wecWins}</p>
                     <p className="text-xs text-muted-foreground uppercase">Wins</p>
                   </div>
                   <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-secondary">{teamData.leMansWins}</p>
+                    <p className="font-racing text-3xl font-bold text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</p>
                     <p className="text-xs text-muted-foreground uppercase">Le Mans</p>
                   </div>
                   <div className="text-center">
@@ -304,7 +331,16 @@ const TeamProfile = () => {
               
               <div className="space-y-4">
                 {/* Drivers */}
-                {teamDrivers.map((driver, index) => (
+                {dbDrivers && dbDrivers.length > 0 ? (
+                  <div className="p-3 rounded-lg bg-muted/30">
+                    <p className="text-xs text-muted-foreground mb-2">2026 Drivers</p>
+                    <div className="space-y-1">
+                      {dbDrivers.map((d, i) => (
+                        <p key={i} className="font-medium text-foreground text-sm">{d.full_name}</p>
+                      ))}
+                    </div>
+                  </div>
+                ) : teamDrivers.map((driver, index) => (
                   <Link 
                     key={driver?.id} 
                     to={`/drivers/${driver?.id}`}
@@ -337,7 +373,7 @@ const TeamProfile = () => {
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
                   <User className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium text-foreground">{teamData.teamPrincipal}</p>
+                    <p className="font-medium text-foreground">{profile?.principal || teamData.teamPrincipal}</p>
                     <p className="text-xs text-muted-foreground">Team Principal</p>
                   </div>
                 </div>
@@ -345,15 +381,15 @@ const TeamProfile = () => {
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
                   <Calendar className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium text-foreground">{teamData.wecDebut}</p>
-                    <p className="text-xs text-muted-foreground">WEC Debut</p>
+                    <p className="font-medium text-foreground">{profile?.founded_year || teamData.wecDebut}</p>
+                    <p className="text-xs text-muted-foreground">{profile?.founded_year ? 'Founded' : 'WEC Debut'}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
                   <MapPin className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium text-foreground">{teamData.base}</p>
+                    <p className="font-medium text-foreground">{profile?.headquarters || teamData.base}</p>
                     <p className="text-xs text-muted-foreground">Base</p>
                   </div>
                 </div>
@@ -374,11 +410,11 @@ const TeamProfile = () => {
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                   <span className="text-muted-foreground">Le Mans Wins</span>
-                  <span className="font-racing text-2xl text-secondary">{teamData.leMansWins}</span>
+                  <span className="font-racing text-2xl text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                   <span className="text-muted-foreground">WEC Wins</span>
-                  <span className="font-racing text-2xl text-primary">{teamData.wecWins}</span>
+                  <span className="font-racing text-2xl text-primary">{profile?.total_wec_wins ?? teamData.wecWins}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                   <span className="text-muted-foreground">
@@ -400,7 +436,7 @@ const TeamProfile = () => {
             {/* About */}
             <div className="glass-card p-6">
               <h2 className="text-lg font-bold mb-4">About</h2>
-              <p className="text-muted-foreground leading-relaxed">{teamData.about}</p>
+              <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile?.bio || teamData.about}</p>
             </div>
 
             {/* Team Facts */}
