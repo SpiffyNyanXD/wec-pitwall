@@ -1,5 +1,10 @@
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
+
+import { useTeamProfile } from '@/hooks/useTeamProfile';
+import { useQuery } from '@tanstack/react-query';
+import { getFlagEmoji } from '@/utils/flags';
+
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
 import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
@@ -12,6 +17,210 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+
+const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
+  <div className="glass-card p-6">
+    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+      <Wrench className="w-5 h-5 text-primary" />
+      Team Details
+    </h2>
+    <div className="space-y-4">
+      {dbDrivers && dbDrivers.length > 0 ? (
+        <div className="p-3 rounded-lg bg-muted/30">
+          <p className="text-xs text-muted-foreground mb-2">2026 Drivers</p>
+          <div className="space-y-1">
+            {dbDrivers.map((driver: Record<string, unknown>, i: number) => (
+              <Link
+                key={i}
+                to={`/drivers/${driver.slug || driver.id || driver.full_name?.toString().toLowerCase().replace(/\s+/g, '-')}`}
+                className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+              >
+                <span className="text-2xl">{driver?.nationality_code ? getFlagEmoji(driver.nationality_code as string) : '🏁'}</span>
+                <div>
+                  <p className="font-medium text-foreground">{driver?.full_name as string}</p>
+                  <p className="text-xs text-muted-foreground">Driver</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : teamDrivers.map((driver: Record<string, unknown>) => (
+        <Link
+          key={driver?.id}
+          to={`/drivers/${driver?.id}`}
+          className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+        >
+          <span className="text-2xl">{driver?.countryFlag}</span>
+          <div>
+            <p className="font-medium text-foreground">{driver?.name}</p>
+            <p className="text-xs text-muted-foreground">Driver</p>
+          </div>
+        </Link>
+      ))}
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Wrench className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{teamData.chassis}</p>
+          <p className="text-xs text-muted-foreground">Chassis</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Target className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{teamData.engine}</p>
+          <p className="text-xs text-muted-foreground">Power Unit</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <User className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.principal || teamData.teamPrincipal}</p>
+          <p className="text-xs text-muted-foreground">Team Principal</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Calendar className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.founded_year || teamData.wecDebut}</p>
+          <p className="text-xs text-muted-foreground">{profile?.founded_year ? 'Founded' : 'WEC Debut'}</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <MapPin className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.headquarters || teamData.base}</p>
+          <p className="text-xs text-muted-foreground">Base</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition: number | string }) => (
+  <div className="glass-card p-6">
+    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+      <Trophy className="w-5 h-5 text-wec-gold" />
+      Achievements
+    </h2>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">Championships</span>
+        <span className="font-racing text-2xl text-wec-gold">{teamData.championships}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">Le Mans Wins</span>
+        <span className="font-racing text-2xl text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">WEC Wins</span>
+        <span className="font-racing text-2xl text-primary">{profile?.total_wec_wins ?? teamData.wecWins}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">
+          {teamClass === 'LMP2' ? 'Le Mans 2024' : '2024 Season'} Position
+        </span>
+        <span className="font-racing text-2xl text-foreground">P{teamPosition}</span>
+      </div>
+    </div>
+  </div>
+);
+
+
+const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="glass-card p-8 mb-8 relative overflow-hidden"
+  >
+    {/* Team Color Gradient */}
+    <div
+      className="absolute top-0 right-0 w-1/2 h-full"
+      style={{ background: `linear-gradient(135deg, ${team.color as string}26 0%, transparent 70%)` }}
+    />
+
+    <div className="relative">
+      <div className="flex flex-col md:flex-row gap-8 items-start">
+        {/* Team Logo/Number */}
+        <div
+          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl flex items-center justify-center shrink-0"
+          style={{ background: `${team.color as string}30`, border: `2px solid ${team.color as string}` }}
+        >
+          <span
+            className="font-bold"
+            style={{
+              color: team.color as string,
+              fontSize: (team.carNumber as string).length > 3 ? '2.5rem' : '3.75rem'
+            }}
+          >
+            {team.carNumber as string}
+          </span>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge variant="outline" className={getClassBadge(team.class as string)}>
+                {team.class as string}
+              </Badge>
+              {team.class === 'LMP2' && (
+                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
+                  Le Mans 24h Only
+                </Badge>
+              )}
+              <span className="text-2xl">{team.countryFlag as string}</span>
+            </div>
+
+            <Button
+              variant={isFavorite ? "default" : "outline"}
+              size="sm"
+              onClick={toggleFavorite}
+              className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
+            >
+              <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
+              {isFavorite ? 'Favorited' : 'Add to Favorites'}
+            </Button>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
+            {team.name as string}
+          </h1>
+          <p className="text-lg text-muted-foreground mb-1">{teamData.chassis as string}</p>
+          <p className="text-sm text-muted-foreground">Since {teamData.wecDebut as string}</p>
+
+          {/* Quick Stats Row */}
+          <div className="flex flex-wrap gap-6 mt-6">
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-foreground">{team.points as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Points</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-wec-gold">{(profile?.total_wec_wins as string | number | undefined) ?? (teamData.wecWins as string | number)}</p>
+              <p className="text-xs text-muted-foreground uppercase">Wins</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-secondary">{(profile?.total_le_mans_wins as string | number | undefined) ?? (teamData.leMansWins as string | number)}</p>
+              <p className="text-xs text-muted-foreground uppercase">Le Mans</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-primary">{teamData.poles as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Poles</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-foreground">{teamData.fastestLaps as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Fastest Laps</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
+
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
   const team = getTeamById(id || '');
@@ -20,6 +229,31 @@ const TeamProfile = () => {
     [team]
   );
   const { user } = useAuth();
+
+  const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
+
+  // Use DB drivers instead of static data for current drivers list
+  // Use DB drivers instead of static data for current drivers list
+  const { data: dbDrivers } = useQuery({
+    queryKey: ['team-drivers', team?.name],
+    queryFn: async () => {
+      if (!supabase || !team?.name) return [];
+      const { data, error } = await supabase
+        .from('drivers')
+        .select(`
+          full_name,
+          cars!inner(team_name)
+        `)
+        .eq('cars.team_name', team.name);
+
+      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code === 'PGRST116') return [];
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+    enabled: !!team?.name && !!supabase
+  });
+
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
 
@@ -198,94 +432,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-8 mb-8 relative overflow-hidden"
-        >
-          {/* Team Color Gradient */}
-          <div 
-            className="absolute top-0 right-0 w-1/2 h-full"
-            style={{ background: `linear-gradient(135deg, ${team.color}26 0%, transparent 70%)` }}
-          />
-          
-          <div className="relative">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Team Logo/Number */}
-              <div 
-                className="w-32 h-32 md:w-40 md:h-40 rounded-2xl flex items-center justify-center shrink-0"
-                style={{ background: `${team.color}30`, border: `2px solid ${team.color}` }}
-              >
-                <span
-                  className="font-bold"
-                  style={{
-                    color: team.color,
-                    fontSize: team.carNumber.length > 3 ? '2.5rem' : '3.75rem'
-                  }}
-                >
-                  {team.carNumber}
-                </span>
-              </div>
-
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="outline" className={getClassBadge(team.class)}>
-                      {team.class}
-                    </Badge>
-                    {team.class === 'LMP2' && (
-                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
-                        Le Mans 24h Only
-                      </Badge>
-                    )}
-                    <span className="text-2xl">{team.countryFlag}</span>
-                  </div>
-
-                  <Button
-                    variant={isFavorite ? "default" : "outline"}
-                    size="sm"
-                    onClick={toggleFavorite}
-                    className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
-                  >
-                    <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
-                    {isFavorite ? 'Favorited' : 'Add to Favorites'}
-                  </Button>
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-                  {team.name}
-                </h1>
-                <p className="text-lg text-muted-foreground mb-1">{teamData.chassis}</p>
-                <p className="text-sm text-muted-foreground">Since {teamData.wecDebut}</p>
-
-                {/* Quick Stats Row */}
-                <div className="flex flex-wrap gap-6 mt-6">
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-foreground">{team.points}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Points</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-wec-gold">{teamData.wecWins}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Wins</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-secondary">{teamData.leMansWins}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Le Mans</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-primary">{teamData.poles}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Poles</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-foreground">{teamData.fastestLaps}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Fastest Laps</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}
@@ -295,99 +442,8 @@ const TeamProfile = () => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-1 space-y-6"
           >
-            {/* Team Details */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Wrench className="w-5 h-5 text-primary" />
-                Team Details
-              </h2>
-              
-              <div className="space-y-4">
-                {/* Drivers */}
-                {teamDrivers.map((driver, index) => (
-                  <Link 
-                    key={driver?.id} 
-                    to={`/drivers/${driver?.id}`}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                  >
-                    <span className="text-2xl">{driver?.countryFlag}</span>
-                    <div>
-                      <p className="font-medium text-foreground">{driver?.name}</p>
-                      <p className="text-xs text-muted-foreground">Driver</p>
-                    </div>
-                  </Link>
-                ))}
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Wrench className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.chassis}</p>
-                    <p className="text-xs text-muted-foreground">Chassis</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Target className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.engine}</p>
-                    <p className="text-xs text-muted-foreground">Power Unit</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <User className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.teamPrincipal}</p>
-                    <p className="text-xs text-muted-foreground">Team Principal</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Calendar className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.wecDebut}</p>
-                    <p className="text-xs text-muted-foreground">WEC Debut</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <MapPin className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.base}</p>
-                    <p className="text-xs text-muted-foreground">Base</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Championships */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-wec-gold" />
-                Achievements
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">Championships</span>
-                  <span className="font-racing text-2xl text-wec-gold">{teamData.championships}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">Le Mans Wins</span>
-                  <span className="font-racing text-2xl text-secondary">{teamData.leMansWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">WEC Wins</span>
-                  <span className="font-racing text-2xl text-primary">{teamData.wecWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">
-                    {team.class === 'LMP2' ? 'Le Mans 2024' : '2024 Season'} Position
-                  </span>
-                  <span className="font-racing text-2xl text-foreground">P{team.position}</span>
-                </div>
-              </div>
-            </div>
+            <TeamDetails teamDrivers={teamDrivers} dbDrivers={dbDrivers} teamData={teamData} profile={profile} />
+            <TeamAchievements teamData={teamData} profile={profile} teamClass={team.class} teamPosition={team.position} />
           </motion.div>
 
           {/* Right Column - About & Facts */}
@@ -400,7 +456,7 @@ const TeamProfile = () => {
             {/* About */}
             <div className="glass-card p-6">
               <h2 className="text-lg font-bold mb-4">About</h2>
-              <p className="text-muted-foreground leading-relaxed">{teamData.about}</p>
+              <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile?.bio || teamData.about}</p>
             </div>
 
             {/* Team Facts */}

@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+        driver_profiles: {
+            Row: {
+                id: string
+                full_name: string
+                date_of_birth: string | null
+                nationality: string | null
+                nationality_code: string | null
+                bio: string | null
+                total_wec_starts: number
+                total_wec_wins: number
+                total_wec_podiums: number
+                total_le_mans_starts: number
+                total_le_mans_wins: number
+                career_highlights: string[]
+            }
+            Insert: {
+                id?: string
+                full_name?: string
+                date_of_birth?: string | null
+                nationality?: string | null
+                nationality_code?: string | null
+                bio?: string | null
+                total_wec_starts?: number
+                total_wec_wins?: number
+                total_wec_podiums?: number
+                total_le_mans_starts?: number
+                total_le_mans_wins?: number
+                career_highlights?: string[]
+            }
+            Update: {
+                id?: string
+                full_name?: string
+                date_of_birth?: string | null
+                nationality?: string | null
+                nationality_code?: string | null
+                bio?: string | null
+                total_wec_starts?: number
+                total_wec_wins?: number
+                total_wec_podiums?: number
+                total_le_mans_starts?: number
+                total_le_mans_wins?: number
+                career_highlights?: string[]
+            }
+        },
+        team_profiles: {
+            Row: {
+              id: string
+              team_name: string
+              headquarters: string | null
+              founded_year: number | null
+              principal: string | null
+              bio: string | null
+            }
+            Insert: {
+                id?: string
+                team_name?: string
+                headquarters?: string | null
+                founded_year?: number | null
+                principal?: string | null
+                bio?: string | null
+            }
+            Update: {
+                id?: string
+                team_name?: string
+                headquarters?: string | null
+                founded_year?: number | null
+                principal?: string | null
+                bio?: string | null
+            }
+        },
+      races: {
+        Row: {
+          id: string
+          circuit: string
+          name: string
+          scheduled_date: string
+          duration_hours: number
+          status: string
+          start_time_utc: string
+        }
+        Insert: {
+          id?: string
+          circuit?: string
+          name?: string
+          scheduled_date?: string
+          duration_hours?: number
+          status?: string
+          start_time_utc?: string
+        }
+        Update: {
+          id?: string
+          circuit?: string
+          name?: string
+          scheduled_date?: string
+          duration_hours?: number
+          status?: string
+          start_time_utc?: string
+        }
+      },
       favorite_teams: {
         Row: {
           car_class: string

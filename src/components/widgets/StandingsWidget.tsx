@@ -190,11 +190,11 @@ const StandingsWidget = () => {
         </div>
           
         <TabsList className="bg-muted/50 mb-4">
-          <TabsTrigger value="entries" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsTrigger value="entries" className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Users className="w-3 h-3 mr-1" />
             Car Entries
           </TabsTrigger>
-          <TabsTrigger value="drivers" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsTrigger value="drivers" className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <User className="w-3 h-3 mr-1" />
             Drivers
           </TabsTrigger>

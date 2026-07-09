@@ -720,7 +720,7 @@ export const teams2024: Team[] = [
 export const races2024: Race[] = [
   {
     id: '2024-1', name: 'Qatar 1812 km', circuit: 'Lusail International Circuit', country: 'Qatar',
-    date: '2024-03-02', duration: '10 Hours', duration_hours: 10, status: 'completed', flag: '🇶🇦', season: 2024, round: 1,
+    date: '2024-03-02', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2024, round: 1,
     winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '5.419 km', laps: 334,
     sessions: [
       { type: 'FP1', date: '2024-02-29', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -732,7 +732,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
-    date: '2024-04-21', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇮🇹', season: 2024, round: 2,
+    date: '2024-04-21', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2024, round: 2,
     winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 212,
     sessions: [
       { type: 'FP1', date: '2024-04-19', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
@@ -744,7 +744,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium', 
-    date: '2024-05-11', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇧🇪', season: 2024, round: 3,
+    date: '2024-05-11', duration: '6 Hours', status: 'completed', flag: '🇧🇪', season: 2024, round: 3,
     winner: 'Porsche #6', winningTeam: 'Porsche Penske Motorsport', trackLength: '7.004 km', laps: 166,
     sessions: [
       { type: 'FP1', date: '2024-05-09', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
@@ -756,7 +756,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
-    date: '2024-06-15', endDate: '2024-06-16', duration: '24 Hours', duration_hours: 24, status: 'completed', flag: '🇫🇷', season: 2024, round: 4,
+    date: '2024-06-15', endDate: '2024-06-16', duration: '24 Hours', status: 'completed', flag: '🇫🇷', season: 2024, round: 4,
     winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '13.626 km', laps: 311,
     sessions: [
                   { type: 'FP1', date: '2024-06-12', startTime: '14:00', endTime: '19:00', duration: '5h' },
@@ -771,7 +771,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil', 
-    date: '2024-07-14', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇧🇷', season: 2024, round: 5,
+    date: '2024-07-14', duration: '6 Hours', status: 'completed', flag: '🇧🇷', season: 2024, round: 5,
     winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.309 km', laps: 227,
     sessions: [
       { type: 'FP1', date: '2024-07-12', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
@@ -783,7 +783,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-6', name: '6 Hours of COTA', circuit: 'Circuit of the Americas', country: 'USA', 
-    date: '2024-09-01', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇺🇸', season: 2024, round: 6,
+    date: '2024-09-01', duration: '6 Hours', status: 'completed', flag: '🇺🇸', season: 2024, round: 6,
     winner: 'Porsche #5', winningTeam: 'Porsche Penske Motorsport', trackLength: '5.513 km', laps: 185,
     sessions: [
       { type: 'FP1', date: '2024-08-30', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
@@ -795,7 +795,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan', 
-    date: '2024-09-15', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇯🇵', season: 2024, round: 7,
+    date: '2024-09-15', duration: '6 Hours', status: 'completed', flag: '🇯🇵', season: 2024, round: 7,
     winner: 'Toyota #7', winningTeam: 'Toyota Gazoo Racing', trackLength: '4.563 km', laps: 214,
     sessions: [
       { type: 'FP1', date: '2024-09-13', startTime: '09:15', endTime: '10:45', duration: '1h 30m' },
@@ -807,7 +807,7 @@ export const races2024: Race[] = [
   },
   { 
     id: '2024-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain', 
-    date: '2024-11-02', duration: '8 Hours', duration_hours: 8, status: 'completed', flag: '🇧🇭', season: 2024, round: 8,
+    date: '2024-11-02', duration: '8 Hours', status: 'completed', flag: '🇧🇭', season: 2024, round: 8,
     winner: 'Ferrari #50', winningTeam: 'Ferrari AF Corse', trackLength: '5.412 km', laps: 270,
     sessions: [
       { type: 'FP1', date: '2024-10-31', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -823,7 +823,7 @@ export const races2024: Race[] = [
 export const races2025: Race[] = [
   { 
     id: '2025-1', name: 'Qatar 1812 km', circuit: 'Lusail International Circuit', country: 'Qatar',
-    date: '2025-02-28', duration: '10 Hours', duration_hours: 10, status: 'completed', flag: '🇶🇦', season: 2025, round: 1,
+    date: '2025-02-28', duration: '10 Hours', status: 'completed', flag: '🇶🇦', season: 2025, round: 1,
     winner: 'Ferrari #51', winningTeam: 'Ferrari AF Corse', trackLength: '5.419 km', laps: 336,
     sessions: [
       { type: 'FP1', date: '2025-02-26', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -835,7 +835,7 @@ export const races2025: Race[] = [
   },
   { 
     id: '2025-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', 
-    date: '2025-04-20', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇮🇹', season: 2025, round: 2,
+    date: '2025-04-20', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2025, round: 2,
     winner: 'Ferrari #51', winningTeam: 'Ferrari AF Corse', trackLength: '4.909 km', laps: 210,
     sessions: [
       { type: 'FP1', date: '2025-04-18', startTime: '10:25', endTime: '11:55', duration: '1h 30m' },
@@ -847,7 +847,7 @@ export const races2025: Race[] = [
   },
   { 
     id: '2025-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium', 
-    date: '2025-05-10', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇧🇪', season: 2025, round: 3,
+    date: '2025-05-10', duration: '6 Hours', status: 'completed', flag: '🇧🇪', season: 2025, round: 3,
     winner: 'Porsche #5', winningTeam: 'Porsche Penske Motorsport', trackLength: '7.004 km', laps: 164,
     sessions: [
       { type: 'FP1', date: '2025-05-08', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
@@ -859,7 +859,7 @@ export const races2025: Race[] = [
   },
   { 
     id: '2025-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France', 
-    date: '2025-06-14', endDate: '2025-06-15', duration: '24 Hours', duration_hours: 24, status: 'completed', flag: '🇫🇷', season: 2025, round: 4,
+    date: '2025-06-14', endDate: '2025-06-15', duration: '24 Hours', status: 'completed', flag: '🇫🇷', season: 2025, round: 4,
     winner: 'AF Corse #83', winningTeam: 'AF Corse', trackLength: '13.626 km', laps: 315,
     sessions: [
                   { type: 'FP1', date: '2025-06-11', startTime: '14:00', endTime: '19:00', duration: '5h' },
@@ -2113,7 +2113,7 @@ export const teams = teams2024;
 export const races2026: Race[] = [
   {
     id: '2026-1', name: 'Qatar 1812 km', circuit: 'Lusail International Circuit', country: 'Qatar',
-    date: '2026-10-17', duration: '1812 km', duration_hours: 10, status: 'postponed', flag: '🇶🇦', season: 2026, round: null, roundNote: 'Postponed — rescheduled date TBC',
+    date: '2026-10-17', duration: '1812 km', status: 'postponed', flag: '🇶🇦', season: 2026, round: null, roundNote: 'Postponed — rescheduled date TBC',
     trackLength: '5.419 km',
     sessions: [
       { type: 'FP1', date: '2026-10-15', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -2125,7 +2125,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-2', name: '6 Hours of Imola', circuit: 'Autodromo Enzo e Dino Ferrari', country: 'Italy',
-    date: '2026-04-19', duration: '6 Hours', duration_hours: 6, status: 'completed', flag: '🇮🇹', season: 2026, round: 1,
+    date: '2026-04-19', duration: '6 Hours', status: 'completed', flag: '🇮🇹', season: 2026, round: 1,
     winner: 'Toyota #8', winningTeam: 'Toyota Gazoo Racing',
     trackLength: '4.909 km',
     sessions: [
@@ -2138,7 +2138,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-3', name: '6 Hours of Spa', circuit: 'Circuit de Spa-Francorchamps', country: 'Belgium',
-    date: '2026-05-09', duration: '6 Hours', duration_hours: 6, status: 'upcoming', flag: '🇧🇪', season: 2026, round: 3,
+    date: '2026-05-09', duration: '6 Hours', status: 'upcoming', flag: '🇧🇪', season: 2026, round: 3,
     trackLength: '7.004 km',
     sessions: [
       { type: 'FP1', date: '2026-05-07', startTime: '14:00', endTime: '15:30', duration: '1h 30m' },
@@ -2150,7 +2150,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-4', name: '24 Hours of Le Mans', circuit: 'Circuit de la Sarthe', country: 'France',
-    date: '2026-06-13', endDate: '2026-06-14', duration: '24 Hours', duration_hours: 24, status: 'upcoming', flag: '🇫🇷', season: 2026, round: 3,
+    date: '2026-06-13', endDate: '2026-06-14', duration: '24 Hours', status: 'upcoming', flag: '🇫🇷', season: 2026, round: 3,
     trackLength: '13.626 km',
     sessions: [
             { type: 'FP1', date: '2026-06-08', startTime: '14:00', endTime: '19:00', duration: '5h' },
@@ -2164,7 +2164,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-5', name: '6 Hours of São Paulo', circuit: 'Interlagos', country: 'Brazil',
-    date: '2026-07-12', duration: '6 Hours', duration_hours: 6, status: 'upcoming', flag: '🇧🇷', season: 2026, round: 4,
+    date: '2026-07-12', duration: '6 Hours', status: 'upcoming', flag: '🇧🇷', season: 2026, round: 4,
     trackLength: '4.309 km',
     sessions: [
       { type: 'FP1', date: '2026-07-10', startTime: '10:00', endTime: '11:30', duration: '1h 30m' },
@@ -2176,7 +2176,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-6', name: 'Lone Star Le Mans', circuit: 'Circuit of the Americas', country: 'USA',
-    date: '2026-09-06', duration: '6 Hours', duration_hours: 6, status: 'upcoming', flag: '🇺🇸', season: 2026, round: 5,
+    date: '2026-09-06', duration: '6 Hours', status: 'upcoming', flag: '🇺🇸', season: 2026, round: 5,
     trackLength: '5.513 km',
     sessions: [
       { type: 'FP1', date: '2026-09-04', startTime: '12:40', endTime: '14:10', duration: '1h 30m' },
@@ -2188,7 +2188,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-7', name: '6 Hours of Fuji', circuit: 'Fuji Speedway', country: 'Japan',
-    date: '2026-09-27', duration: '6 Hours', duration_hours: 6, status: 'upcoming', flag: '🇯🇵', season: 2026, round: 6,
+    date: '2026-09-27', duration: '6 Hours', status: 'upcoming', flag: '🇯🇵', season: 2026, round: 6,
     trackLength: '4.563 km',
     sessions: [
       { type: 'FP1', date: '2026-09-25', startTime: '11:00', endTime: '12:30', duration: '1h 30m' },
@@ -2200,7 +2200,7 @@ export const races2026: Race[] = [
   },
   {
     id: '2026-8', name: '8 Hours of Bahrain', circuit: 'Bahrain International Circuit', country: 'Bahrain',
-    date: '2026-11-07', duration: '8 Hours', duration_hours: 8, status: 'upcoming', flag: '🇧🇭', season: 2026, round: 7,
+    date: '2026-11-07', duration: '8 Hours', status: 'upcoming', flag: '🇧🇭', season: 2026, round: 7,
     trackLength: '5.412 km',
     sessions: [
       { type: 'FP1', date: '2026-11-05', startTime: '12:15', endTime: '13:45', duration: '1h 30m' },
@@ -2316,7 +2316,7 @@ export const hypercars2026: Team[] = [
 ];
 
 export const circuits = [
-  { id: 'qatar', name: 'Lusail International Circuit', location: 'qatar', country: 'Qatar', flag: '🇶🇦', length: '5.419 km', turns: 16, lapRecord: '1:46.783', firstWEC: 2024, description: 'Lusail International Circuit is a motorsport venue in Lusail, Qatar. Originally built for MotoGP, it was upgraded for Formula 1 and WEC racing with extensive lighting for night races.' },
+  { id: 'qatar', name: 'Lusail International Circuit', location: 'Lusail', country: 'Qatar', flag: '🇶🇦', length: '5.419 km', turns: 16, lapRecord: '1:46.783', firstWEC: 2024, description: 'Lusail International Circuit is a motorsport venue in Lusail, Qatar. Originally built for MotoGP, it was upgraded for Formula 1 and WEC racing with extensive lighting for night races.' },
   { id: 'imola', name: 'Autodromo Enzo e Dino Ferrari', location: 'Imola', country: 'Italy', flag: '🇮🇹', length: '4.909 km', turns: 19, lapRecord: '1:30.140', firstWEC: 2024, description: 'Autodromo Enzo e Dino Ferrari is a historic Italian circuit named after Ferrari founder Enzo Ferrari and his son Dino. Known for its challenging, old-school layout with elevation changes.' },
   { id: 'spa', name: 'Circuit de Spa-Francorchamps', location: 'Stavelot', country: 'Belgium', flag: '🇧🇪', length: '7.004 km', turns: 19, lapRecord: '2:01.540', firstWEC: 2012, description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single race.' },
   { id: 'le-mans', name: 'Circuit de la Sarthe', location: 'Le Mans', country: 'France', flag: '🇫🇷', length: '13.626 km', turns: 38, lapRecord: '3:26.9 (Hypercar Race)', firstWEC: 2012, description: "Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world's oldest active sports car endurance race. The circuit combines permanent sections with public roads closed for the event." },

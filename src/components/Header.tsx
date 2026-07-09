@@ -93,7 +93,7 @@ const Header = () => {
                     key={item.to}
                     to={item.to}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                       isActive(item.to) 
                         ? 'bg-primary/20 text-primary' 
                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -110,7 +110,7 @@ const Header = () => {
                   <Link
                     to="/favorites"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                       isActive('/favorites') 
                         ? 'bg-primary/20 text-primary' 
                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -124,7 +124,7 @@ const Header = () => {
                 <Link
                   to="/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     isActive('/settings') 
                       ? 'bg-primary/20 text-primary' 
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -300,7 +300,7 @@ const Header = () => {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
                 isActive(item.to)
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -317,7 +317,7 @@ const Header = () => {
           {user && (
             <Link
               to="/favorites"
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
                 isActive('/favorites')
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -331,7 +331,7 @@ const Header = () => {
 
           <Link
             to="/settings"
-            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
               isActive('/settings')
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'

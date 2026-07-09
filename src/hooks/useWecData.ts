@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { getFlagEmoji } from '@/utils/flags';
 import { supabase } from '@/integrations/supabase/client';
 import type { Race, HypercardDriverStanding, ManufacturerStanding, Lmgt3Standing, RaceResult, SeasonStats } from '@/types/wec';
 
