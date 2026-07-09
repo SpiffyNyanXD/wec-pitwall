@@ -111,8 +111,7 @@ const Teams = () => {
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Teams 2026 | WEC Pitwall"
+            <SEOHead title="WEC Teams 2026 — WEC Pitwall"
         description="All 2026 FIA WEC Hypercar and LMGT3 teams — entry lists, car specs, championship standings and results."
         url="/teams"
       />

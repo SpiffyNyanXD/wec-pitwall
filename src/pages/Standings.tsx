@@ -293,8 +293,7 @@ const Standings = () => {
     <div className="min-h-screen bg-background">
 
 
-            <SEOHead
-        title="Championship Standings 2026 | WEC Pitwall"
+            <SEOHead title="WEC Championship Standings — WEC Pitwall"
         description="2026 FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round."
         url="/standings"
       />

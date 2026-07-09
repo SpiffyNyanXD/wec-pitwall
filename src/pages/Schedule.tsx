@@ -145,8 +145,7 @@ const Schedule = () => {
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
       }} />
 
-      <SEOHead
-        title="2026 WEC Race Schedule | WEC Pitwall"
+      <SEOHead title="2026 WEC Season Schedule — WEC Pitwall"
         description="Full 2026 FIA World Endurance Championship calendar. Dates, circuits and results for all 8 rounds including the 24 Hours of Le Mans."
         url="/schedule"
       />

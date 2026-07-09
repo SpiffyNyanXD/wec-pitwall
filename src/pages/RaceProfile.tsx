@@ -1,3 +1,4 @@
+import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
@@ -45,7 +46,9 @@ const RaceProfile = () => {
   if (!race) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+
+      {race ? <SEOHead title={`${race.name} Results — WEC Pitwall`} /> : <SEOHead title="Race Results — WEC Pitwall" />}
+      <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Race Not Found</h1>
@@ -262,6 +265,7 @@ const RaceProfile = () => {
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
 
+      {race ? <SEOHead title={`${race.name} Results — WEC Pitwall`} /> : <SEOHead title="Race Results — WEC Pitwall" />}
       <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 md:py-8 relative z-10">

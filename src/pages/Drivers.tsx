@@ -86,8 +86,7 @@ const Drivers = () => {
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Drivers 2026 | WEC Pitwall"
+            <SEOHead title="WEC Drivers 2026 — WEC Pitwall"
         description="All 2026 FIA WEC Hypercar and LMGT3 drivers — career stats, team info, championship points and race history."
         url="/drivers"
       />
