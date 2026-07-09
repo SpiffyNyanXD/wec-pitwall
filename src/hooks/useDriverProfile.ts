@@ -5,6 +5,7 @@ export function useDriverProfile(fullName: string) {
   return useQuery({
     queryKey: ['driver-profile', fullName],
     queryFn: async () => {
+      if (!supabase) return null;
       const { data, error } = await supabase
         .from('driver_profiles')
         .select('*')
@@ -14,6 +15,6 @@ export function useDriverProfile(fullName: string) {
       return data // null if no profile found — handle gracefully in UI
     },
     staleTime: 1000 * 60 * 60, // 1 hour
-    enabled: !!fullName,
+    enabled: !!fullName && !!supabase,
   })
 }
