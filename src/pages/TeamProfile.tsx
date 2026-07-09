@@ -17,6 +17,109 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+
+const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
+  <div className="glass-card p-6">
+    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+      <Wrench className="w-5 h-5 text-primary" />
+      Team Details
+    </h2>
+    <div className="space-y-4">
+      {dbDrivers && dbDrivers.length > 0 ? (
+        <div className="p-3 rounded-lg bg-muted/30">
+          <p className="text-xs text-muted-foreground mb-2">2026 Drivers</p>
+          <div className="space-y-1">
+            {dbDrivers.map((d: Record<string, unknown>, i: number) => (
+              <p key={i} className="font-medium text-foreground text-sm">{d.full_name}</p>
+            ))}
+          </div>
+        </div>
+      ) : teamDrivers.map((driver: Record<string, unknown>) => (
+        <Link
+          key={driver?.id}
+          to={`/drivers/${driver?.id}`}
+          className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+        >
+          <span className="text-2xl">{driver?.countryFlag}</span>
+          <div>
+            <p className="font-medium text-foreground">{driver?.name}</p>
+            <p className="text-xs text-muted-foreground">Driver</p>
+          </div>
+        </Link>
+      ))}
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Wrench className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{teamData.chassis}</p>
+          <p className="text-xs text-muted-foreground">Chassis</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Target className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{teamData.engine}</p>
+          <p className="text-xs text-muted-foreground">Power Unit</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <User className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.principal || teamData.teamPrincipal}</p>
+          <p className="text-xs text-muted-foreground">Team Principal</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <Calendar className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.founded_year || teamData.wecDebut}</p>
+          <p className="text-xs text-muted-foreground">{profile?.founded_year ? 'Founded' : 'WEC Debut'}</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+        <MapPin className="w-5 h-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium text-foreground">{profile?.headquarters || teamData.base}</p>
+          <p className="text-xs text-muted-foreground">Base</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition: number | string }) => (
+  <div className="glass-card p-6">
+    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+      <Trophy className="w-5 h-5 text-wec-gold" />
+      Achievements
+    </h2>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">Championships</span>
+        <span className="font-racing text-2xl text-wec-gold">{teamData.championships}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">Le Mans Wins</span>
+        <span className="font-racing text-2xl text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">WEC Wins</span>
+        <span className="font-racing text-2xl text-primary">{profile?.total_wec_wins ?? teamData.wecWins}</span>
+      </div>
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+        <span className="text-muted-foreground">
+          {teamClass === 'LMP2' ? 'Le Mans 2024' : '2024 Season'} Position
+        </span>
+        <span className="font-racing text-2xl text-foreground">P{teamPosition}</span>
+      </div>
+    </div>
+  </div>
+);
+
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
   const team = getTeamById(id || '');
@@ -322,108 +425,8 @@ const TeamProfile = () => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-1 space-y-6"
           >
-            {/* Team Details */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Wrench className="w-5 h-5 text-primary" />
-                Team Details
-              </h2>
-              
-              <div className="space-y-4">
-                {/* Drivers */}
-                {dbDrivers && dbDrivers.length > 0 ? (
-                  <div className="p-3 rounded-lg bg-muted/30">
-                    <p className="text-xs text-muted-foreground mb-2">2026 Drivers</p>
-                    <div className="space-y-1">
-                      {dbDrivers.map((d, i) => (
-                        <p key={i} className="font-medium text-foreground text-sm">{d.full_name}</p>
-                      ))}
-                    </div>
-                  </div>
-                ) : teamDrivers.map((driver, index) => (
-                  <Link 
-                    key={driver?.id} 
-                    to={`/drivers/${driver?.id}`}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                  >
-                    <span className="text-2xl">{driver?.countryFlag}</span>
-                    <div>
-                      <p className="font-medium text-foreground">{driver?.name}</p>
-                      <p className="text-xs text-muted-foreground">Driver</p>
-                    </div>
-                  </Link>
-                ))}
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Wrench className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.chassis}</p>
-                    <p className="text-xs text-muted-foreground">Chassis</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Target className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{teamData.engine}</p>
-                    <p className="text-xs text-muted-foreground">Power Unit</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <User className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{profile?.principal || teamData.teamPrincipal}</p>
-                    <p className="text-xs text-muted-foreground">Team Principal</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <Calendar className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{profile?.founded_year || teamData.wecDebut}</p>
-                    <p className="text-xs text-muted-foreground">{profile?.founded_year ? 'Founded' : 'WEC Debut'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <MapPin className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{profile?.headquarters || teamData.base}</p>
-                    <p className="text-xs text-muted-foreground">Base</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Championships */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-wec-gold" />
-                Achievements
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">Championships</span>
-                  <span className="font-racing text-2xl text-wec-gold">{teamData.championships}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">Le Mans Wins</span>
-                  <span className="font-racing text-2xl text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">WEC Wins</span>
-                  <span className="font-racing text-2xl text-primary">{profile?.total_wec_wins ?? teamData.wecWins}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <span className="text-muted-foreground">
-                    {team.class === 'LMP2' ? 'Le Mans 2024' : '2024 Season'} Position
-                  </span>
-                  <span className="font-racing text-2xl text-foreground">P{team.position}</span>
-                </div>
-              </div>
-            </div>
+            <TeamDetails teamDrivers={teamDrivers} dbDrivers={dbDrivers} teamData={teamData} profile={profile} />
+            <TeamAchievements teamData={teamData} profile={profile} teamClass={team.class} teamPosition={team.position} />
           </motion.div>
 
           {/* Right Column - About & Facts */}

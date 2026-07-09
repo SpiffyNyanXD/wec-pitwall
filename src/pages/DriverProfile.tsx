@@ -9,6 +9,85 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 
+
+const DriverHero = ({ driver, profile, age, team, getFlagEmoji }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined; getFlagEmoji: (code: string) => string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="glass-card p-8 mb-8 relative overflow-hidden"
+  >
+    <div
+      className="absolute top-0 right-0 w-1/2 h-full opacity-10"
+      style={{ background: `linear-gradient(135deg, ${team?.color || 'hsl(var(--primary))'} 0%, transparent 100%)` }}
+    />
+    <div className="relative flex flex-col md:flex-row gap-8 items-start">
+      <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-6xl md:text-7xl shrink-0">
+        {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
+      </div>
+      <div className="flex-1">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <Badge variant="outline" className={`${team ? 'bg-primary/20 text-primary border-primary/30' : 'bg-muted text-muted-foreground'}`}>
+            {driver.class}
+          </Badge>
+          <span className="font-racing text-xl text-primary">{driver.carNumber}</span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold mb-2">
+          <span className="text-muted-foreground">{driver.firstName}</span>{' '}
+          <span className="text-foreground">{driver.lastName}</span>
+        </h1>
+        <p className="text-lg text-muted-foreground mb-4">{driver.team}</p>
+        <div className="flex flex-wrap gap-4 text-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="w-4 h-4" />
+            {profile?.nationality || driver.nationality}
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Calendar className="w-4 h-4" />
+            Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : 'Unknown'} {age ? `(Age ${age})` : ''}
+          </div>
+          {driver.placeOfBirth && (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="w-4 h-4" />
+              {driver.placeOfBirth}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
+
+const DriverStats = ({ profile }: { profile: Record<string, unknown> | null | undefined }) => (
+  <div className="glass-card p-6">
+    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+      <Trophy className="w-5 h-5 text-wec-gold" />
+      WEC Career
+    </h2>
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="text-center p-4 rounded-lg bg-muted/30">
+        <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_wec_starts}</p>
+        <p className="text-xs text-muted-foreground uppercase mt-1">Starts</p>
+      </div>
+      <div className="text-center p-4 rounded-lg bg-muted/30">
+        <p className="font-racing text-3xl font-bold text-primary">{profile?.total_wec_wins}</p>
+        <p className="text-xs text-muted-foreground uppercase mt-1">Wins</p>
+      </div>
+      <div className="text-center p-4 rounded-lg bg-muted/30">
+        <p className="font-racing text-3xl font-bold text-secondary">{profile?.total_wec_podiums}</p>
+        <p className="text-xs text-muted-foreground uppercase mt-1">Podiums</p>
+      </div>
+      <div className="text-center p-4 rounded-lg bg-muted/30">
+        <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_le_mans_starts}</p>
+        <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Starts</p>
+      </div>
+      <div className="text-center p-4 rounded-lg bg-muted/30">
+        <p className="font-racing text-3xl font-bold text-wec-gold">{profile?.total_le_mans_wins}</p>
+        <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Wins</p>
+      </div>
+    </div>
+  </div>
+);
+
 const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
@@ -90,58 +169,7 @@ const DriverProfile = () => {
           <BackButton to="/drivers" label="Back to Drivers" />
         </motion.div>
 
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-8 mb-8 relative overflow-hidden"
-        >
-          {/* Decorative gradient */}
-          <div 
-            className="absolute top-0 right-0 w-1/2 h-full opacity-10"
-            style={{ background: `linear-gradient(135deg, ${team?.color || 'hsl(var(--primary))'} 0%, transparent 100%)` }}
-          />
-          
-          <div className="relative flex flex-col md:flex-row gap-8 items-start">
-            {/* Driver Avatar */}
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-6xl md:text-7xl shrink-0">
-              {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
-            </div>
-
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                <Badge variant="outline" className={`${getClassBadge(driver.class)}`}>
-                  {driver.class}
-                </Badge>
-                <span className="font-racing text-xl text-primary">{driver.carNumber}</span>
-              </div>
-
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                <span className="text-muted-foreground">{driver.firstName}</span>{' '}
-                <span className="text-foreground">{driver.lastName}</span>
-              </h1>
-
-              <p className="text-lg text-muted-foreground mb-4">{driver.team}</p>
-
-              <div className="flex flex-wrap gap-4 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="w-4 h-4" />
-                  {profile?.nationality || driver.nationality}
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="w-4 h-4" />
-                  Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : (formatDate(driver.dateOfBirth) || 'Unknown')} {age ? `(Age ${age})` : ''}
-                </div>
-                {driver.placeOfBirth && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="w-4 h-4" />
-                  {driver.placeOfBirth || 'Unknown'}
-                </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <DriverHero driver={driver} profile={profile} age={age} team={team} getFlagEmoji={getFlagEmoji} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Stats Cards */}
@@ -184,35 +212,7 @@ const DriverProfile = () => {
               </div>
             ) : (
               <>
-                {/* WEC Career Stats Grid */}
-                <div className="glass-card p-6">
-                  <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <Trophy className="w-5 h-5 text-wec-gold" />
-                    WEC Career
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 rounded-lg bg-muted/30">
-                      <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_wec_starts}</p>
-                      <p className="text-xs text-muted-foreground uppercase mt-1">Starts</p>
-                    </div>
-                    <div className="text-center p-4 rounded-lg bg-muted/30">
-                      <p className="font-racing text-3xl font-bold text-primary">{profile?.total_wec_wins}</p>
-                      <p className="text-xs text-muted-foreground uppercase mt-1">Wins</p>
-                    </div>
-                    <div className="text-center p-4 rounded-lg bg-muted/30">
-                      <p className="font-racing text-3xl font-bold text-secondary">{profile?.total_wec_podiums}</p>
-                      <p className="text-xs text-muted-foreground uppercase mt-1">Podiums</p>
-                    </div>
-                    <div className="text-center p-4 rounded-lg bg-muted/30">
-                      <p className="font-racing text-3xl font-bold text-foreground">{profile?.total_le_mans_starts}</p>
-                      <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Starts</p>
-                    </div>
-                    <div className="text-center p-4 rounded-lg bg-muted/30">
-                      <p className="font-racing text-3xl font-bold text-wec-gold">{profile?.total_le_mans_wins}</p>
-                      <p className="text-xs text-muted-foreground uppercase mt-1">Le Mans Wins</p>
-                    </div>
-                  </div>
-                </div>
+                <DriverStats profile={profile} />
 
                 {/* Biography */}
                 {profile?.bio && (
