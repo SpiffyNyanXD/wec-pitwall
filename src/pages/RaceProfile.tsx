@@ -5,7 +5,7 @@ import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lu
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
-import { computeAllRaceStatuses } from '@/utils/raceStatus';
+import { useRaceStatuses } from '@/hooks/useRaceStatuses';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';

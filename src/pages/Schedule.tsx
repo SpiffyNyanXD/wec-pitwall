@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
-import { computeAllRaceStatuses } from '@/utils/raceStatus';
+import { useRaceStatuses } from '@/hooks/useRaceStatuses';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
@@ -12,14 +12,14 @@ import { JsonLd } from "@/components/seo/JsonLd";
 
 const Schedule = () => {
   const allRaces = [...races2026, ...races2025, ...races2024];
-  const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
+  const raceStatuses = useRaceStatuses(
     allRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
       duration_hours: r.duration_hours ?? (r.duration.includes('km') ? 10 : parseInt(r.duration) || 6),
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
-  ), [allRaces]);
+  );
 
   const formatDate = (dateString: string, endDate?: string) => {
     const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
