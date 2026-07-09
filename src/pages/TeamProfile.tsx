@@ -120,6 +120,97 @@ const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { team
   </div>
 );
 
+
+const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="glass-card p-8 mb-8 relative overflow-hidden"
+  >
+    {/* Team Color Gradient */}
+    <div
+      className="absolute top-0 right-0 w-1/2 h-full"
+      style={{ background: `linear-gradient(135deg, ${team.color as string}26 0%, transparent 70%)` }}
+    />
+
+    <div className="relative">
+      <div className="flex flex-col md:flex-row gap-8 items-start">
+        {/* Team Logo/Number */}
+        <div
+          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl flex items-center justify-center shrink-0"
+          style={{ background: `${team.color as string}30`, border: `2px solid ${team.color as string}` }}
+        >
+          <span
+            className="font-bold"
+            style={{
+              color: team.color as string,
+              fontSize: (team.carNumber as string).length > 3 ? '2.5rem' : '3.75rem'
+            }}
+          >
+            {team.carNumber as string}
+          </span>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge variant="outline" className={getClassBadge(team.class as string)}>
+                {team.class as string}
+              </Badge>
+              {team.class === 'LMP2' && (
+                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
+                  Le Mans 24h Only
+                </Badge>
+              )}
+              <span className="text-2xl">{team.countryFlag as string}</span>
+            </div>
+
+            <Button
+              variant={isFavorite ? "default" : "outline"}
+              size="sm"
+              onClick={toggleFavorite}
+              className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
+            >
+              <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
+              {isFavorite ? 'Favorited' : 'Add to Favorites'}
+            </Button>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
+            {team.name as string}
+          </h1>
+          <p className="text-lg text-muted-foreground mb-1">{teamData.chassis as string}</p>
+          <p className="text-sm text-muted-foreground">Since {teamData.wecDebut as string}</p>
+
+          {/* Quick Stats Row */}
+          <div className="flex flex-wrap gap-6 mt-6">
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-foreground">{team.points as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Points</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-wec-gold">{(profile?.total_wec_wins as string | number | undefined) ?? (teamData.wecWins as string | number)}</p>
+              <p className="text-xs text-muted-foreground uppercase">Wins</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-secondary">{(profile?.total_le_mans_wins as string | number | undefined) ?? (teamData.leMansWins as string | number)}</p>
+              <p className="text-xs text-muted-foreground uppercase">Le Mans</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-primary">{teamData.poles as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Poles</p>
+            </div>
+            <div className="text-center">
+              <p className="font-racing text-3xl font-bold text-foreground">{teamData.fastestLaps as string | number}</p>
+              <p className="text-xs text-muted-foreground uppercase">Fastest Laps</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
+
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
   const team = getTeamById(id || '');
@@ -328,94 +419,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-8 mb-8 relative overflow-hidden"
-        >
-          {/* Team Color Gradient */}
-          <div 
-            className="absolute top-0 right-0 w-1/2 h-full"
-            style={{ background: `linear-gradient(135deg, ${team.color}26 0%, transparent 70%)` }}
-          />
-          
-          <div className="relative">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Team Logo/Number */}
-              <div 
-                className="w-32 h-32 md:w-40 md:h-40 rounded-2xl flex items-center justify-center shrink-0"
-                style={{ background: `${team.color}30`, border: `2px solid ${team.color}` }}
-              >
-                <span
-                  className="font-bold"
-                  style={{
-                    color: team.color,
-                    fontSize: team.carNumber.length > 3 ? '2.5rem' : '3.75rem'
-                  }}
-                >
-                  {team.carNumber}
-                </span>
-              </div>
-
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="outline" className={getClassBadge(team.class)}>
-                      {team.class}
-                    </Badge>
-                    {team.class === 'LMP2' && (
-                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
-                        Le Mans 24h Only
-                      </Badge>
-                    )}
-                    <span className="text-2xl">{team.countryFlag}</span>
-                  </div>
-
-                  <Button
-                    variant={isFavorite ? "default" : "outline"}
-                    size="sm"
-                    onClick={toggleFavorite}
-                    className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
-                  >
-                    <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
-                    {isFavorite ? 'Favorited' : 'Add to Favorites'}
-                  </Button>
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-                  {team.name}
-                </h1>
-                <p className="text-lg text-muted-foreground mb-1">{teamData.chassis}</p>
-                <p className="text-sm text-muted-foreground">Since {teamData.wecDebut}</p>
-
-                {/* Quick Stats Row */}
-                <div className="flex flex-wrap gap-6 mt-6">
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-foreground">{team.points}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Points</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-wec-gold">{profile?.total_wec_wins ?? teamData.wecWins}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Wins</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-secondary">{profile?.total_le_mans_wins ?? teamData.leMansWins}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Le Mans</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-primary">{teamData.poles}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Poles</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-racing text-3xl font-bold text-foreground">{teamData.fastestLaps}</p>
-                    <p className="text-xs text-muted-foreground uppercase">Fastest Laps</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}

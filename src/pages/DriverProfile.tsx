@@ -88,6 +88,78 @@ const DriverStats = ({ profile }: { profile: Record<string, unknown> | null | un
   </div>
 );
 
+
+const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<string, unknown> | null | undefined; isProfileLoading: boolean; driver: Record<string, unknown> }) => {
+  if (!profile && !isProfileLoading) {
+    return (
+      <div className="glass-card p-12 text-center">
+        <h2 className="text-2xl font-bold mb-2">Extended profile coming soon.</h2>
+        <p className="text-muted-foreground">Check back later for detailed career statistics, biography, and more.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <DriverStats profile={profile} />
+
+      {/* Biography */}
+      {profile?.bio && (
+        <div className="glass-card p-6">
+          <h2 className="text-lg font-bold mb-4">Biography</h2>
+          <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile.bio}</p>
+        </div>
+      )}
+
+      {/* Career Highlights */}
+      {profile?.career_highlights && profile.career_highlights.length > 0 && (
+        <div className="glass-card p-6">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <Medal className="w-5 h-5 text-wec-gold" />
+            Highlights
+          </h2>
+          <ul className="space-y-3 list-disc list-inside text-muted-foreground">
+            {profile.career_highlights.map((highlight: string, index: number) => (
+              <motion.li
+                key={index}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+              >
+                <span className="text-foreground">{highlight}</span>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Fallback to static highlights if no profile highlights */}
+      {(!profile?.career_highlights || profile.career_highlights.length === 0) && driver.careerHighlights && driver.careerHighlights.length > 0 && (
+        <div className="glass-card p-6">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <Medal className="w-5 h-5 text-wec-gold" />
+            Career Highlights
+          </h2>
+          <ul className="space-y-3">
+            {driver.careerHighlights.map((highlight: string, index: number) => (
+              <motion.li
+                key={index}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+                className="flex items-start gap-3 p-3 rounded-lg bg-muted/30"
+              >
+                <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
+                <span className="text-foreground">{highlight}</span>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
+};
+
 const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
@@ -205,70 +277,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            {!profile && !isProfileLoading ? (
-              <div className="glass-card p-12 text-center">
-                <h2 className="text-2xl font-bold mb-2">Extended profile coming soon.</h2>
-                <p className="text-muted-foreground">Check back later for detailed career statistics, biography, and more.</p>
-              </div>
-            ) : (
-              <>
-                <DriverStats profile={profile} />
-
-                {/* Biography */}
-                {profile?.bio && (
-                  <div className="glass-card p-6">
-                    <h2 className="text-lg font-bold mb-4">Biography</h2>
-                    <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile.bio}</p>
-                  </div>
-                )}
-
-                {/* Career Highlights */}
-                {profile?.career_highlights && profile.career_highlights.length > 0 && (
-                  <div className="glass-card p-6">
-                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                      <Medal className="w-5 h-5 text-wec-gold" />
-                      Highlights
-                    </h2>
-                    <ul className="space-y-3 list-disc list-inside text-muted-foreground">
-                      {profile.career_highlights.map((highlight: string, index: number) => (
-                        <motion.li
-                          key={index}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + index * 0.1 }}
-                        >
-                          <span className="text-foreground">{highlight}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Fallback to static highlights if no profile highlights */}
-                {(!profile?.career_highlights || profile.career_highlights.length === 0) && driver.careerHighlights && driver.careerHighlights.length > 0 && (
-                  <div className="glass-card p-6">
-                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                      <Medal className="w-5 h-5 text-wec-gold" />
-                      Career Highlights
-                    </h2>
-                    <ul className="space-y-3">
-                      {driver.careerHighlights.map((highlight, index) => (
-                        <motion.li
-                          key={index}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + index * 0.1 }}
-                          className="flex items-start gap-3 p-3 rounded-lg bg-muted/30"
-                        >
-                          <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
-                          <span className="text-foreground">{highlight}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
-            )}
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver as unknown as Record<string, unknown>} />
           </motion.div>
         </div>
       </AuthGate>
