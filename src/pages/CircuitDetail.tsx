@@ -49,7 +49,7 @@ const CircuitDetail = () => {
   const { data: race } = useQuery({
     queryKey: ['circuit-race', circuit?.id],
     queryFn: async () => {
-      if (!circuit?.id) return null;
+      if (!supabase || !circuit?.id) return null;
       const dbCircuitName = circuitSlugToDbName[circuit.id];
       if (!dbCircuitName) return null;
 
@@ -57,12 +57,12 @@ const CircuitDetail = () => {
         .from('races')
         .select('name, scheduled_date, duration_hours, status, start_time_utc')
         .ilike('circuit', `%${dbCircuitName}%`)
-        .single();
+        .maybeSingle();
       if (error) return null;
       return data;
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !!circuit?.id
+    enabled: !!circuit?.id && !!supabase
   });
 
   const getStatusBadge = (status: string) => {
