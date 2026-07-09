@@ -5,6 +5,7 @@ export function useTeamProfile(teamName: string) {
   return useQuery({
     queryKey: ['team-profile', teamName],
     queryFn: async () => {
+      if (!supabase) return null;
       const { data, error } = await supabase
         .from('team_profiles')
         .select('*')
@@ -14,6 +15,6 @@ export function useTeamProfile(teamName: string) {
       return data // null if no profile found — handle gracefully in UI
     },
     staleTime: 1000 * 60 * 60, // 1 hour
-    enabled: !!teamName,
+    enabled: !!teamName && !!supabase,
   })
 }
