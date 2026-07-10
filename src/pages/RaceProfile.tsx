@@ -47,7 +47,7 @@ const RaceProfile = () => {
     return (
       <div className="min-h-screen bg-background">
 
-<SEOHead title="Race Results — WEC Pitwall" />
+      {race ? <SEOHead title={`${race.name} Results — WEC Pitwall`} /> : <SEOHead title="Race Results — WEC Pitwall" />}
       <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center">
@@ -580,19 +580,11 @@ const RaceProfile = () => {
                   {(() => {
                     const totalLaps = raceResult.results[0]?.laps || 1;
                     const marginStr = raceResult.results[1]?.gap || '';
-                    const match = marginStr.match(/\+?\d+/);
-                    if (!match || marginStr.toLowerCase().includes('lap')) return <p className="text-2xl font-bold text-foreground">N/A</p>;
-
-                    const cleanStr = marginStr.replace('+', '').replace('s', '').trim();
-                    const hasColon = cleanStr.includes(':');
-
-                    let totalSeconds = 0;
-                    if (hasColon) {
-                      const parts = cleanStr.split(':');
-                      totalSeconds = parseInt(parts[0]) * 60 + parseFloat(parts[1]);
-                    } else {
-                      totalSeconds = parseFloat(cleanStr);
-                    }
+                    const match = marginStr.match(/\+?(\d+):?(\d+\.?\d*)/);
+                    if (!match) return <p className="text-2xl font-bold text-foreground">N/A</p>;
+                    const totalSeconds = match[1].includes(':')
+                      ? parseInt(match[1]) * 60 + parseFloat(match[2])
+                      : parseFloat(match[1] + '.' + (match[2] || '0'));
                     const avgDelta = totalSeconds / totalLaps;
                     return (
                       <>
