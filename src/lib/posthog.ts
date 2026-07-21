@@ -8,7 +8,8 @@ const posthogHost = import.meta.env.VITE_POSTHOG_HOST || "https://eu.i.posthog.c
 const posthogConfig = {
   api_host: posthogHost,
   person_profiles: "identified_only",
-  capture_pageview: true,
+  capture_pageview: false,
+  opt_out_capturing_by_default: true,
   capture_pageleave: true,
 } satisfies Partial<PostHogConfig>;
 
