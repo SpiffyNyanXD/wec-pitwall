@@ -2,53 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Core pages -->
-  <url><loc>https://wec-pitwall.vercel.app/</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/standings</loc><lastmod>2026-05-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/schedule</loc><lastmod>2026-05-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/teams</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/manufacturers</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/championship</loc><lastmod>2026-05-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/timeline</loc><lastmod>2026-05-28</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/le-mans</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/compare</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/privacy</loc><lastmod>2026-05-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/cookie-policy</loc><lastmod>2026-05-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/cookie-preferences</loc><lastmod>2026-05-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
 
-  <!-- Circuit pages -->
-  <url><loc>https://wec-pitwall.vercel.app/circuit/qatar</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/imola</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/spa</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/le-mans</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/sao-paulo</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/fuji</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/bahrain</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuit/cota</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/schedule</loc><lastmod>2026-07-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/standings</loc><lastmod>2026-07-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
-  <!-- Driver pages (2025/2026 key drivers) -->
-  <url><loc>https://wec-pitwall.vercel.app/drivers/pier-guidi</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/calado</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/fuoco</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/buemi</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/hartley</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/estre</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/drivers/vanthoor</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/teams</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/drivers</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
-  <!-- Team pages -->
-  <url><loc>https://wec-pitwall.vercel.app/teams/ferrari-51</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/teams/ferrari-50</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/teams/toyota-8</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/teams/toyota-7</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/compare</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/championship</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
+  <!-- Other pages -->
+  <url><loc>https://wec-pitwall.vercel.app/manufacturers</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/timeline</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/le-mans</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 
-  <url><loc>https://wec-pitwall.vercel.app/circuits/imola</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/spa</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/le-mans</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/sao-paulo</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/cota</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/fuji</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/lusail</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://wec-pitwall.vercel.app/circuits/bahrain</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Auth & User -->
+  <url><loc>https://wec-pitwall.vercel.app/auth</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/reset-password</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/settings</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/favorites</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/notifications</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <!-- Legal -->
+  <url><loc>https://wec-pitwall.vercel.app/privacy</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/cookie-policy</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/data-request</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/terms</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+
+  <!-- Circuit dynamic routes -->
+  <url><loc>https://wec-pitwall.vercel.app/circuits/qatar</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/imola</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/spa</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/le-mans</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/sao-paulo</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/cota</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/fuji</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuits/bahrain</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
 </urlset>
