@@ -5,15 +5,28 @@ import { Link } from 'react-router-dom';
 import { MapPin, Route, Calendar, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
-import { circuits } from '@/data/wecData';
+import { circuits as oldCircuits } from '@/data/wecData';
 
 const Circuits = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredCircuits = useMemo(() => {
+    const _circuits = oldCircuits.map(c => {
+      const circuitSlugMap: Record<string, string> = {
+        "Autodromo Enzo e Dino Ferrari": "imola",
+        "Circuit de Spa-Francorchamps": "spa",
+        "Circuit de la Sarthe": "le-mans",
+        "Interlagos": "sao-paulo",
+        "Circuit of the Americas": "cota",
+        "Fuji Speedway": "fuji",
+        "Lusail International Circuit": "lusail",
+        "Bahrain International Circuit": "bahrain",
+      };
+      return { ...c, slug: circuitSlugMap[c.name] || c.id };
+    });
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return circuits;
-    return circuits.filter(c =>
+    if (!q) return _circuits;
+    return _circuits.filter(c =>
       c.name.toLowerCase().includes(q) ||
       c.country.toLowerCase().includes(q)
     );
@@ -22,8 +35,7 @@ const Circuits = () => {
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Circuits 2026 | WEC Pitwall"
+            <SEOHead title="WEC Circuits 2026 — WEC Pitwall"
         description="2026 WEC race circuits — track maps, lap records and race history for all rounds including Le Mans, Spa and Bahrain."
         url="/circuits"
       />
@@ -74,7 +86,7 @@ const Circuits = () => {
               transition={{ delay: index * 0.05 }}
             >
               <Link
-                to={`/circuit/${circuit.id}`}
+                to={`/circuits/${circuit.slug}`}
                 className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300 h-full"
               >
                 <div className="flex justify-between items-start">

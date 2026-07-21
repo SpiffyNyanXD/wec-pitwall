@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 
 type SeasonYear = 2024 | 2025 | 2026;
@@ -20,23 +19,6 @@ const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: type
   2024: { drivers: drivers2024, teams: teams2024, races: races2024, status: 'completed' },
   2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
   2026: { drivers: [], teams: [...hypercars2026, ...lmgt3Teams2026], races: races2026, status: 'in-progress' },
-};
-
-
-// Empty state component
-const StandingsEmptyState = ({ message }: { message: string }) => (
-  <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
-    <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
-    <p className="text-muted-foreground">{message}</p>
-  </div>
-);
-
-
-const ConditionalAuthGate = ({ condition, featureName, children }: { condition: boolean, featureName: string, children: React.ReactNode }) => {
-  if (condition) {
-    return <AuthGate featureName={featureName}>{children}</AuthGate>;
-  }
-  return <>{children}</>;
 };
 
 const Standings = () => {
@@ -284,7 +266,13 @@ const Standings = () => {
     </motion.div>
   );
 
-
+  // Empty state component
+  const StandingsEmptyState = ({ message }: { message: string }) => (
+    <div className="glass-card p-8 text-center border-dashed border-2 border-border/50">
+      <Info className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
+      <p className="text-muted-foreground">{message}</p>
+    </div>
+  );
 
   const hypercarDrivers = useMemo(
     () => getDriversStandings('HYPERCAR'),
@@ -305,8 +293,7 @@ const Standings = () => {
     <div className="min-h-screen bg-background">
 
 
-            <SEOHead
-        title="Championship Standings 2026 | WEC Pitwall"
+            <SEOHead title="WEC Championship Standings — WEC Pitwall"
         description="2026 FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round."
         url="/standings"
       />
@@ -325,7 +312,7 @@ const Standings = () => {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h1 className="text-xl md:text-2xl lg:text-3xl 3xl:text-4xl font-bold">
+            <h1 className="text-3xl md:text-4xl font-bold">
               <span className="text-gradient">Championship Standings</span>
             </h1>
             
@@ -334,7 +321,7 @@ const Standings = () => {
               value={selectedSeason.toString()} 
               onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
             >
-              <SelectTrigger className="w-[140px] bg-card border-border min-h-[44px] md:min-h-0">
+              <SelectTrigger className="w-[140px] bg-card border-border">
                 <Calendar className="w-4 h-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
@@ -355,13 +342,7 @@ const Standings = () => {
           </div>
         </motion.div>
 
-
-
-        <ConditionalAuthGate condition={selectedSeason < 2026} featureName="Historical Data">
-          <div className="space-y-10">
-            {/* Hypercar Championships */}
-
-
+        {/* Hypercar Championships */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-wec-gold" />
@@ -373,7 +354,7 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
-              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
@@ -405,7 +386,7 @@ const Standings = () => {
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {(selectedSeason === 2025 ? standings2025 : standings2024).hypercars.drivers.map((driver: Record<string, unknown>, index: number) => (
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
                       <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
@@ -446,7 +427,7 @@ const Standings = () => {
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {(selectedSeason === 2025 ? standings2025 : standings2024).hypercars.teams.map((team: Record<string, unknown>, index: number) => (
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
                       <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
@@ -498,11 +479,11 @@ const Standings = () => {
 
           <Tabs defaultValue="drivers" className="w-full">
             <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
-              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                 <User className="w-3 h-3" />
                 Drivers
               </TabsTrigger>
-              <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
                 <Users className="w-3 h-3" />
                 Teams
               </TabsTrigger>
@@ -575,11 +556,11 @@ const Standings = () => {
             {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
               <Tabs defaultValue="teams" className="w-full">
                 <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
-                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold">
                     <Users className="w-3 h-3" />
                     Teams
                   </TabsTrigger>
-                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold">
                     <User className="w-3 h-3" />
                     Drivers
                   </TabsTrigger>
@@ -639,10 +620,6 @@ const Standings = () => {
           </div>
         </div>
 
-
-
-          </div>
-        </ConditionalAuthGate>
         {/* Legend */}
         <motion.div 
           initial={{ opacity: 0 }}
