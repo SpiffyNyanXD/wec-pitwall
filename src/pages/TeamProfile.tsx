@@ -242,6 +242,7 @@ const TeamProfile = () => {
         .from('drivers')
         .select(`
           full_name,
+          nationality_code,
           cars!inner(team_name)
         `)
         .eq('cars.team_name', team.name);
