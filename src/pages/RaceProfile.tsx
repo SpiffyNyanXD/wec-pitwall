@@ -576,11 +576,11 @@ const RaceProfile = () => {
                   {(() => {
                     const totalLaps = raceResult.results[0]?.laps || 1;
                     const marginStr = raceResult.results[1]?.gap || '';
-                    const match = marginStr.match(/\+?(\d+):?(\d+\.?\d*)/);
+                    const match = marginStr.match(/\+?(?:(\d+):)?(\d+\.?\d*)/);
                     if (!match) return <p className="text-2xl font-bold text-foreground">N/A</p>;
-                    const totalSeconds = match[1].includes(':')
-                      ? parseInt(match[1]) * 60 + parseFloat(match[2])
-                      : parseFloat(match[1] + '.' + (match[2] || '0'));
+                    const minutes = match[1] ? parseInt(match[1], 10) : 0;
+                    const seconds = parseFloat(match[2]);
+                    const totalSeconds = minutes * 60 + seconds;
                     const avgDelta = totalSeconds / totalLaps;
                     return (
                       <>
