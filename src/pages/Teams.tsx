@@ -6,8 +6,6 @@ import { Trophy, Flag, Users, MapPin, Search, X } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTeamProfile } from '@/hooks/useTeamProfile';
-
 import { teams2025, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
 
 const getClassBadge = (carClass: string) => {
@@ -25,7 +23,6 @@ interface TeamCardProps {
 }
 
 const TeamCard = ({ team, index }: TeamCardProps) => {
-  const { data: profile } = useTeamProfile(team.name);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -33,16 +30,17 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
       transition={{ delay: index * 0.05 }}
     >
       <Link to={`/teams/${team.id}`}>
-        <div className="glass-card p-6 hover:border-primary/50 transition-all duration-300 group h-full flex flex-col">
-          <div className="flex items-start gap-4 flex-1">
+        <div className="glass-card p-6 hover:border-primary/50 transition-all duration-300 group h-full">
+          <div className="flex items-start gap-4">
             {/* Team Color & Position */}
             <div className="flex flex-col items-center gap-2">
               <div 
-                className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-racing font-bold shrink-0"
+                className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-racing font-bold"
                 style={{ background: `${team.color}30`, color: team.color }}
               >
                 {team.carNumber}
               </div>
+              <span className="text-sm text-muted-foreground">P{team.position}</span>
             </div>
 
             {/* Team Info */}
@@ -64,24 +62,17 @@ const TeamCard = ({ team, index }: TeamCardProps) => {
               </h3>
               <p className="text-sm text-muted-foreground">{team.manufacturer}</p>
               
-              {profile && (
-              <div className="mt-2 text-xs text-muted-foreground space-y-1">
-                {profile.founded_year && <p>Est. {profile.founded_year}</p>}
-                {profile.headquarters && <p className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {profile.headquarters}</p>}
+              <div className="flex items-center gap-4 mt-3 text-sm">
+                <div className="flex items-center gap-1">
+                  <Trophy className="w-4 h-4 text-wec-gold" />
+                  <span className="text-foreground font-medium">{team.points}</span>
+                  <span className="text-muted-foreground">pts</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4 text-primary" />
+                  <span className="text-muted-foreground">{team.drivers.length} drivers</span>
+                </div>
               </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/50 text-sm">
-            <div className="flex items-center gap-1">
-              <Trophy className="w-4 h-4 text-wec-gold" />
-              <span className="text-foreground font-medium">{team.points}</span>
-              <span className="text-muted-foreground">pts</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Users className="w-4 h-4 text-primary" />
-              <span className="text-muted-foreground">{team.drivers.length} drivers</span>
             </div>
           </div>
         </div>
@@ -120,8 +111,7 @@ const Teams = () => {
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Teams 2026 | WEC Pitwall"
+            <SEOHead title="WEC Teams 2026 — WEC Pitwall"
         description="All 2026 FIA WEC Hypercar and LMGT3 teams — entry lists, car specs, championship standings and results."
         url="/teams"
       />

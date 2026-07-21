@@ -22,8 +22,7 @@ const Circuits = () => {
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Circuits 2026 | WEC Pitwall"
+            <SEOHead title="WEC Circuits 2026 — WEC Pitwall"
         description="2026 WEC race circuits — track maps, lap records and race history for all rounds including Le Mans, Spa and Bahrain."
         url="/circuits"
       />
