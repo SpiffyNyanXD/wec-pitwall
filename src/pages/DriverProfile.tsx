@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 
 
-const DriverHero = ({ driver, profile, age, team }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; team: Record<string, unknown> | null | undefined;  }) => (
+const DriverHero = ({ driver, profile, team }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; team: Record<string, unknown> | null | undefined;  }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
