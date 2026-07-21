@@ -4,22 +4,23 @@ import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
-import { useRaceStatuses } from '@/hooks/useRaceStatuses';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
+import { AuthGate } from "@/components/AuthGate";
 
 const Schedule = () => {
-  const allRaces = [...races2026, ...races2025, ...races2024];
-  const raceStatuses = useRaceStatuses(
+  const allRaces = useMemo(() => [...races2026, ...races2025, ...races2024], []);
+  const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
     allRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: r.duration_hours ?? (r.duration.includes('km') ? 10 : parseInt(r.duration) || 6),
+      duration_hours: r.duration_hours || 6,
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
-  );
+  ), [allRaces]);
 
   const formatDate = (dateString: string, endDate?: string) => {
     const parseDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
@@ -145,7 +146,8 @@ const Schedule = () => {
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
       }} />
 
-      <SEOHead title="2026 WEC Season Schedule — WEC Pitwall"
+      <SEOHead
+        title="2026 WEC Race Schedule | WEC Pitwall"
         description="Full 2026 FIA World Endurance Championship calendar. Dates, circuits and results for all 8 rounds including the 24 Hours of Le Mans."
         url="/schedule"
       />
@@ -163,7 +165,7 @@ const Schedule = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 md:mb-8"
         >
-          <h1 className="text-2xl md:text-4xl font-bold mb-1 md:mb-2">
+          <h1 className="text-xl md:text-2xl lg:text-3xl 3xl:text-4xl font-bold mb-1 md:mb-2">
             <span className="text-gradient">Race Calendar</span>
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">FIA World Endurance Championship</p>
@@ -171,9 +173,9 @@ const Schedule = () => {
 
         <Tabs defaultValue="2026" className="w-full">
           <TabsList className="grid w-full max-w-xs md:max-w-md grid-cols-3 mb-6 md:mb-8">
-            <TabsTrigger value="2026" className="text-sm md:text-base">2026</TabsTrigger>
-            <TabsTrigger value="2025" className="text-sm md:text-base">2025</TabsTrigger>
-            <TabsTrigger value="2024" className="text-sm md:text-base">2024</TabsTrigger>
+            <TabsTrigger value="2026" className="text-sm md:text-base min-h-[44px] md:min-h-0">2026</TabsTrigger>
+            <TabsTrigger value="2025" className="text-sm md:text-base min-h-[44px] md:min-h-0">2025</TabsTrigger>
+            <TabsTrigger value="2024" className="text-sm md:text-base min-h-[44px] md:min-h-0">2024</TabsTrigger>
           </TabsList>
 
           <TabsContent value="2026">
@@ -192,19 +194,23 @@ const Schedule = () => {
           </TabsContent>
 
           <TabsContent value="2025">
+            <AuthGate featureName="Historical Data">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
               {races2025.map((race, index) => (
                 <RaceCard key={race.id} race={race} index={index} />
               ))}
             </div>
+          </AuthGate>
           </TabsContent>
 
           <TabsContent value="2024">
+            <AuthGate featureName="Historical Data">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
               {races2024.map((race, index) => (
                 <RaceCard key={race.id} race={race} index={index} />
               ))}
             </div>
+          </AuthGate>
           </TabsContent>
         </Tabs>
       </main>

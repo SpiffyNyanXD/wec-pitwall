@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { races2025, races2026 } from '@/data/wecData';
-import { useRaceStatuses } from '@/hooks/useRaceStatuses';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Link } from 'react-router-dom';
 
@@ -12,11 +12,11 @@ const CalendarWidget = () => {
   const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
 
-  const raceStatuses = useRaceStatuses(
+  const raceStatuses = computeAllRaceStatuses(
     currentSeasonRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: r.duration_hours ?? (r.duration.includes('km') ? 10 : parseInt(r.duration) || 6),
+      duration_hours: r.duration_hours || 6,
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   );
