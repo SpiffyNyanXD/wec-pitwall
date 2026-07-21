@@ -46,7 +46,7 @@ const DriverHero = ({ driver, profile, age, team }: { driver: Record<string, unk
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="w-4 h-4" />
-            Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown'}
+            Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) : 'Unknown'}
           </div>
           {driver.placeOfBirth && (
             <div className="flex items-center gap-2 text-muted-foreground">
