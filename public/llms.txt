@@ -1,0 +1,21 @@
+# WEC Pitwall
+
+> Professional FIA World Endurance Championship analytics — live race status, standings, driver comparisons, championship battles, and circuit profiles.
+
+## Pages
+
+- [Home](https://wec-pitwall.vercel.app): Race countdown, live status, editorial hero
+- [Schedule](https://wec-pitwall.vercel.app/schedule): Full 2024–2026 WEC calendar with status badges
+- [Standings](https://wec-pitwall.vercel.app/standings): Driver & team championship standings by season/class
+- [Circuits](https://wec-pitwall.vercel.app/circuits): All 8 WEC 2026 track profiles with details
+- [Teams](https://wec-pitwall.vercel.app/teams): Team rosters and class listings
+- [Driver Comparison](https://wec-pitwall.vercel.app/compare): Head-to-head driver analytics (auth required)
+- [Championship Battle](https://wec-pitwall.vercel.app/championship): Title fight visualization (auth required)
+
+## Tech Stack
+
+React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Supabase, Sentry, PostHog
+
+## Data
+
+2026 season data sourced from Supabase. 2024–2025 historical data in static files.

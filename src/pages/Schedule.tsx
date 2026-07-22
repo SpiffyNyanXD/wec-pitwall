@@ -17,7 +17,7 @@ const Schedule = () => {
     allRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: r.duration_hours || 6,
+      duration_hours: r.duration_hours,
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   ), [allRaces]);
