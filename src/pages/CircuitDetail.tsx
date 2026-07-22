@@ -1,4 +1,5 @@
 import SEOHead from "@/components/SEOHead";
+import { buildTitle } from "@/utils/seo";
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
@@ -58,7 +59,7 @@ const CircuitDetail = () => {
         .select('name, scheduled_date, duration_hours, status, start_time_utc')
         .ilike('circuit', `%${dbCircuitName}%`)
         .maybeSingle();
-      if (error) return null;
+      if (error) { if (error.code === 'PGRST116') { console.warn('No race found for circuit'); return null; } throw error; }
       return data;
     },
     staleTime: 1000 * 60 * 5,
@@ -77,6 +78,11 @@ const CircuitDetail = () => {
   if (!circuit) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title={buildTitle('Circuit Not Found')}
+          description="Circuit not found in WEC Pitwall."
+          noIndex
+        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -90,6 +96,11 @@ const CircuitDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={buildTitle(`${circuit.name} | Circuits`)}
+        description={`Circuit details for ${circuit.name}, ${circuit.location}, ${circuit.country}. View race schedule and circuit history.`}
+        url={`/circuits/${circuit.id}`}
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />

@@ -18,7 +18,7 @@
   <url><loc>https://wec-pitwall.vercel.app/cookie-preferences</loc><lastmod>2026-05-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 
   <!-- Circuit pages -->
-  <url><loc>https://wec-pitwall.vercel.app/circuit/qatar</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://wec-pitwall.vercel.app/circuit/lusail</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://wec-pitwall.vercel.app/circuit/imola</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://wec-pitwall.vercel.app/circuit/spa</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://wec-pitwall.vercel.app/circuit/le-mans</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
@@ -27,6 +27,7 @@
   <url><loc>https://wec-pitwall.vercel.app/circuit/bahrain</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://wec-pitwall.vercel.app/circuit/cota</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
+  <!-- Dynamic routes: /drivers/:slug, /teams/:slug -->
   <!-- Driver pages (2025/2026 key drivers) -->
   <url><loc>https://wec-pitwall.vercel.app/drivers/pier-guidi</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://wec-pitwall.vercel.app/drivers/calado</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>

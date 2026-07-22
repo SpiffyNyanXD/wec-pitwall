@@ -1,4 +1,5 @@
 import SEOHead from "@/components/SEOHead";
+import { buildTitle } from "@/utils/seo";
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
@@ -7,10 +8,11 @@ import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getDriverById, getTeamById } from '@/data/wecData';
+import { useDriverProfile } from '@/hooks/useDriverProfile';
+import { getDriverById, getTeamById, Driver } from '@/data/wecData';
 
 
-const DriverHero = ({ driver, profile, age, team, getFlagEmoji }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined; getFlagEmoji: (code: string) => string }) => (
+const DriverHero = ({ driver, profile, age, team, getFlagEmoji }: { driver: Driver; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined; getFlagEmoji: (code: string) => string }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -89,7 +91,7 @@ const DriverStats = ({ profile }: { profile: Record<string, unknown> | null | un
 );
 
 
-const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<string, unknown> | null | undefined; isProfileLoading: boolean; driver: Record<string, unknown> }) => {
+const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<string, unknown> | null | undefined; isProfileLoading: boolean; driver: Driver }) => {
   if (!profile && !isProfileLoading) {
     return (
       <div className="glass-card p-12 text-center">
@@ -164,6 +166,8 @@ const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
   const team = driver ? getTeamById(driver.teamId) : undefined;
+  const { data: profile, isLoading: isProfileLoading, age } = useDriverProfile(driver?.name || '');
+
 
   if (!driver) {
     return (
@@ -216,7 +220,7 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
+        title={driver ? buildTitle(driver.name) : 'Driver'}
         description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
         url={driver ? `/drivers/${driver.id}` : '/drivers'}
       />
@@ -277,7 +281,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver as unknown as Record<string, unknown>} />
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver} />
           </motion.div>
         </div>
       </AuthGate>
