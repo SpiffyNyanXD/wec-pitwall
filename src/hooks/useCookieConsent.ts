@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { posthog } from '@/lib/posthog';
 
 export type ConsentStatus = 'accepted' | 'rejected' | 'pending' | 'blocked';
 
@@ -73,15 +74,18 @@ export function useCookieConsent() {
     if (termlyConsent === 'accepted') {
       setConsent('accepted');
       persistConsent('accepted');
+      posthog.opt_in_capturing();
     } else if (termlyConsent === 'rejected') {
       setConsent('rejected');
       persistConsent('rejected');
+      posthog.opt_out_capturing();
     }
   }, []);
 
   function acceptAll() {
     persistConsent('accepted');
     setConsent('accepted');
+    posthog.opt_in_capturing();
     try { window.Termly?.acceptAll?.(); } catch {
       // empty
     }
@@ -90,6 +94,7 @@ export function useCookieConsent() {
   function rejectAll() {
     persistConsent('rejected');
     setConsent('rejected');
+    posthog.opt_out_capturing();
     try { window.Termly?.rejectAll?.(); } catch {
       // empty
     }

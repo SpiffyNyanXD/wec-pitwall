@@ -16,11 +16,6 @@ const manufacturerData2025 = [
   { round: 'R2 Imola',    Ferrari: 93, Toyota: 53, Porsche: 72, Cadillac: 40, BMW: 22 },
   { round: 'R3 Spa',      Ferrari: 118, Toyota: 68, Porsche: 107, Cadillac: 54, BMW: 30 },
   { round: 'R4 Le Mans',  Ferrari: 168, Toyota: 101, Porsche: 132, Cadillac: 76, BMW: 42 },
-  // TODO: [championshipProgression for R5-R8] not found online — requires manual verification
-  { round: 'R5 Sao Paulo', Ferrari: 168, Toyota: 101, Porsche: 132, Cadillac: 76, BMW: 42 },
-  { round: 'R6 COTA',     Ferrari: 168, Toyota: 101, Porsche: 132, Cadillac: 76, BMW: 42 },
-  { round: 'R7 Fuji',     Ferrari: 168, Toyota: 101, Porsche: 132, Cadillac: 76, BMW: 42 },
-  { round: 'R8 Bahrain',  Ferrari: 168, Toyota: 101, Porsche: 132, Cadillac: 76, BMW: 42 },
 ];
 
 const driversData2025 = [
@@ -28,11 +23,6 @@ const driversData2025 = [
   { round: 'R2 Imola',   '#51 Ferrari': 50, '#83 AF Corse': 33, '#50 Ferrari': 22, '#6 Porsche': 36, '#7 Toyota': 23, '#8 Toyota': 16 },
   { round: 'R3 Spa',     '#51 Ferrari': 68, '#83 AF Corse': 48, '#50 Ferrari': 30, '#6 Porsche': 61, '#7 Toyota': 33, '#8 Toyota': 24 },
   { round: 'R4 Le Mans', '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
-  // TODO: [championshipProgression for R5-R8] not found online — requires manual verification
-  { round: 'R5 Sao Paulo', '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
-  { round: 'R6 COTA',      '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
-  { round: 'R7 Fuji',      '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
-  { round: 'R8 Bahrain',   '#51 Ferrari': 83, '#83 AF Corse': 73, '#50 Ferrari': 38, '#6 Porsche': 76, '#7 Toyota': 48, '#8 Toyota': 32 },
 ];
 
 const manufacturerData2024 = [
