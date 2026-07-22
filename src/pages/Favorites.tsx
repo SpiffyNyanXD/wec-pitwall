@@ -20,7 +20,7 @@ interface FavoriteTeam {
 const FavoritesPage = () => {
   useEffect(() => {
     document.title = "Favorites | WEC Pitwall";
-  }, [loadFavorites]);
+  }, []);
 
   const { user } = useAuth();
   const [favoriteTeams, setFavoriteTeams] = useState<FavoriteTeam[]>([]);
