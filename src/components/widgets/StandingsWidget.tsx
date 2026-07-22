@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { AuthModal } from '@/components/AuthModal';
 import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -100,7 +101,7 @@ const StandingsWidget = () => {
           </span>
           <span className="text-xs text-muted-foreground ml-0.5">pts</span>
         </div>
-        {showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
+        {AUTH_ENABLED && showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
     </motion.div>
     </Link>
   );
@@ -108,17 +109,17 @@ const StandingsWidget = () => {
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
-      if (!user) {
-        setShowAuthModal(true);
-      } else {
+      if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
+      } else {
+        setShowAuthModal(true);
       }
     };
 
     return (
       <div onClick={handleClick} className="cursor-pointer relative">
         <motion.div
-          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${!user ? 'opacity-80' : ''}`}
+          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.1 }}
@@ -134,7 +135,7 @@ const StandingsWidget = () => {
           <span className="flex-1 text-foreground text-sm truncate">{driver.displayName}</span>
           <span className="font-racing text-sm font-bold">{driver.points} <span className="text-xs text-muted-foreground">pts</span></span>
         </motion.div>
-        {!user && (
+        {AUTH_ENABLED && !user && (
           <div className="absolute top-2 right-2">
             <Lock className="w-3 h-3 text-zinc-400" />
           </div>

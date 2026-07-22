@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import WecLogo from './WecLogo';
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function AuthModal({ featureName, onClose }: Props) {
+
   const navigate = useNavigate();
 
   const handleClose = () => {
