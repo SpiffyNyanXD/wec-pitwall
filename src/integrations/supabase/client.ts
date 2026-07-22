@@ -8,6 +8,11 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  console.error('[WEC Pitwall] FATAL: VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY is missing. Auth is broken.');
+}
+
 export const supabase = SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY
   ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
       auth: {

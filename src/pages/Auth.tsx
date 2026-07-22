@@ -88,10 +88,10 @@ const Auth = () => {
   const handleLoginSubmit = async () => {
     const { error } = await signIn(email, password);
     if (error) {
-      if (error.message.includes('Invalid login credentials')) {
+      if ((error.message || '').includes('Invalid login credentials')) {
         toast.error('Invalid email or password');
       } else {
-        toast.error(error.message);
+        toast.error(error.message || 'Something went wrong. Please try again.');
       }
     } else {
       toast.success('Welcome back!');
@@ -125,10 +125,10 @@ const Auth = () => {
 
     const { error } = await signUp(email, password, displayName);
     if (error) {
-      if (error.message.includes('already registered')) {
+      if ((error.message || '').includes('already registered')) {
         toast.error('This email is already registered. Try logging in instead.');
       } else {
-        toast.error(error.message);
+        toast.error(error.message || 'Something went wrong. Please try again.');
       }
     } else {
       if (username) {
@@ -154,7 +154,7 @@ const Auth = () => {
     });
     setIsSubmitting(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Something went wrong. Please try again.');
     } else {
       toast.success('Password reset email sent. Check your inbox.');
     }

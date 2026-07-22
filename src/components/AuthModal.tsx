@@ -22,6 +22,11 @@ export function AuthModal({ featureName, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
+      {(!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) && (
+        <div className="fixed top-0 left-0 right-0 z-[100] bg-red-600 text-white text-center text-xs py-1">
+          ⚠️ Supabase env vars missing. Auth will not work.
+        </div>
+      )}
       <div className="max-w-md w-full mx-4 bg-[#0a0a0a] rounded-2xl p-8 border border-zinc-700 relative shadow-2xl">
         <button
           onClick={handleClose}
