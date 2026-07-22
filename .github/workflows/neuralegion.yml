@@ -157,6 +157,9 @@ on:
   schedule:
     - cron: '42 9 * * 4'
 
+permissions:
+  contents: read
+
 jobs:
   neuralegion_scan:
     runs-on: ubuntu-18.04
