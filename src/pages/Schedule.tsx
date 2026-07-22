@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { AuthGate } from "@/components/AuthGate";
 
 const Schedule = () => {
-  const allRaces = [...races2026, ...races2025, ...races2024];
+  const allRaces = useMemo(() => [...races2026, ...races2025, ...races2024], []);
   const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
     allRaces.map(r => ({
       id: r.id,

@@ -1,3 +1,4 @@
+import { posthog } from '@/lib/posthog';
 import { Toaster } from "@/components/ui/toaster";
 
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -66,6 +67,15 @@ const PageLoader = () => (
   </div>
 );
 
+
+const PageTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    posthog.capture('$pageview');
+  }, [location]);
+  return null;
+};
+
 const RouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   return <div key={location.pathname}>{children}</div>;
@@ -82,6 +92,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
+            <PageTracker />
             <RouteWrapper><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />

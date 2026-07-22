@@ -10,6 +10,7 @@ import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
 import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { parseMarginToSeconds } from '@/lib/raceUtils';
 
 interface CircuitFacts {
   lapLength: string;
@@ -576,19 +577,10 @@ const RaceProfile = () => {
                   {(() => {
                     const totalLaps = raceResult.results[0]?.laps || 1;
                     const marginStr = raceResult.results[1]?.gap || '';
-                    const match = marginStr.match(/\+?\d+/);
-                    if (!match || marginStr.toLowerCase().includes('lap')) return <p className="text-2xl font-bold text-foreground">N/A</p>;
 
-                    const cleanStr = marginStr.replace('+', '').replace('s', '').trim();
-                    const hasColon = cleanStr.includes(':');
+                    const totalSeconds = parseMarginToSeconds(marginStr);
+                    if (totalSeconds === null) return <p className="text-2xl font-bold text-foreground">N/A</p>;
 
-                    let totalSeconds = 0;
-                    if (hasColon) {
-                      const parts = cleanStr.split(':');
-                      totalSeconds = parseInt(parts[0]) * 60 + parseFloat(parts[1]);
-                    } else {
-                      totalSeconds = parseFloat(cleanStr);
-                    }
                     const avgDelta = totalSeconds / totalLaps;
                     return (
                       <>
