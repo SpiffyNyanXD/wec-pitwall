@@ -360,7 +360,8 @@ export function useLastRace() {
         winningTeam: winningTeam,
       };
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 1000 * 60 * 1,
+    refetchInterval: 1000 * 60 * 1,
   });
 
   return { data, loading: isLoading, error: error?.message ?? null };

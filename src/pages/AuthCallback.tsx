@@ -12,7 +12,7 @@ const AuthCallback = () => {
     const handleCallback = async () => {
       const urlParams = new URLSearchParams(location.search);
       let code = urlParams.get('code');
-      const next = urlParams.get('next') || '/';
+      let next = urlParams.get('next') || '/';
       
       // Fallback to hash if not in query string (Supabase uses hash by default)
       if (!code && location.hash) {

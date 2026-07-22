@@ -260,3 +260,6 @@ Every PR must:
 - Has Vercel MCP access — can inspect deployments and fetch live HTML
 - Use caveman mode when communicating with the developer (Anshul)
 - Refer to this file for project context before making suggestions
+## Supabase Direct Operations (not in migration files)
+- start_time_utc column added manually via SQL
+- pg_cron job 'mark-completed-races' runs every hour to mark past races as completed

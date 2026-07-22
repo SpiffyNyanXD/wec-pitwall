@@ -7,8 +7,6 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { drivers2024, drivers2026, getDriversByClass } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDriverProfile } from '@/hooks/useDriverProfile';
-
 
 const Drivers = () => {
   const [searchParams] = useSearchParams();
@@ -22,92 +20,73 @@ const Drivers = () => {
     }
   };
 
-
-  const getFlagEmoji = (code: string): string => {
-    return code
-      .toUpperCase()
-      .split('')
-      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
-      .join('');
-  };
-
-  const DriverCard = ({ driver, index }: { driver: typeof drivers2024[0]; index: number }) => {
-    const { data: profile } = useDriverProfile(driver.name);
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05 }}
+  const DriverCard = ({ driver, index }: { driver: typeof drivers2024[0]; index: number }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+    >
+      <Link
+        to={`/drivers/${driver.id}`}
+        className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300"
       >
-        <Link
-          to={`/drivers/${driver.id}`}
-          className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300 h-full"
-        >
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-2xl font-racing">
-                {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                  {driver.name}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-1">{driver.team}</p>
-                {profile && (
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {profile.total_wec_starts} WEC starts
-                  </p>
-                )}
-              </div>
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-2xl font-racing">
+              {driver.countryFlag}
             </div>
-            <Badge variant="outline" className={`${getClassBadge(driver.class)} text-xs shrink-0 ml-2`}>
-              {driver.class}
-            </Badge>
+            <div>
+              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                {driver.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">{driver.team}</p>
+            </div>
           </div>
+          <Badge variant="outline" className={`${getClassBadge(driver.class)} text-xs`}>
+            {driver.class}
+          </Badge>
+        </div>
 
-          <div className="grid grid-cols-3 gap-3 text-center mt-auto">
-            <div className="glass-card p-2 rounded-lg">
-              <div className="flex items-center justify-center gap-1 text-wec-gold mb-1">
-                <Trophy className="w-3 h-3" />
-              </div>
-              <p className="text-lg font-racing font-bold">{driver.championships}</p>
-              <p className="text-[10px] text-muted-foreground uppercase">Titles</p>
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-wec-gold mb-1">
+              <Trophy className="w-3 h-3" />
             </div>
-            <div className="glass-card p-2 rounded-lg">
-              <div className="flex items-center justify-center gap-1 text-secondary mb-1">
-                <Flag className="w-3 h-3" />
-              </div>
-              <p className="text-lg font-racing font-bold">{driver.leMansWins}</p>
-              <p className="text-[10px] text-muted-foreground uppercase">Le Mans</p>
-            </div>
-            <div className="glass-card p-2 rounded-lg">
-              <div className="flex items-center justify-center gap-1 text-primary mb-1">
-                <Medal className="w-3 h-3" />
-              </div>
-              <p className="text-lg font-racing font-bold">{driver.wecWins}</p>
-              <p className="text-[10px] text-muted-foreground uppercase">WEC Wins</p>
-            </div>
+            <p className="text-lg font-racing font-bold">{driver.championships}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Titles</p>
           </div>
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-secondary mb-1">
+              <Flag className="w-3 h-3" />
+            </div>
+            <p className="text-lg font-racing font-bold">{driver.leMansWins}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Le Mans</p>
+          </div>
+          <div className="glass-card p-2 rounded-lg">
+            <div className="flex items-center justify-center gap-1 text-primary mb-1">
+              <Medal className="w-3 h-3" />
+            </div>
+            <p className="text-lg font-racing font-bold">{driver.wecWins}</p>
+            <p className="text-[10px] text-muted-foreground uppercase">WEC Wins</p>
+          </div>
+        </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border/50">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-racing text-primary">{driver.carNumber}</span>
-              <span className="text-xs text-muted-foreground">|</span>
-              <span className="text-sm text-muted-foreground">{driver.nationality}</span>
-            </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-racing text-primary">{driver.carNumber}</span>
+            <span className="text-xs text-muted-foreground">|</span>
+            <span className="text-sm text-muted-foreground">{driver.nationality}</span>
           </div>
-        </Link>
-      </motion.div>
-    );
-  };
+          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+        </div>
+      </Link>
+    </motion.div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
 
-            <SEOHead
-        title="WEC Drivers 2026 | WEC Pitwall"
+            <SEOHead title="WEC Drivers 2026 — WEC Pitwall"
         description="All 2026 FIA WEC Hypercar and LMGT3 drivers — career stats, team info, championship points and race history."
         url="/drivers"
       />

@@ -6,6 +6,7 @@ export interface Race {
   circuit: string;
   country_code: string; // ISO 3166-1 alpha-2: "IT", "BE", "FR" etc.
   scheduled_date: string;
+  start_time_utc?: string;
   duration_hours: number;
   status: 'scheduled' | 'completed' | 'cancelled';
 }
