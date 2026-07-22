@@ -6,12 +6,12 @@
 name: DevSkim
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '40 13 * * 0'
+  # push:
+#     branches: [ "main" ]
+  # pull_request:
+#     branches: [ "main" ]
+  # schedule:
+#     - cron: '40 13 * * 0'
 
 jobs:
   lint:

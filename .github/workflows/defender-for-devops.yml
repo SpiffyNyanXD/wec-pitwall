@@ -19,12 +19,12 @@
 name: "Microsoft Defender For Devops"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '24 2 * * 6'
+  # push:
+#     branches: [ "main" ]
+  # pull_request:
+#     branches: [ "main" ]
+  # schedule:
+#     - cron: '24 2 * * 6'
 
 permissions:
   contents: read

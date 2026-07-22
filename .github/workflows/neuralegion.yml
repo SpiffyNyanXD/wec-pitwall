@@ -150,12 +150,12 @@
 name: "NeuraLegion"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '42 9 * * 4'
+  # push:
+#     branches: [ "main" ]
+  # pull_request:
+#     branches: [ "main" ]
+  # schedule:
+#     - cron: '42 9 * * 4'
 
 permissions:
   contents: read

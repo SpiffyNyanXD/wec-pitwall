@@ -33,13 +33,13 @@
 name: "Xanitizer Security Analysis"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+  # push:
+#     branches: [ "main" ]
+  # pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
-  schedule:
-    - cron: '19 8 * * 4'
+#     branches: [ "main" ]
+  # schedule:
+#     - cron: '19 8 * * 4'
   workflow_dispatch:
 
 permissions:

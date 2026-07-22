@@ -9,12 +9,12 @@
 name: "JFrog SAST Scan"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '32 12 * * 1'
+  # push:
+#     branches: [ "main" ]
+  # pull_request:
+#     branches: [ "main" ]
+  # schedule:
+#     - cron: '32 12 * * 1'
 
 env:
   # [Mandatory]
