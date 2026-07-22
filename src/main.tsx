@@ -1,5 +1,6 @@
 import "./instrument";
 import "./lib/posthog";
+import "./lib/supabase";
 
 import { createRoot } from "react-dom/client";
 import { reactErrorHandler } from "@sentry/react";
