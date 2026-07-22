@@ -480,15 +480,27 @@ const SettingsPage = () => {
                       onClick={async (e) => {
                         e.preventDefault();
                         setIsDeleting(true);
-                        const { error } = await supabase.functions.invoke('delete-user');
-                        if (error) {
+
+                        if (!supabase) {
                           setIsDeleting(false);
                           toast.error('Failed to delete account. Please contact support.');
                           return;
                         }
-                        await signOut();
-                        toast.success('Account deleted successfully.');
-                        navigate('/');
+
+                        try {
+                          const { error } = await supabase.functions.invoke('delete-user');
+                          if (error) {
+                            setIsDeleting(false);
+                            toast.error('Failed to delete account. Please contact support.');
+                            return;
+                          }
+                          await signOut();
+                          toast.success('Account deleted successfully.');
+                          navigate('/');
+                        } catch (err) {
+                          setIsDeleting(false);
+                          toast.error('Failed to delete account. Please contact support.');
+                        }
                       }}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
