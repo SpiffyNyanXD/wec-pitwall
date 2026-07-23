@@ -33,6 +33,8 @@ jobs:
     steps:
       # Checkout project source
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # Scan code using project's configuration on https://semgrep.dev/manage
       - uses: returntocorp/semgrep-action@fcd5ab7459e8d91cb1777481980d1b18b4fc6735

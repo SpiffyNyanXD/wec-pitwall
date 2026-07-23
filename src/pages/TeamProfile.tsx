@@ -236,10 +236,17 @@ const TeamProfile = () => {
         `)
         .eq('cars.team_name', team.name);
 
-      if (error) return [];
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.log('No drivers found for team (PGRST116)');
+          return [];
+        }
+        throw error;
+      }
       return data || [];
     },
-    enabled: !!team?.name && !!supabase
+    enabled: !!team?.name && !!supabase,
+    staleTime: 5 * 60 * 1000
   });
 
   const [isFavorite, setIsFavorite] = useState(false);

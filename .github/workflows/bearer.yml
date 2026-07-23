@@ -27,6 +27,8 @@ jobs:
     steps:
       # Checkout project source
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       # Scan code using Bearer CLI
       - name: Run Report
         id: report
