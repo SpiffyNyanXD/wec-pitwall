@@ -162,7 +162,7 @@ const SettingsPage = () => {
   };
 
   const updateNotificationSetting = async (key: string, value: boolean) => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to update settings');
       return;
     }
@@ -188,7 +188,7 @@ const SettingsPage = () => {
     }
   };
 
-  if (!user) {
+  if (AUTH_ENABLED && !user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />

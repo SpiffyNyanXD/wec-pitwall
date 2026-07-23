@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useAuth } from '../hooks/useAuth'
 import { AuthModal } from './AuthModal'
 import { AUTH_ENABLED } from '@/lib/featureFlags';

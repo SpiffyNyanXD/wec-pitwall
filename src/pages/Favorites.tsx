@@ -32,7 +32,7 @@ const FavoritesPage = () => {
   const teamsList: Record<string, unknown>[] = [];
 
   const loadFavorites = async () => {
-    if (!user || !supabase) {
+    if ((AUTH_ENABLED && !user) || !supabase) {
       setLoading(false);
       return;
     }
@@ -57,7 +57,7 @@ const FavoritesPage = () => {
   }, [user]);
 
   const addFavorite = async (team: Record<string, unknown>) => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to add favorites');
       return;
     }
@@ -113,7 +113,7 @@ const FavoritesPage = () => {
     }
   };
 
-  if (!user) {
+  if (AUTH_ENABLED && !user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />

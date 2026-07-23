@@ -135,7 +135,7 @@ const Header = () => {
                   <span className="font-medium">Settings</span>
                 </Link>
 
-                {!loading && (
+                {!loading && AUTH_ENABLED && (
                   <>
                     {user ? (
                       <button

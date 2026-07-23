@@ -269,7 +269,7 @@ const TeamProfile = () => {
   };
 
   const toggleFavorite = async () => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to add favorites');
       return;
     }
