@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
@@ -72,7 +73,7 @@ const SettingsPage = () => {
     const { error } = await supabase
       .from('profiles')
       .update({ marketing_emails: checked })
-      .eq('user_id', user.id);
+      .eq('user_id', user?.id);
     if (error) {
       console.error('Failed to update marketing consent:', error);
       setMarketingConsent(!checked); // revert on error
@@ -126,7 +127,7 @@ const SettingsPage = () => {
         username: editUsername || null,
         display_name: editDisplayName || null,
       })
-      .eq('user_id', user.id);
+      .eq('user_id', user?.id);
 
     if (error) {
       toast.error('Failed to save profile');
@@ -147,7 +148,7 @@ const SettingsPage = () => {
     const { data, error } = await supabase
       .from('notification_subscriptions')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', user?.id)
       .single();
 
     if (data) {
@@ -161,7 +162,7 @@ const SettingsPage = () => {
   };
 
   const updateNotificationSetting = async (key: string, value: boolean) => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to update settings');
       return;
     }
@@ -177,7 +178,7 @@ const SettingsPage = () => {
     const { error } = await supabase
       .from('notification_subscriptions')
       .update({ [dbKey]: value })
-      .eq('user_id', user.id);
+      .eq('user_id', user?.id);
 
     if (error) {
       toast.error('Failed to update setting');
@@ -187,7 +188,7 @@ const SettingsPage = () => {
     }
   };
 
-  if (!user) {
+  if (AUTH_ENABLED && !user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -239,7 +240,7 @@ const SettingsPage = () => {
                 {/* Email — read only */}
                 <div>
                   <Label className="text-muted-foreground text-xs uppercase tracking-wide">Email</Label>
-                  <p className="text-foreground mt-1 text-sm">{user.email}</p>
+                  <p className="text-foreground mt-1 text-sm">{user?.email}</p>
                 </div>
 
                 {/* Username */}
