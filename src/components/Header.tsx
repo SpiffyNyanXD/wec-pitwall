@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
@@ -223,7 +224,7 @@ const Header = () => {
             </Link>
           </Button>
 
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <DropdownMenu>
@@ -345,7 +346,7 @@ const Header = () => {
 
         {/* User / Sign In at bottom */}
         <div className="p-4 border-t border-border/50 shrink-0">
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <div className="flex flex-col gap-2">

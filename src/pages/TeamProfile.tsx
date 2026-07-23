@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
