@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { init, browserTracingIntegration, replayIntegration } from "@sentry/react";
 
 Sentry.init({
