@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { posthog } from '@/lib/posthog';
 import { Toaster } from "@/components/ui/toaster";
 
@@ -47,6 +48,8 @@ const Terms = lazy(() => import('./pages/Terms'));
 const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
+
+  if (!AUTH_ENABLED) return <>{children}</>;
 
   if (loading) return null;
   if (!user) {
