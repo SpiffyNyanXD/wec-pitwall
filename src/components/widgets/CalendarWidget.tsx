@@ -13,7 +13,7 @@ const CalendarWidget = () => {
   const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
 
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => {
