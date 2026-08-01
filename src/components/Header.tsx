@@ -1,8 +1,9 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import WecLogo from '@/components/WecLogo';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
+import { Menu, Bell, Settings, LogIn, LogOut, User,Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -134,7 +135,7 @@ const Header = () => {
                   <span className="font-medium">Settings</span>
                 </Link>
 
-                {!loading && (
+                {!loading && AUTH_ENABLED && (
                   <>
                     {user ? (
                       <button
@@ -223,7 +224,7 @@ const Header = () => {
             </Link>
           </Button>
 
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <DropdownMenu>
@@ -345,7 +346,7 @@ const Header = () => {
 
         {/* User / Sign In at bottom */}
         <div className="p-4 border-t border-border/50 shrink-0">
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <div className="flex flex-col gap-2">

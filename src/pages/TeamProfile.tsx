@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
@@ -275,7 +276,7 @@ const TeamProfile = () => {
   };
 
   const toggleFavorite = async () => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to add favorites');
       return;
     }
