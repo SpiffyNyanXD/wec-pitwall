@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
+import { useDriverProfile } from '@/hooks/useDriverProfile';
 
 
 const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined }) => (
@@ -165,6 +166,13 @@ const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
   const team = driver ? getTeamById(driver.teamId) : undefined;
+
+  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
+
+  // Calculate age from date_of_birth
+  const age = profile?.date_of_birth
+    ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
+    : null;
 
   if (!driver) {
     return (
