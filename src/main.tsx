@@ -8,6 +8,29 @@ import "./index.css";
 injectSpeedInsights();
 inject();
 
+class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return React.createElement('div', {
+        style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace", height: "100vh", overflow: "auto" }
+      },
+        React.createElement('h2', null, "Failed to render the application"),
+        React.createElement('pre', null, this.state.error?.stack || String(this.state.error))
+      );
+    }
+    return this.props.children;
+  }
+}
+
 async function bootstrap() {
   try {
     await import("./instrument");
@@ -28,19 +51,21 @@ async function bootstrap() {
     });
 
     createRoot(document.getElementById("root")!).render(
-      <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <Sentry.ErrorBoundary fallback={
-              <div style={{ color: "red", padding: "20px", background: "#000", fontFamily: "monospace" }}>
-                An error has occurred during render.
-              </div>
-            }>
-              <App />
-            </Sentry.ErrorBoundary>
-          </HelmetProvider>
-        </QueryClientProvider>
-      </React.StrictMode>
+      React.createElement(React.StrictMode, null,
+        React.createElement(QueryClientProvider, { client: queryClient },
+          React.createElement(HelmetProvider, null,
+            React.createElement(Sentry.ErrorBoundary, {
+              fallback: React.createElement('div', { style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace" } },
+                "An error has occurred during Sentry boundary."
+              )
+            },
+              React.createElement(BootErrorBoundary, null,
+                React.createElement(App, null)
+              )
+            )
+          )
+        )
+      )
     );
   } catch (err) {
     console.error("Boot error:", err);
