@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
@@ -236,10 +237,17 @@ const TeamProfile = () => {
         `)
         .eq('cars.team_name', team.name);
 
-      if (error) return [];
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.log('No drivers found for team (PGRST116)');
+          return [];
+        }
+        throw error;
+      }
       return data || [];
     },
-    enabled: !!team?.name && !!supabase
+    enabled: !!team?.name && !!supabase,
+    staleTime: 5 * 60 * 1000
   });
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -268,7 +276,7 @@ const TeamProfile = () => {
   };
 
   const toggleFavorite = async () => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to add favorites');
       return;
     }

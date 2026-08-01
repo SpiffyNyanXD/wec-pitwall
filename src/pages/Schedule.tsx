@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,7 @@ const Schedule = () => {
     allRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: r.duration_hours,
+      duration_hours: r.duration_hours || 6,
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   ), [allRaces]);
