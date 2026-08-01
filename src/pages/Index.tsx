@@ -30,7 +30,8 @@ const Index = () => {
 
 
 
-            <SEOHead title="WEC Pitwall — FIA World Endurance Championship"
+            <SEOHead
+        title="WEC Pitwall — Fan-Made WEC Companion"
         description="Track WEC standings, race schedules, teams and drivers for the FIA World Endurance Championship."
         url="/"
       />

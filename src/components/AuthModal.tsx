@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useNavigate } from 'react-router-dom';
 import { X, Mail, Lock } from 'lucide-react';
 import WecLogo from './WecLogo';
@@ -11,6 +11,7 @@ interface Props {
 }
 
 export function AuthModal({ featureName, onClose }: Props) {
+
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
 
@@ -19,6 +20,8 @@ export function AuthModal({ featureName, onClose }: Props) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!AUTH_ENABLED) return null;
 
   const handleClose = () => {
     if (onClose) {

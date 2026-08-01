@@ -1,17 +1,11 @@
 import * as Sentry from "@sentry/react";
-import React from "react";
-import {
-  createRoutesFromChildren,
-  matchRoutes,
-  useLocation,
-  useNavigationType,
-} from "react-router-dom";
+import { init, browserTracingIntegration, replayIntegration } from "@sentry/react";
 
 Sentry.init({
-  dsn: "https://3c5169ab31c2f8fcdde00d5009c7f0fa@o4511398217318400.ingest.us.sentry.io/4511398282657792",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   environment: import.meta.env.MODE,
 
-  sendDefaultPii: true,
+  sendDefaultPii: false,
   enableLogs: true,
 
   integrations: [

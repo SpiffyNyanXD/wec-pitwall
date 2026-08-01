@@ -11,6 +11,7 @@
 
 @layer base {
   body {
+    text-wrap: pretty;
     @apply text-sm md:text-base;
   }
   h1 {
@@ -143,6 +144,7 @@
   }
 
   body {
+    text-wrap: pretty;
     @apply bg-background text-foreground font-body antialiased;
     font-family: var(--font-body);
     min-height: 100%;
@@ -160,6 +162,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
     font-family: var(--font-racing);
   }
 }
@@ -380,4 +383,29 @@
   background-color: #1a1a1a !important;
   color: #f5f5f5 !important;
   border-color: #2a2a2a !important;
+}
+
+/* Scrollbar — WEC Pitwall */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E8002D;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 #0a0a0a;
 }

@@ -1,8 +1,9 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import WecLogo from '@/components/WecLogo';
-import { Menu, Bell, Settings, LogIn, LogOut, User, X, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
+import { Menu, Bell, Settings, LogIn, LogOut, User,Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -93,7 +94,7 @@ const Header = () => {
                     key={item.to}
                     to={item.to}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
                       isActive(item.to) 
                         ? 'bg-primary/20 text-primary' 
                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -110,7 +111,7 @@ const Header = () => {
                   <Link
                     to="/favorites"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
                       isActive('/favorites') 
                         ? 'bg-primary/20 text-primary' 
                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -124,7 +125,7 @@ const Header = () => {
                 <Link
                   to="/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
                     isActive('/settings') 
                       ? 'bg-primary/20 text-primary' 
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -134,7 +135,7 @@ const Header = () => {
                   <span className="font-medium">Settings</span>
                 </Link>
 
-                {!loading && (
+                {!loading && AUTH_ENABLED && (
                   <>
                     {user ? (
                       <button
@@ -223,7 +224,7 @@ const Header = () => {
             </Link>
           </Button>
 
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <DropdownMenu>
@@ -300,7 +301,7 @@ const Header = () => {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
                 isActive(item.to)
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -317,7 +318,7 @@ const Header = () => {
           {user && (
             <Link
               to="/favorites"
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
                 isActive('/favorites')
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -331,7 +332,7 @@ const Header = () => {
 
           <Link
             to="/settings"
-            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[44px] md:min-h-0 ${
               isActive('/settings')
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
@@ -345,7 +346,7 @@ const Header = () => {
 
         {/* User / Sign In at bottom */}
         <div className="p-4 border-t border-border/50 shrink-0">
-          {!loading && (
+          {!loading && AUTH_ENABLED && (
             <>
               {user ? (
                 <div className="flex flex-col gap-2">

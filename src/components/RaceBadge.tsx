@@ -10,7 +10,7 @@ interface RaceBadgeProps {
 export function RaceBadge({ status, className }: RaceBadgeProps) {
   const badgeStyles: Record<RaceBadgeStatus, string> = {
     done:      'bg-zinc-700 text-zinc-300',
-    live:      'bg-red-600 text-white',
+    live:      'bg-red-600 text-white animate-pulse',
     next:      'bg-white text-black font-semibold',
     upcoming:  'bg-zinc-800 text-zinc-400',
     postponed: 'bg-amber-600 text-white',

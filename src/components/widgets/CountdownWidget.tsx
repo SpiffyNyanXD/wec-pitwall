@@ -15,7 +15,7 @@ interface TimeLeft {
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
-  const { convertTime, timezone } = useTimezone();
+  const { convertTime } = useTimezone();
   
   // Find next upcoming race
   const nextRace = getNextRace();
@@ -89,7 +89,7 @@ const CountdownWidget = () => {
             <span className="text-sm uppercase tracking-widest text-muted-foreground">2025 Season Complete</span>
           </div>
           
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+          <h2 className="text-xl md:text-2xl lg:text-3xl 3xl:text-4xl font-bold text-foreground mb-2">
             2026 Season Coming Soon
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -138,7 +138,7 @@ const CountdownWidget = () => {
           
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+              <h2 className="text-xl md:text-2xl lg:text-3xl 3xl:text-4xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                 {nextRace.name}
               </h2>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
