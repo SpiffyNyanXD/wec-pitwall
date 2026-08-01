@@ -144,6 +144,7 @@
   }
 
   body {
+    text-wrap: pretty;
     @apply bg-background text-foreground font-body antialiased;
     font-family: var(--font-body);
     min-height: 100%;
@@ -217,15 +218,15 @@
   }
 
   /* Scrollbar styling */
-  .scrollbar-thinhtml::-webkit-scrollbar {
+  .scrollbar-thin::-webkit-scrollbar {
     width: 4px;
   }
 
-  .scrollbar-thinhtml::-webkit-scrollbar-track {
+  .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .scrollbar-thinhtml::-webkit-scrollbar-thumb {
+  .scrollbar-thin::-webkit-scrollbar-thumb {
     background: hsl(var(--muted));
     border-radius: 2px;
   }
@@ -385,26 +386,26 @@
 }
 
 /* Scrollbar — WEC Pitwall */
-html::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-html::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #0a0a0a;
 }
 
-html::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 3px;
 }
 
-html::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #E8002D;
 }
 
 /* Firefox */
-html {
+* {
   scrollbar-width: thin;
   scrollbar-color: #333 #0a0a0a;
 }

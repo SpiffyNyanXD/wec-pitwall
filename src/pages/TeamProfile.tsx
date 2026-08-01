@@ -1,6 +1,5 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
-import { buildTitle } from "@/utils/seo";
 import { useParams, Link } from 'react-router-dom';
 
 import { useTeamProfile } from '@/hooks/useTeamProfile';
@@ -20,7 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 
-const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; teamData: TeamData; profile: Record<string, unknown> | null | undefined }) => (
+const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
   <div className="glass-card p-6">
     <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
       <Wrench className="w-5 h-5 text-primary" />
@@ -93,7 +92,7 @@ const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDriver
   </div>
 );
 
-const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: TeamData; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition: number | string }) => (
+const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition: number | string }) => (
   <div className="glass-card p-6">
     <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
       <Trophy className="w-5 h-5 text-wec-gold" />
@@ -123,25 +122,7 @@ const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { team
 );
 
 
-
-interface TeamData {
-  fullName: string;
-  chassis: string;
-  engine: string;
-  teamPrincipal: string;
-  base: string;
-  founded: string | number;
-  wecDebut: string | number;
-  championships: number;
-  leMansWins: number;
-  wecWins: number;
-  poles: number;
-  fastestLaps: number;
-  about: string;
-  facts: string[];
-}
-
-const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Team; teamData: TeamData; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
+const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -256,10 +237,17 @@ const TeamProfile = () => {
         `)
         .eq('cars.team_name', team.name);
 
-      if (error) return [];
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.log('No drivers found for team (PGRST116)');
+          return [];
+        }
+        throw error;
+      }
       return data || [];
     },
-    enabled: !!team?.name && !!supabase
+    enabled: !!team?.name && !!supabase,
+    staleTime: 5 * 60 * 1000
   });
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -415,7 +403,7 @@ const TeamProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={team ? buildTitle(team.name) : 'Team'}
+        title={team ? team.name : 'Team'}
         description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
         url={team ? `/teams/${team.id}` : '/teams'}
       />
@@ -440,7 +428,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team} teamData={teamData} profile={profile} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}

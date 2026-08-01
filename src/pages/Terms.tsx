@@ -132,7 +132,6 @@ export default function Terms() {
       <SEOHead
         title="Terms of Use — WEC Pitwall"
         description="Terms of Use for WEC Pitwall analytics platform."
-        url="/terms"
       />
       <Header />
       <div className="min-h-screen bg-background px-4 py-16">

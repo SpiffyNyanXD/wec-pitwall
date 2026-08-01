@@ -23,24 +23,6 @@ interface ConsentRecord {
   timestamp: number;
 }
 
-
-function injectClarity() {
-  if (typeof window === 'undefined') return;
-  if (document.getElementById('clarity-script')) return;
-
-  const script = document.createElement('script');
-  script.id = 'clarity-script';
-  script.type = 'text/javascript';
-  script.innerHTML = `
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "x0sidpdwxq");
-  `;
-  document.head.appendChild(script);
-}
-
 export function useCookieConsent() {
   const [consent, setConsent] = useState<ConsentStatus>('pending');
 
@@ -93,7 +75,6 @@ export function useCookieConsent() {
       setConsent('accepted');
       persistConsent('accepted');
       posthog.opt_in_capturing();
-      injectClarity();
     } else if (termlyConsent === 'rejected') {
       setConsent('rejected');
       persistConsent('rejected');
@@ -105,7 +86,6 @@ export function useCookieConsent() {
     persistConsent('accepted');
     setConsent('accepted');
     posthog.opt_in_capturing();
-    injectClarity();
     try { window.Termly?.acceptAll?.(); } catch {
       // empty
     }
