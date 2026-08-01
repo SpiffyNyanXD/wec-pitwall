@@ -1,0 +1,69 @@
+# WEC Pitwall - Full LLM Documentation
+
+> Professional FIA World Endurance Championship analytics — live race status, standings, driver comparisons, championship battles, and circuit profiles.
+
+## Pages
+
+- **Home** (`https://wec-pitwall.vercel.app`)
+  - Description: The main landing page featuring a live countdown to the next race, current race status, and an editorial hero section.
+  - Data points: Next race countdown, recent news/hero banner.
+  - Auth: Free
+
+- **Schedule** (`https://wec-pitwall.vercel.app/schedule`)
+  - Description: The full calendar for the 2024, 2025, and 2026 WEC seasons. Displays dates, locations, and current status of each round.
+  - Data points: Race dates, circuits, durations, status badges.
+  - Auth: Free
+
+- **Standings** (`https://wec-pitwall.vercel.app/standings`)
+  - Description: Comprehensive championship standings for drivers and teams across different seasons and classes (Hypercar, LMGT3).
+  - Data points: Points, positions, driver/team names.
+  - Auth: Free
+
+- **Circuits** (`https://wec-pitwall.vercel.app/circuits`)
+  - Description: Detailed profiles for all tracks on the WEC calendar. Includes track maps, length, lap records, and history.
+  - Data points: Circuit details (length, turns, lap record, first WEC race), description.
+  - Auth: Free
+
+- **Teams** (`https://wec-pitwall.vercel.app/teams`)
+  - Description: Directory of all participating teams, organized by class. Shows driver rosters, car numbers, and manufacturer affiliations.
+  - Data points: Team names, car numbers, drivers, manufacturers.
+  - Auth: Free
+
+- **Driver Comparison** (`https://wec-pitwall.vercel.app/compare`)
+  - Description: Head-to-head analytical tool to compare two drivers' statistics, performance, and career highlights.
+  - Data points: Wins, poles, podiums, fastest laps.
+  - Auth: Required (Locked)
+
+- **Championship Battle** (`https://wec-pitwall.vercel.app/championship`)
+  - Description: Interactive visualization showing the points progression and title fight dynamics throughout the season.
+  - Data points: Round-by-round points progression.
+  - Auth: Required (Locked)
+
+## 2026 Circuits List
+1. **Lusail International Circuit**, Qatar (Round 1 - Rescheduled)
+2. **Autodromo Enzo e Dino Ferrari**, Italy (Round 2)
+3. **Circuit de Spa-Francorchamps**, Belgium (Round 3)
+4. **Circuit de la Sarthe**, France (Round 4)
+5. **Interlagos**, Brazil (Round 5)
+6. **Circuit of the Americas**, USA (Round 6)
+7. **Fuji Speedway**, Japan (Round 7)
+8. **Bahrain International Circuit**, Bahrain (Round 8)
+
+## Status Badges Explanation
+- **Done**: The race has been completed and results are final.
+- **LIVE**: The race is currently underway.
+- **Next**: The upcoming race on the calendar.
+- **Upcoming**: Future scheduled races beyond the 'Next' one.
+- **Postponed**: The race has been delayed and a new date is pending or rescheduled.
+
+## Design System Summary
+- **Background**: True black (`#000000`).
+- **Primary Accent**: WEC Red (`#E8002D`).
+- **Fonts**:
+  - `Orbitron`: Strictly used for numbers, times, lap data, and race positions.
+  - `Inter` (sans-serif): Used for all other body text, headings, labels, and descriptions.
+- **UI Elements**: Glassmorphism cards (`glass-card`), gradient text (`text-gradient`), racing background gradients (`racing-gradient`), and ambient blue/red glows.
+
+## API / Data Sources
+- **2026 Season**: Live data sourced dynamically from Supabase (PostgreSQL). Handled via React Query hooks.
+- **2024 & 2025 Seasons**: Historical data served from static files (`src/data/wecData.ts`).

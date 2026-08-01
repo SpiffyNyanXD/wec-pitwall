@@ -1,3 +1,5 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
+import { posthog } from '@/lib/posthog';
 import { Toaster } from "@/components/ui/toaster";
 
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -22,7 +24,7 @@ const Drivers = lazy(() => import("./pages/Drivers"));
 const DriverProfile = lazy(() => import("./pages/DriverProfile"));
 const Teams = lazy(() => import("./pages/Teams"));
 const Circuits = lazy(() => import("./pages/Circuits"));
-const CircuitPage = lazy(() => import("./pages/CircuitPage"));
+const CircuitDetail = lazy(() => import("./pages/CircuitDetail"));
 const TeamProfile = lazy(() => import("./pages/TeamProfile"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const RaceProfile = lazy(() => import("./pages/RaceProfile"));
@@ -47,6 +49,8 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
+  if (!AUTH_ENABLED) return <>{children}</>;
+
   if (loading) return null;
   if (!user) {
     return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
@@ -66,6 +70,15 @@ const PageLoader = () => (
   </div>
 );
 
+
+const PageTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    posthog.capture('$pageview');
+  }, [location]);
+  return null;
+};
+
 const RouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   return <div key={location.pathname}>{children}</div>;
@@ -82,6 +95,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
+            <PageTracker />
             <RouteWrapper><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -90,7 +104,7 @@ const App = () => (
               <Route path="/teams" element={<Teams />} />
               <Route path="/teams/:id" element={<TeamProfile />} />
               <Route path="/circuits" element={<Circuits />} />
-              <Route path="/circuits/:slug" element={<CircuitPage />} />
+              <Route path="/circuit/:id" element={<CircuitDetail />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/race/:id" element={<RaceProfile />} />
               <Route path="/standings" element={<Standings />} />
