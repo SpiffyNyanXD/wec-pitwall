@@ -48,6 +48,10 @@ const Auth = () => {
     setUsernameStatus('checking');
     if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
     usernameCheckTimer.current = setTimeout(async () => {
+      if (!supabase) {
+        setUsernameStatus('idle');
+        return;
+      }
       const { data, error } = await supabase.rpc('is_username_available', { uname: cleaned });
       if (!error) {
         setUsernameStatus(data ? 'available' : 'taken');
@@ -131,7 +135,7 @@ const Auth = () => {
         toast.error(error.message || 'Something went wrong. Please try again.');
       }
     } else {
-      if (username) {
+      if (username && supabase) {
         await supabase
           .from('profiles')
           .update({ username, display_name: displayName || null })
@@ -146,6 +150,10 @@ const Auth = () => {
   const handleForgotPassword = async () => {
     if (!email.trim()) {
       toast.error('Please enter your email address first.');
+      return;
+    }
+    if (!supabase) {
+      toast.error('Authentication service is not available. Please check your configuration.');
       return;
     }
     setIsSubmitting(true);

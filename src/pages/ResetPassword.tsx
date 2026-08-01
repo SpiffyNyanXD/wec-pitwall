@@ -17,6 +17,10 @@ export default function ResetPassword() {
   // Supabase sends the user back with a session in the URL hash.
   // The Supabase client picks this up automatically on mount.
   useEffect(() => {
+    if (!supabase) {
+      setError('Authentication service is not available. Please check your configuration.');
+      return;
+    }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         // User is authenticated via the reset link — they can now set a new password.
@@ -32,6 +36,10 @@ export default function ResetPassword() {
     }
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');
+      return;
+    }
+    if (!supabase) {
+      setError('Authentication service is not available. Please check your configuration.');
       return;
     }
     setIsLoading(true);
