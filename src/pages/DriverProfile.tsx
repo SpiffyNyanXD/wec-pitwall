@@ -166,6 +166,13 @@ const DriverProfile = () => {
   const driver = getDriverById(id || '');
   const team = driver ? getTeamById(driver.teamId) : undefined;
 
+  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
+
+  // Calculate age from date_of_birth
+  const age = profile?.date_of_birth
+    ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
+    : null;
+
   if (!driver) {
     return (
       <div className="min-h-screen bg-background">
