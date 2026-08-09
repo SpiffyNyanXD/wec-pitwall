@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { races2025, races2026 } from '@/data/wecData';
@@ -12,11 +13,20 @@ const CalendarWidget = () => {
   const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
 
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   const raceStatuses = computeAllRaceStatuses(
     currentSeasonRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
-      duration_hours: r.duration_hours,
+      duration_hours: r.duration_hours || 6,
       status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   );

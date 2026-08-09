@@ -8,9 +8,10 @@ import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
+import { getFlagEmoji } from '@/lib/flagUtils';
 
 
-const DriverHero = ({ driver, profile, age, team, getFlagEmoji }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined; getFlagEmoji: (code: string) => string }) => (
+const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -165,6 +166,13 @@ const DriverProfile = () => {
   const driver = getDriverById(id || '');
   const team = driver ? getTeamById(driver.teamId) : undefined;
 
+  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
+
+  // Calculate age from date_of_birth
+  const age = profile?.date_of_birth
+    ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
+    : null;
+
   if (!driver) {
     return (
       <div className="min-h-screen bg-background">
@@ -191,13 +199,6 @@ const DriverProfile = () => {
   };
 
 
-  const getFlagEmoji = (code: string): string => {
-    return code
-      .toUpperCase()
-      .split('')
-      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
-      .join('');
-  };
 
   const formatDate = (dateString?: string) => {
     const date = new Date(dateString);
@@ -241,7 +242,7 @@ const DriverProfile = () => {
           <BackButton to="/drivers" label="Back to Drivers" />
         </motion.div>
 
-        <DriverHero driver={driver} profile={profile} age={age} team={team} getFlagEmoji={getFlagEmoji} />
+        <DriverHero driver={driver} profile={profile} age={age} team={team} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Stats Cards */}

@@ -1,4 +1,4 @@
-import { init, browserTracingIntegration, replayIntegration } from "@sentry/react";
+import * as Sentry from "@sentry/react";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -8,13 +8,7 @@ Sentry.init({
   enableLogs: true,
 
   integrations: [
-    Sentry.reactRouterV7BrowserTracingIntegration({
-      useEffect: React.useEffect,
-      useLocation,
-      useNavigationType,
-      createRoutesFromChildren,
-      matchRoutes,
-    }),
+    Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
       maskAllText: true,
       blockAllMedia: true,

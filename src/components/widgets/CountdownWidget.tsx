@@ -15,7 +15,7 @@ interface TimeLeft {
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
-  const { convertTime, timezone } = useTimezone();
+  const { convertTime } = useTimezone();
   
   // Find next upcoming race
   const nextRace = getNextRace();
