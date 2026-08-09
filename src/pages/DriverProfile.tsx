@@ -216,9 +216,9 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
-        description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
-        url={driver ? `/drivers/${driver.id}` : '/drivers'}
+        title={`${driver.name} — WEC Pitwall`}
+        description={`WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
+        url={`/drivers/${driver.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -277,7 +277,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver as unknown as Record<string, unknown>} />
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver} />
           </motion.div>
         </div>
       </AuthGate>
