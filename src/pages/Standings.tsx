@@ -10,6 +10,8 @@ import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, r
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
+import { useActiveSeasonId } from '@/hooks/useWecData';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 
 type SeasonYear = 2024 | 2025 | 2026;
@@ -32,6 +34,7 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 );
 
 const Standings = () => {
+  const { loading: isLoading } = useActiveSeasonId();
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
@@ -386,7 +389,9 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
+                {isLoading ? (
+                  <BoneyardSkeleton.Table rows={8} />
+                ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : hypercarDrivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -461,7 +466,9 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
+                {isLoading ? (
+                  <BoneyardSkeleton.Table rows={8} />
+                ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : manufacturersStandings.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -507,7 +514,9 @@ const Standings = () => {
                     {CHAMPIONSHIPS.LMGT3_DRIVERS}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
+                {isLoading ? (
+                  <BoneyardSkeleton.Table rows={8} />
+                ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : lmgt3Drivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -529,7 +538,9 @@ const Standings = () => {
                     {CHAMPIONSHIPS.LMGT3_TEAMS}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
+                {isLoading ? (
+                  <BoneyardSkeleton.Table rows={8} />
+                ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : lmgt3Teams.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -577,7 +588,9 @@ const Standings = () => {
                 </TabsList>
 
                 <TabsContent value="teams">
-                  {selectedSeason === 2024 ? (
+                  {isLoading ? (
+                    <BoneyardSkeleton.Table rows={5} />
+                  ) : selectedSeason === 2024 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {standings2024.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
@@ -601,7 +614,9 @@ const Standings = () => {
                 </TabsContent>
 
                 <TabsContent value="drivers">
-                  {selectedSeason === 2024 ? (
+                  {isLoading ? (
+                    <BoneyardSkeleton.Table rows={5} />
+                  ) : selectedSeason === 2024 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       {standings2024.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">

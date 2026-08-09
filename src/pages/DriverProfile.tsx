@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
 import Header from '@/components/Header';
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
 import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
@@ -172,6 +173,21 @@ const DriverProfile = () => {
   const age = profile?.date_of_birth
     ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
     : null;
+
+    if (isProfileLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <BoneyardSkeleton.Card className="lg:col-span-1" />
+            <BoneyardSkeleton.Table rows={5} className="lg:col-span-2" />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   if (!driver) {
     return (

@@ -1,3 +1,4 @@
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
@@ -261,7 +262,7 @@ const TeamProfile = () => {
   const mappedDbDrivers = useMemo(() => {
     if (!dbDrivers || dbDrivers.length === 0) return [];
 
-    return dbDrivers.map((d: any, index: number) => ({
+    return dbDrivers.map((d: Record<string, unknown>, index: number) => ({
       id: `db-driver-${index}`,
       name: d.full_name,
       nationality: d.nationality || 'Unknown',
@@ -344,6 +345,21 @@ const TeamProfile = () => {
       }
     }
   };
+
+    if (isProfileLoading || isDriversLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <BoneyardSkeleton.List items={3} className="lg:col-span-1" />
+            <BoneyardSkeleton.List items={4} className="lg:col-span-2" />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   if (!team) {
     return (

@@ -8,6 +8,7 @@ import BackButton from '@/components/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 
@@ -46,7 +47,7 @@ const CircuitDetail = () => {
     }
   }, [circuit]);
 
-  const { data: race } = useQuery({
+  const { data: race, isLoading } = useQuery({
     queryKey: ['circuit-race', circuit?.id],
     queryFn: async () => {
       if (!supabase || !circuit?.id) return null;
@@ -73,6 +74,21 @@ const CircuitDetail = () => {
     }
   };
 
+
+    if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <BoneyardSkeleton.Card />
+            <BoneyardSkeleton.Card />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   if (!circuit) {
     return (
