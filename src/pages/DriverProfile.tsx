@@ -189,30 +189,9 @@ const DriverProfile = () => {
     );
   }
 
-  const getClassBadge = (carClass: string) => {
-    switch (carClass) {
-      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
-      case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      default: return 'bg-muted text-muted-foreground';
-    }
-  };
 
 
 
-  const formatDate = (dateString?: string) => {
-    const date = new Date(dateString);
-
-    if (!dateString || Number.isNaN(date.getTime())) {
-      return 'Unknown';
-    }
-
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">

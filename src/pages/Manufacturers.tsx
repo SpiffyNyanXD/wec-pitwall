@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Calendar, Car, Shield, Milestone, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

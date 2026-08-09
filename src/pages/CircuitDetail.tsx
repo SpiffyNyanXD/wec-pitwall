@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react';
 import Header from '@/components/Header';
-import BackButton from '@/components/BackButton';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';

@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Trophy, Flag, Medal, ChevronRight, Search, X, Users } from 'lucide-react';

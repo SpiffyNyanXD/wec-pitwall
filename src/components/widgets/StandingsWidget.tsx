@@ -1,7 +1,7 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
+import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
 import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';

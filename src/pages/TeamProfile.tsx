@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
 import { useTeamProfile } from '@/hooks/useTeamProfile';
-import { Helmet } from 'react-helmet-async';
+
 import { useQuery } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';
@@ -394,10 +394,6 @@ const TeamProfile = () => {
     return `${team.manufacturer} Hybrid Power Unit`;
   };
 
-  const getClassLabel = () => {
-    if (team.class === 'LMP2') return 'Le Mans 24h Only';
-    return team.class;
-  };
 
   // Default values for extended data
   const teamData = {
