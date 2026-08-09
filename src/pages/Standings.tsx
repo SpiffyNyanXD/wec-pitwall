@@ -345,9 +345,7 @@ const Standings = () => {
                   {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                 </span>
               </div>
-              {!hasHypercarDrivers ? (
-                <StandingsEmptyState message="Season in progress — standings will update after each round." />
-              ) : hasHypercarDrivers ? (
+              {hasHypercarDrivers ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? hypercarDrivers.map((driver, index) => (
@@ -365,7 +363,7 @@ const Standings = () => {
                   }
                 </div>
               ) : (
-                <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
               )}
             </div>
           </TabsContent>
@@ -378,32 +376,25 @@ const Standings = () => {
                   {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
                 </span>
               </div>
-              {!hasHypercarTeams ? (
-                <StandingsEmptyState message="Season in progress — standings will update after each round." />
-              ) : hasHypercarTeams ? (
-                <>
-                  {(
-                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
-                  )}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {!isHistoric
-                      ? hypercarEntries.map((team, index) => (
-                          <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
-                        ))
-                      : historicData!.hypercars.teams.map((team: Record<string, unknown>, index: number) => (
-                          <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                            <div className="flex items-center gap-3">
-                              <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
-                              <span className="font-medium text-sm">{String(team.team)}</span>
-                            </div>
-                            <span className="font-racing text-lg">{String(team.points)} pts</span>
+              {hasHypercarTeams ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  {!isHistoric
+                    ? hypercarEntries.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))
+                    : historicData!.hypercars.teams.map((team: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                            <span className="font-medium text-sm">{String(team.team)}</span>
                           </div>
-                        ))
-                    }
-                  </div>
-                </>
+                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                        </div>
+                      ))
+                  }
+                </div>
               ) : (
-                <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
               )}
             </div>
           </TabsContent>
@@ -416,9 +407,7 @@ const Standings = () => {
                   {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
                 </span>
               </div>
-              {!hasHypercarManufacturers ? (
-                <StandingsEmptyState message="Season in progress — standings will update after each round." />
-              ) : hasHypercarManufacturers ? (
+              {hasHypercarManufacturers ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? manufacturersStandings.map((manufacturer, index) => (
@@ -436,7 +425,7 @@ const Standings = () => {
                   }
                 </div>
               ) : (
-                <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
               )}
             </div>
           </TabsContent>
@@ -473,9 +462,7 @@ const Standings = () => {
                   {CHAMPIONSHIPS.LMGT3_DRIVERS}
                 </span>
               </div>
-              {!hasLmgt3Drivers ? (
-                <StandingsEmptyState message="Season in progress — standings will update after each round." />
-              ) : hasLmgt3Drivers ? (
+              {hasLmgt3Drivers ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? lmgt3Drivers.map((driver, index) => (
@@ -493,7 +480,7 @@ const Standings = () => {
                   }
                 </div>
               ) : (
-                <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
               )}
             </div>
           </TabsContent>
@@ -506,9 +493,7 @@ const Standings = () => {
                   {CHAMPIONSHIPS.LMGT3_TEAMS}
                 </span>
               </div>
-              {!hasLmgt3Teams ? (
-                <StandingsEmptyState message="Season in progress — standings will update after each round." />
-              ) : hasLmgt3Teams ? (
+              {hasLmgt3Teams ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? lmgt3Teams.map((team, index) => (
@@ -526,7 +511,7 @@ const Standings = () => {
                   }
                 </div>
               ) : (
-                <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
+                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
               )}
             </div>
           </TabsContent>
