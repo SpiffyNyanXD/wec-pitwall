@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
+import { useDriverProfile } from '@/hooks/useDriverProfile';
 
 
 const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined }) => (
@@ -174,24 +175,14 @@ const DriverProfile = () => {
     ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
     : null;
 
-    if (isProfileLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
-          <BoneyardSkeleton.Hero className="mb-8" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <BoneyardSkeleton.Card className="lg:col-span-1" />
-            <BoneyardSkeleton.Table rows={5} className="lg:col-span-2" />
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   if (!driver) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Driver Not Found — WEC Pitwall"
+          description="Driver not found"
+          url="/drivers"
+        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -199,6 +190,26 @@ const DriverProfile = () => {
             <Button asChild className="tap-highlight">
               <Link to="/drivers">Back to Drivers</Link>
             </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+    if (isProfileLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title={`${driver.name} — WEC Pitwall`}
+          description={`WEC career profile for ${driver.name}.`}
+          url={`/drivers/${driver.id}`}
+        />
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <BoneyardSkeleton.Card className="lg:col-span-1" />
+            <BoneyardSkeleton.Table rows={5} className="lg:col-span-2" />
           </div>
         </main>
       </div>

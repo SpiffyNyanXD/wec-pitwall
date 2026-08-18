@@ -9,12 +9,9 @@ import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
-import { useActiveSeasonId } from "@/hooks/useWecData";
-import { BoneyardSkeleton } from "@/components/ui/BoneyardSkeleton";
 import { AuthGate } from "@/components/AuthGate";
 
 const Schedule = () => {
-  const { loading: isLoading } = useActiveSeasonId();
   const allRaces = useMemo(() => [...races2026, ...races2025, ...races2024], []);
   const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
     allRaces.map(r => ({
@@ -183,33 +180,25 @@ const Schedule = () => {
 
           <TabsContent value="2026">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
-              {isLoading ? (
-                Array.from({ length: 6 }).map((_, i) => <BoneyardSkeleton.Card key={i} />)
-              ) : (
-                races2026
-                  .slice()
-                  .sort((a, b) => {
-                    if (a.round === null) return 1;
-                    if (b.round === null) return -1;
-                    return a.round - b.round;
-                  })
-                  .map((race, index) => (
-                    <RaceCard key={race.id} race={race} index={index} />
-                  ))
-              )}
+              {races2026
+                .slice()
+                .sort((a, b) => {
+                  const dateA = a.date ? new Date(a.date).getTime() : Infinity;
+                  const dateB = b.date ? new Date(b.date).getTime() : Infinity;
+                  return dateA - dateB;
+                })
+                .map((race, index) => (
+                  <RaceCard key={race.id} race={race} index={index} />
+                ))}
             </div>
           </TabsContent>
 
           <TabsContent value="2025">
             <AuthGate featureName="Historical Data">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
-              {isLoading ? (
-                Array.from({ length: 6 }).map((_, i) => <BoneyardSkeleton.Card key={i} />)
-              ) : (
-                races2025.map((race, index) => (
-                  <RaceCard key={race.id} race={race} index={index} />
-                ))
-              )}
+              {races2025.map((race, index) => (
+                <RaceCard key={race.id} race={race} index={index} />
+              ))}
             </div>
           </AuthGate>
           </TabsContent>
@@ -217,13 +206,9 @@ const Schedule = () => {
           <TabsContent value="2024">
             <AuthGate featureName="Historical Data">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
-              {isLoading ? (
-                Array.from({ length: 6 }).map((_, i) => <BoneyardSkeleton.Card key={i} />)
-              ) : (
-                races2024.map((race, index) => (
-                  <RaceCard key={race.id} race={race} index={index} />
-                ))
-              )}
+              {races2024.map((race, index) => (
+                <RaceCard key={race.id} race={race} index={index} />
+              ))}
             </div>
           </AuthGate>
           </TabsContent>

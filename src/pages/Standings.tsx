@@ -524,6 +524,18 @@ const Standings = () => {
                       <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
                     ))}
                   </div>
+                ) : (selectedSeason === 2025 || selectedSeason === 2024) && (selectedSeason === 2025 ? standings2025 : standings2024).lmgt3?.drivers?.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                          <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
@@ -548,6 +560,18 @@ const Standings = () => {
                       <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                     ))}
                   </div>
+                ) : (selectedSeason === 2025 || selectedSeason === 2024) && (selectedSeason === 2025 ? standings2025 : standings2024).lmgt3?.teams?.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                          <span className="font-medium text-sm">{String(team.team)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(team.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
                 )}
@@ -557,6 +581,7 @@ const Standings = () => {
         </div>
 
         {/* LMP2 - Le Mans Only */}
+        {(lmp2Teams.length > 0 || lmp2Drivers.length > 0 || (selectedSeason === 2024 && standings2024.lmp2 && (standings2024.lmp2.teams.length > 0 || standings2024.lmp2.drivers.length > 0))) && (
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6 text-blue-400" />
@@ -574,7 +599,7 @@ const Standings = () => {
               </span>
             </div>
 
-            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
+            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 || (selectedSeason === 2024 && standings2024.lmp2) ? (
               <Tabs defaultValue="teams" className="w-full">
                 <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
                   <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
@@ -644,6 +669,7 @@ const Standings = () => {
             )}
           </div>
         </div>
+        )}
 
 
             </div>

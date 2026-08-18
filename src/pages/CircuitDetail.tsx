@@ -74,10 +74,33 @@ const CircuitDetail = () => {
     }
   };
 
+  if (!circuit) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Circuit Not Found — WEC Pitwall"
+          description="Circuit not found"
+          url="/circuits"
+        />
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center py-20">
+            <h1 className="text-2xl mb-4">Circuit not found</h1>
+            <Link to="/circuits" className="text-primary hover:underline">Back to Circuits</Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
     if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title={`${circuit.name} — WEC Pitwall`}
+          description={`${circuit.description || `${circuit.name} circuit details`}`}
+          url={`/circuits/${circuit.id}`}
+        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
           <BoneyardSkeleton.Hero className="mb-8" />
@@ -90,22 +113,13 @@ const CircuitDetail = () => {
     );
   }
 
-  if (!circuit) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Circuit not found</h1>
-            <Link to="/circuits" className="text-primary hover:underline">Back to Circuits</Link>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${circuit.name} — WEC Pitwall`}
+        description={circuit.description || `${circuit.name} circuit details, track information and race schedule.`}
+        url={`/circuits/${circuit.id}`}
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
