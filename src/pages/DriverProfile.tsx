@@ -164,7 +164,7 @@ const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<
 const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
-  const team = driver ? getTeamById(driver.teamId) : undefined;
+
 
   const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
 
@@ -188,6 +188,8 @@ const DriverProfile = () => {
       </div>
     );
   }
+
+  const team = getTeamById(driver.teamId);
 
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
@@ -217,9 +219,9 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
-        description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
-        url={driver ? `/drivers/${driver.id}` : '/drivers'}
+        title={`${driver.name} — WEC Pitwall`}
+        description={`WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
+        url={`/drivers/${driver.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

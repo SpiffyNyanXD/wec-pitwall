@@ -424,9 +424,9 @@ const TeamProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={team ? team.name : 'Team'}
-        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
-        url={team ? `/teams/${team.id}` : '/teams'}
+        title={team.name}
+        description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
+        url={`/teams/${team.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
