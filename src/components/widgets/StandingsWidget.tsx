@@ -1,69 +1,134 @@
-import { AUTH_ENABLED } from '@/lib/featureFlags';
-import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link, useNavigate } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
+import { AUTH_ENABLED } from "@/lib/featureFlags";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Trophy,
+  Users,
+  User,
+  Crown,
+  Medal,
+  Award,
+  Lock,
+  Factory,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthModal } from "@/components/AuthModal";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link, useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton as BoneyardSkeleton } from "@/components/ui/skeleton";
+import {
+  useActiveSeasonId,
+  useHypercarDriversStandings,
+  useHypercarManufacturersStandings,
+  useLmgt3DriversStandings,
+  useLmgt3TeamsStandings,
+} from "@/hooks/useWecData";
 
 const StandingsWidget = () => {
-  const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [category, setCategory] = useState<"HYP" | "LMGT3">("HYP");
   const navigate = useNavigate();
-  
-  const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
-  const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
+
+  const { data: seasonId, loading: seasonLoading } = useActiveSeasonId();
+
+  // We only fetch data for the active category for the widget using gating
+  const hypSeasonId = category === "HYP" ? seasonId : null;
+  const lmgt3SeasonId = category === "LMGT3" ? seasonId : null;
+
+  const { data: hypDriversData, loading: hypDriversLoading } =
+    useHypercarDriversStandings(hypSeasonId);
+  const { data: hypMfrsData, loading: hypMfrsLoading } =
+    useHypercarManufacturersStandings(hypSeasonId);
+  const { data: lmgt3DriversData, loading: lmgt3DriversLoading } =
+    useLmgt3DriversStandings(lmgt3SeasonId);
+  const { data: lmgt3TeamsData, loading: lmgt3TeamsLoading } =
+    useLmgt3TeamsStandings(lmgt3SeasonId);
 
   const getMedalIcon = (position: number) => {
     switch (position) {
-      case 1: return <Crown className="w-4 h-4 text-wec-gold" />;
-      case 2: return <Medal className="w-4 h-4 text-wec-silver" />;
-      case 3: return <Award className="w-4 h-4 text-wec-bronze" />;
-      default: return null;
+      case 1:
+        return <Crown className="w-4 h-4 text-wec-gold" />;
+      case 2:
+        return <Medal className="w-4 h-4 text-wec-silver" />;
+      case 3:
+        return <Award className="w-4 h-4 text-wec-bronze" />;
+      default:
+        return null;
     }
   };
 
   const getMedalColor = (position: number) => {
     switch (position) {
-      case 1: return 'text-wec-gold font-bold';
-      case 2: return 'text-wec-silver';
-      case 3: return 'text-wec-bronze';
-      default: return 'text-muted-foreground';
+      case 1:
+        return "text-wec-gold font-bold";
+      case 2:
+        return "text-wec-silver";
+      case 3:
+        return "text-wec-bronze";
+      default:
+        return "text-muted-foreground";
     }
   };
 
-  // Get drivers grouped by crew (shared points)
-  const getDriversStandings = useMemo(() => {
-    return () => {
-      const hypercarDrivers = drivers.filter(d => d.class === 'HYPERCAR');
-      const driverGroups: Record<string, typeof hypercarDrivers> = {};
+  const formatFlag = (code: string | null | undefined) => {
+    if (!code) return "🏁";
+    return String.fromCodePoint(
+      ...code
+        .toUpperCase()
+        .split("")
+        .map((char: string) => 127397 + char.charCodeAt(0)),
+    );
+  };
 
-      hypercarDrivers.forEach(driver => {
-        const key = `${driver.teamId}-${driver.points}`;
-        if (!driverGroups[key]) {
-          driverGroups[key] = [];
-        }
-        driverGroups[key].push(driver);
-      });
+  const hypDrivers = useMemo(() => {
+    return (hypDriversData || []).map((d) => ({
+      id: d.driver_id,
+      displayName: d.driver_name,
+      countryFlag: formatFlag(d.country_code),
+      points: d.total_points,
+    }));
+  }, [hypDriversData]);
 
-      return Object.values(driverGroups)
-        .map(crew => ({
-          ...crew[0],
-          displayName: crew.map(d => d.lastName || d.name.split(' ').pop()).join(' / ')
-        }))
-        .sort((a, b) => b.points - a.points);
-    };
-  }, [drivers]);
+  const hypMfrs = useMemo(() => {
+    return (hypMfrsData || []).map((m, i) => ({
+      id: m.manufacturer_id || `mfr-${i}`,
+      name: m.manufacturer_name,
+      countryFlag: formatFlag(m.country_code),
+      points: m.total_points,
+    }));
+  }, [hypMfrsData]);
 
-  const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
-  const driversStandings = useMemo(() => getDriversStandings(), [getDriversStandings]);
+  const lmgt3Drivers = useMemo(() => {
+    return (lmgt3DriversData || []).map((d) => ({
+      id: d.driver_id,
+      displayName: d.driver_name,
+      countryFlag: formatFlag(d.country_code),
+      points: d.total_points,
+    }));
+  }, [lmgt3DriversData]);
 
-  const EntryRow = ({ team, index }: { team: typeof teams[0]; index: number }) => (
-    <Link to={`/teams/${team.id.replace('-2025', '')}`}>
+  const lmgt3Teams = useMemo(() => {
+    return (lmgt3TeamsData || []).map((t) => ({
+      id: t.car_id,
+      teamId: t.team_id,
+      name: t.team_name,
+      carNumber: t.car_number,
+      manufacturer: t.manufacturer_name,
+      points: t.total_points,
+      color: "#E8002D",
+    }));
+  }, [lmgt3TeamsData]);
+
+  const EntryRow = ({
+    team,
+    index,
+  }: {
+    team: (typeof lmgt3Teams)[0];
+    index: number;
+  }) => (
+    <Link to={`/teams/${team.teamId}`}>
       <motion.div
         className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors group tap-highlight"
         initial={{ opacity: 0, x: -20 }}
@@ -77,40 +142,90 @@ const StandingsWidget = () => {
             </span>
           )}
         </div>
-        
-        <div 
+
+        <div
           className="w-1 h-6 rounded-full"
           style={{ backgroundColor: team.color }}
         />
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="font-racing text-xs font-bold text-primary">{team.carNumber}</span>
+            <span className="font-racing text-xs font-bold text-primary">
+              {team.carNumber}
+            </span>
             <p className="font-medium text-foreground text-sm truncate group-hover:text-primary transition-colors">
               {team.name}
             </p>
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground truncate">
             {team.manufacturer}
           </p>
         </div>
-        
+
         <div className="text-right">
           <span className="font-racing text-sm font-bold text-foreground">
             {team.points}
           </span>
           <span className="text-xs text-muted-foreground ml-0.5">pts</span>
         </div>
-        {AUTH_ENABLED && showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
-    </motion.div>
+        {AUTH_ENABLED && showAuthModal && (
+          <AuthModal
+            featureName="Driver Profiles"
+            onClose={() => setShowAuthModal(false)}
+          />
+        )}
+      </motion.div>
     </Link>
   );
 
-  const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
+  const MfrRow = ({
+    mfr,
+    index,
+  }: {
+    mfr: (typeof hypMfrs)[0];
+    index: number;
+  }) => (
+    <motion.div
+      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.1 }}
+    >
+      <div className="flex items-center w-6">
+        {getMedalIcon(index + 1) || (
+          <span className={`font-racing text-sm ${getMedalColor(index + 1)}`}>
+            {index + 1}
+          </span>
+        )}
+      </div>
+
+      <span className="text-sm">{mfr.countryFlag}</span>
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-foreground text-sm truncate">
+          {mfr.name}
+        </p>
+      </div>
+
+      <div className="text-right">
+        <span className="font-racing text-sm font-bold text-foreground">
+          {mfr.points}
+        </span>
+        <span className="text-xs text-muted-foreground ml-0.5">pts</span>
+      </div>
+    </motion.div>
+  );
+
+  const DriverRow = ({
+    driver,
+    index,
+  }: {
+    driver: (typeof hypDrivers)[0];
+    index: number;
+  }) => {
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
       if (!AUTH_ENABLED || user) {
-        navigate(`/drivers/${driver.id.replace('-2025', '')}`);
+        navigate(`/drivers/${driver.id}`);
       } else {
         setShowAuthModal(true);
       }
@@ -119,21 +234,28 @@ const StandingsWidget = () => {
     return (
       <div onClick={handleClick} className="cursor-pointer relative">
         <motion.div
-          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
+          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? "opacity-80" : ""}`}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.1 }}
         >
           <div className="flex items-center w-6">
             {getMedalIcon(index + 1) || (
-              <span className={`font-racing text-sm ${getMedalColor(index + 1)}`}>
+              <span
+                className={`font-racing text-sm ${getMedalColor(index + 1)}`}
+              >
                 {index + 1}
               </span>
             )}
           </div>
           <span className="text-sm">{driver.countryFlag}</span>
-          <span className="flex-1 text-foreground text-sm truncate">{driver.displayName}</span>
-          <span className="font-racing text-sm font-bold">{driver.points} <span className="text-xs text-muted-foreground">pts</span></span>
+          <span className="flex-1 text-foreground text-sm truncate">
+            {driver.displayName}
+          </span>
+          <span className="font-racing text-sm font-bold">
+            {driver.points}{" "}
+            <span className="text-xs text-muted-foreground">pts</span>
+          </span>
         </motion.div>
         {AUTH_ENABLED && !user && (
           <div className="absolute top-2 right-2">
@@ -144,77 +266,209 @@ const StandingsWidget = () => {
     );
   };
 
+  const loading =
+    seasonLoading ||
+    (category === "HYP"
+      ? hypDriversLoading || hypMfrsLoading
+      : lmgt3DriversLoading || lmgt3TeamsLoading);
+
   return (
-    <motion.div 
-      className="glass-card p-5 col-span-full md:col-span-1"
+    <motion.div
+      className="glass-card p-5 col-span-full md:col-span-1 min-h-[420px]"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <Tabs defaultValue="entries" className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-wec-gold" />
-            <h3 className="text-lg font-bold">Hypercar</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1">
-              <button
-                onClick={() => setSelectedSeason(2025)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  selectedSeason === 2025
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                }`}
-              >
-                2025
-              </button>
-              <button
-                onClick={() => setSelectedSeason(2026)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  selectedSeason === 2026
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                }`}
-              >
-                2026
-              </button>
-            </div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Trophy className="w-4 h-4 text-wec-gold" />
+          <h3 className="text-lg font-bold">Standings</h3>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1">
+            <button
+              onClick={() => setCategory("HYP")}
+              className={`px-2 py-1 text-xs font-bold rounded transition-colors ${
+                category === "HYP"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              HYP
+            </button>
+            <button
+              onClick={() => setCategory("LMGT3")}
+              className={`px-2 py-1 text-xs font-bold rounded transition-colors ${
+                category === "LMGT3"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              LMGT3
+            </button>
           </div>
         </div>
-        
-        <div className="flex items-center justify-between mb-3">
-          <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
-          </Badge>
-          <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
-        </div>
-          
-        <TabsList className="bg-muted/50 mb-4">
-          <TabsTrigger value="entries" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-            <Users className="w-3 h-3 mr-1" />
-            Car Entries
-          </TabsTrigger>
-          <TabsTrigger value="drivers" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-            <User className="w-3 h-3 mr-1" />
-            Drivers
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="entries" className="mt-0 space-y-1">
-          {hypercarTeams.slice(0, 6).map((team, index) => (
-            <EntryRow key={team.id} team={team} index={index} />
-          ))}
-        </TabsContent>
-        
-        <TabsContent value="drivers" className="mt-0 space-y-1">
-          {driversStandings.slice(0, 6).map((driver, index) => (
-            <DriverRow key={driver.id} driver={driver} index={index} />
-          ))}
-        </TabsContent>
-      </Tabs>
-      
+      </div>
 
+      <div className="flex items-center justify-between mb-3">
+        <Badge
+          variant="outline"
+          className={`text-xs bg-primary/20 text-primary border-primary/30`}
+        >
+          2026 Season
+        </Badge>
+        <Link to="/standings" className="text-xs text-primary hover:underline">
+          All Championships
+        </Link>
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={category}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 10 }}
+          transition={{ duration: 0.2 }}
+        >
+          {category === "HYP" ? (
+            <Tabs defaultValue="drivers" className="w-full">
+              <TabsList className="bg-muted/50 mb-4 w-full">
+                <TabsTrigger
+                  value="drivers"
+                  className="text-xs flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <User className="w-3 h-3 mr-1" />
+                  Drivers
+                </TabsTrigger>
+                <TabsTrigger
+                  value="mfrs"
+                  className="text-xs flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <Factory className="w-3 h-3 mr-1" />
+                  Manufacturers
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="drivers" className="mt-0 space-y-1">
+                {loading ? (
+                  Array(6)
+                    .fill(0)
+                    .map((_, i) => (
+                      <BoneyardSkeleton
+                        key={i}
+                        className="h-12 w-full mb-1 rounded-lg"
+                      />
+                    ))
+                ) : hypDrivers.length > 0 ? (
+                  hypDrivers
+                    .slice(0, 6)
+                    .map((driver, index) => (
+                      <DriverRow
+                        key={driver.id}
+                        driver={driver}
+                        index={index}
+                      />
+                    ))
+                ) : (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    No driver data available
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="mfrs" className="mt-0 space-y-1">
+                {loading ? (
+                  Array(6)
+                    .fill(0)
+                    .map((_, i) => (
+                      <BoneyardSkeleton
+                        key={i}
+                        className="h-12 w-full mb-1 rounded-lg"
+                      />
+                    ))
+                ) : hypMfrs.length > 0 ? (
+                  hypMfrs.map((mfr, index) => (
+                    <MfrRow key={mfr.id} mfr={mfr} index={index} />
+                  ))
+                ) : (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    No manufacturer data available
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <Tabs defaultValue="teams" className="w-full">
+              <TabsList className="bg-muted/50 mb-4 w-full">
+                <TabsTrigger
+                  value="teams"
+                  className="text-xs flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <Users className="w-3 h-3 mr-1" />
+                  Teams
+                </TabsTrigger>
+                <TabsTrigger
+                  value="drivers"
+                  className="text-xs flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <User className="w-3 h-3 mr-1" />
+                  Drivers
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="teams" className="mt-0 space-y-1">
+                {loading ? (
+                  Array(6)
+                    .fill(0)
+                    .map((_, i) => (
+                      <BoneyardSkeleton
+                        key={i}
+                        className="h-12 w-full mb-1 rounded-lg"
+                      />
+                    ))
+                ) : lmgt3Teams.length > 0 ? (
+                  lmgt3Teams
+                    .slice(0, 6)
+                    .map((team, index) => (
+                      <EntryRow key={team.id} team={team} index={index} />
+                    ))
+                ) : (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    No team data available
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="drivers" className="mt-0 space-y-1">
+                {loading ? (
+                  Array(6)
+                    .fill(0)
+                    .map((_, i) => (
+                      <BoneyardSkeleton
+                        key={i}
+                        className="h-12 w-full mb-1 rounded-lg"
+                      />
+                    ))
+                ) : lmgt3Drivers.length > 0 ? (
+                  lmgt3Drivers
+                    .slice(0, 6)
+                    .map((driver, index) => (
+                      <DriverRow
+                        key={driver.id}
+                        driver={driver}
+                        index={index}
+                      />
+                    ))
+                ) : (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    No driver data available
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 };
