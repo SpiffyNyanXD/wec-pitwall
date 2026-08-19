@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { HypercardDriverStanding, RaceResult, SeasonStats } from '@/types/wec';
+import type { Race, HypercardDriverStanding, Lmgt3Standing, SeasonStats } from '@/types/wec';
 
 interface RawRaceResultRow {
   id: string;

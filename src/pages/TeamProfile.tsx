@@ -261,7 +261,7 @@ const TeamProfile = () => {
   const mappedDbDrivers = useMemo(() => {
     if (!dbDrivers || dbDrivers.length === 0) return [];
 
-    return dbDrivers.map((d: any, index: number) => ({
+    return dbDrivers.map((d: Record<string, unknown>, index: number) => ({
       id: `db-driver-${index}`,
       name: d.full_name,
       nationality: d.nationality || 'Unknown',
@@ -346,19 +346,7 @@ const TeamProfile = () => {
   };
 
   if (!team) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Team not found</h1>
-            <Button asChild className="tap-highlight">
-              <Link to="/teams">Back to Teams</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const getClassBadge = (carClass: string) => {
@@ -420,9 +408,9 @@ const TeamProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={team ? team.name : 'Team'}
-        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
-        url={team ? `/teams/${team.id}` : '/teams'}
+        title={team.name}
+        description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
+        url={`/teams/${team.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -445,7 +433,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}

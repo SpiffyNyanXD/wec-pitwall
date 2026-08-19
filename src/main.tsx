@@ -1,9 +1,11 @@
+import "./instrument";
 import "./lib/posthog";
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { inject } from '@vercel/analytics';
 import React from 'react';
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import ErrorFallback from "./components/ErrorFallback";
 
 injectSpeedInsights();
 inject();
@@ -20,12 +22,7 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
   render() {
     if (this.state.hasError) {
-      return React.createElement('div', {
-        style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace", height: "100vh", overflow: "auto" }
-      },
-        React.createElement('h2', null, "Failed to render the application"),
-        React.createElement('pre', null, this.state.error?.stack || String(this.state.error))
-      );
+      return React.createElement(ErrorFallback, { error: this.state.error });
     }
     return this.props.children;
   }
@@ -33,7 +30,6 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
 async function bootstrap() {
   try {
-    await import("./instrument");
     const Sentry = await import("@sentry/react");
     const { default: App } = await import("./App.tsx");
     const { HelmetProvider } = await import('react-helmet-async');
@@ -55,9 +51,7 @@ async function bootstrap() {
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
             React.createElement(Sentry.ErrorBoundary, {
-              fallback: React.createElement('div', { style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace" } },
-                "An error has occurred during Sentry boundary."
-              )
+              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
             },
               React.createElement(BootErrorBoundary, null,
                 React.createElement(App, null)
