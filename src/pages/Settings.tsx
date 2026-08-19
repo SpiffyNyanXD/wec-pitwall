@@ -456,6 +456,23 @@ const SettingsPage = () => {
             <ChevronRight className="w-5 h-5 text-muted-foreground" />
           </Link>
 
+
+          {/* Sentry Test Button */}
+          {(import.meta.env.DEV || new URLSearchParams(window.location.search).get('sentry-test') === 'true') && (
+            <div className="glass-card p-6 mb-6 border-destructive/20">
+              <h3 className="text-lg font-bold text-destructive mb-2">Sentry Test</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Clicking this button will throw an error to test Sentry integration.
+              </p>
+              <Button
+                variant="destructive"
+                onClick={() => { throw new Error('Sentry test error'); }}
+              >
+                Test Sentry
+              </Button>
+            </div>
+          )}
+
           {/* Danger Zone */}
           <div className="glass-card p-6 mt-6 border-destructive/20">
             <h3 className="text-lg font-bold text-destructive mb-2">Danger Zone</h3>
