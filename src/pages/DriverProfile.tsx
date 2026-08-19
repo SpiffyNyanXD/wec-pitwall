@@ -164,7 +164,7 @@ const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<
 const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
-  const team = driver ? getTeamById(driver.teamId) : undefined;
+
 
   const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
 
@@ -176,6 +176,8 @@ const DriverProfile = () => {
   if (!driver) {
     return <NotFound />;
   }
+
+  const team = getTeamById(driver.teamId);
 
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
