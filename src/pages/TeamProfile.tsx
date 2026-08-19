@@ -346,14 +346,24 @@ const TeamProfile = () => {
     }
   };
 
+    if (isProfileLoading || isDriversLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <BoneyardSkeleton.List items={3} className="lg:col-span-1" />
+            <BoneyardSkeleton.List items={4} className="lg:col-span-2" />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (!team) {
     return (
       <div className="min-h-screen bg-background">
-        <SEOHead
-          title="Team Not Found — WEC Pitwall"
-          description="Team not found"
-          url="/teams"
-        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -361,26 +371,6 @@ const TeamProfile = () => {
             <Button asChild className="tap-highlight">
               <Link to="/teams">Back to Teams</Link>
             </Button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-    if (isProfileLoading || isDriversLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <SEOHead
-          title={`${team.name} — WEC Pitwall`}
-          description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
-          url={`/teams/${team.id}`}
-        />
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
-          <BoneyardSkeleton.Hero className="mb-8" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <BoneyardSkeleton.List items={3} className="lg:col-span-1" />
-            <BoneyardSkeleton.List items={4} className="lg:col-span-2" />
           </div>
         </main>
       </div>

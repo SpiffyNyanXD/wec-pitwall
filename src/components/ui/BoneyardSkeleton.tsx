@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 export const BoneyardSkeleton = {
   Hero: ({ className }: { className?: string }) => (
     <div
-      className={cn("w-full rounded-md bg-[#0d0d0d] overflow-hidden p-6 md:p-8 border border-border/10", className)}
+      className={cn("w-full rounded-md bg-[#0a0a0a] overflow-hidden p-6 md:p-8 border border-border/10", className)}
       aria-busy="true"
       aria-label="Loading..."
     >
@@ -25,7 +25,7 @@ export const BoneyardSkeleton = {
 
   Card: ({ className }: { className?: string }) => (
     <div
-      className={cn("bg-[#0d0d0d] rounded-md overflow-hidden p-4 md:p-5 flex flex-col gap-4 border border-border/10", className)}
+      className={cn("bg-[#0a0a0a] rounded-md overflow-hidden p-4 md:p-5 flex flex-col gap-4 border border-border/10", className)}
       aria-busy="true"
       aria-label="Loading..."
     >
@@ -45,7 +45,7 @@ export const BoneyardSkeleton = {
 
   Table: ({ rows = 5, className }: { rows?: number; className?: string }) => (
     <div
-      className={cn("w-full bg-[#0d0d0d] rounded-md p-4 md:p-6 space-y-3 border border-border/10", className)}
+      className={cn("w-full bg-[#0a0a0a] rounded-md p-4 md:p-6 space-y-3 border border-border/10", className)}
       aria-busy="true"
       aria-label="Loading..."
     >
@@ -71,7 +71,7 @@ export const BoneyardSkeleton = {
 
   List: ({ items = 3, className }: { items?: number; className?: string }) => (
     <div
-      className={cn("w-full bg-[#0d0d0d] rounded-md p-6 border border-border/10", className)}
+      className={cn("w-full bg-[#0a0a0a] rounded-md p-6 border border-border/10", className)}
       aria-busy="true"
       aria-label="Loading..."
     >
