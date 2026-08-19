@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Calendar, Trophy, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
@@ -67,7 +68,7 @@ const NotFound = () => {
             transition={{ delay: 0.3 }}
             className="text-2xl md:text-3xl font-bold text-foreground mb-3"
           >
-            Off the Racing Line
+            404 — Off Track
           </motion.h1>
 
           <motion.p
@@ -76,7 +77,7 @@ const NotFound = () => {
             transition={{ delay: 0.4 }}
             className="text-muted-foreground mb-2"
           >
-            This page doesn't exist or has been moved.
+            The page you're looking for has spun out or doesn't exist in the current season.
           </motion.p>
 
           <motion.p
@@ -93,7 +94,7 @@ const NotFound = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mb-8"
+            className="mb-8 flex flex-col sm:flex-row justify-center gap-4"
           >
             <Link
               to="/"
@@ -101,6 +102,13 @@ const NotFound = () => {
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard
+            </Link>
+            <Link
+              to="/schedule"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-muted/30 text-foreground font-semibold text-sm hover:bg-muted/50 transition-colors border border-border/50"
+            >
+              <Calendar className="w-4 h-4" />
+              View Schedule
             </Link>
           </motion.div>
 
