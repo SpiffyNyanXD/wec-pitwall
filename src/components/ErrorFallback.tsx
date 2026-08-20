@@ -2,9 +2,10 @@ import { Home, AlertTriangle } from 'lucide-react';
 
 interface ErrorFallbackProps {
   error?: Error | null;
+  resetErrorBoundary?: () => void;
 }
 
-const ErrorFallback = ({ error }: ErrorFallbackProps) => {
+const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps) => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Background effects */}
@@ -29,6 +30,14 @@ const ErrorFallback = ({ error }: ErrorFallbackProps) => {
         </p>
 
         <div className="pt-8">
+          {resetErrorBoundary && (
+            <button
+              onClick={resetErrorBoundary}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-semibold transition-colors mr-4"
+            >
+              Try Again
+            </button>
+          )}
           <button
             onClick={() => window.location.href = '/'}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#E8002D] hover:bg-[#c00025] text-white font-semibold transition-colors"
