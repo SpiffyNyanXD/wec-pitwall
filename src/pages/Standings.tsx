@@ -10,6 +10,7 @@ import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, r
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
+import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useActiveSeasonId } from '@/hooks/useWecData';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 
 type SeasonYear = 2024 | 2025 | 2026;
@@ -31,11 +32,20 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
   </div>
 );
 
+const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+
 const Standings = () => {
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2026);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
+  // Use DB hooks for 2026
+  const is2026 = selectedSeason === 2026;
+  const { data: dbHypercarDrivers } = useHypercarDriversStandings(is2026 ? SEASON_2026_ID : null);
+  const { data: dbHypercarMfg } = useHypercarManufacturersStandings(is2026 ? SEASON_2026_ID : null);
+  const { data: dbLmgt3Drivers } = useLmgt3DriversStandings(is2026 ? SEASON_2026_ID : null);
+  const { data: dbLmgt3Teams } = useLmgt3TeamsStandings(is2026 ? SEASON_2026_ID : null);
+
   // Calculate completed rounds
   const completedRounds = races.filter(r => r.status === 'completed').length;
   const totalRounds = races.length;
@@ -138,11 +148,8 @@ const Standings = () => {
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
   };
 
-  const manufacturersStandings = getManufacturersStandings();
-  const hypercarEntries = useMemo(
-    () => getHypercarEntries(),
-    [teams]
-  );
+
+
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
     <motion.div
@@ -278,20 +285,76 @@ const Standings = () => {
 
 
 
-  const hypercarDrivers = useMemo(
-    () => getDriversStandings('HYPERCAR'),
-    [drivers]
-  );
-  const lmgt3Drivers = useMemo(
-    () => getDriversStandings('LMGT3'),
-    [drivers]
-  );
+  const hypercarDrivers = useMemo(() => {
+    if (is2026) {
+      return (dbHypercarDrivers || []).map(d => ({
+        id: d.id,
+        name: d.driver_names,
+        displayName: d.driver_names,
+        points: d.total_points,
+        position: d.position,
+        teamId: d.car_id,
+        countryFlag: d.flag || '🏁'
+      }));
+    }
+    return getDriversStandings('HYPERCAR');
+  }, [drivers, is2026, dbHypercarDrivers]);
+
+  const manufacturersStandings = useMemo(() => {
+    if (is2026) {
+      return (dbHypercarMfg || []).map(m => ({
+        name: m.manufacturer_name,
+        points: m.total_points,
+        position: m.position,
+        color: m.color || '#E8002D',
+        countryFlag: m.flag || '🏁'
+      }));
+    }
+    return getManufacturersStandings();
+  }, [teams, is2026, dbHypercarMfg]);
+
+  const hypercarEntries = useMemo(() => {
+    if (is2026) {
+      return teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
+    }
+    return getHypercarEntries();
+  }, [teams, is2026]);
+
+  const lmgt3Drivers = useMemo(() => {
+    if (is2026) {
+      return (dbLmgt3Drivers || []).map(d => ({
+        id: d.id,
+        name: d.driver_names,
+        displayName: d.driver_names,
+        points: d.total_points,
+        position: d.position,
+        teamId: d.car_id,
+        countryFlag: d.flag || '🏁'
+      }));
+    }
+    return getDriversStandings('LMGT3');
+  }, [drivers, is2026, dbLmgt3Drivers]);
+
+  const lmgt3Teams = useMemo(() => {
+    if (is2026) {
+      return (dbLmgt3Teams || []).map(t => ({
+        id: t.id,
+        name: t.team_name,
+        carNumber: t.car_number,
+        manufacturer: t.manufacturer_name,
+        points: t.total_points,
+        position: t.position,
+        color: t.color || '#E8002D'
+      }));
+    }
+    return teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
+  }, [teams, is2026, dbLmgt3Teams]);
+
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
     [drivers]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
-  const lmgt3Teams = teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
 
 
   // Data normalization for rendering
@@ -518,8 +581,9 @@ const Standings = () => {
         </Tabs>
       </div>
 
-      {/* LMP2 - Le Mans Only */}
+      {!is2026 && (
       <div className="mb-10">
+        {/* LMP2 - Le Mans Only */}
         <div className="flex items-center gap-3 mb-6">
           <Trophy className="w-6 h-6 text-blue-400" />
           <h2 className="text-2xl font-bold">LMP2</h2>
@@ -600,9 +664,11 @@ const Standings = () => {
           )}
         </div>
       </div>
+      )}
     </div>
   );
-return (
+
+  return (
     <div className="min-h-screen bg-background">
 
 
