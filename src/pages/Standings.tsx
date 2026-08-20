@@ -32,7 +32,7 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 );
 
 const Standings = () => {
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2026);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
