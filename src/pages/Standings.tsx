@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -94,7 +94,7 @@ const Standings = () => {
   };
 
   // Calculate Manufacturers Championship (aggregate points by manufacturer for Hypercar only)
-  const getManufacturersStandings = () => {
+  const getManufacturersStandings = useCallback(() => {
     const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR');
     const manufacturerPoints: Record<string, { points: number; color: string; country: string; countryFlag: string; wins: number; entries: number }> = {};
     
@@ -116,17 +116,17 @@ const Standings = () => {
     return Object.entries(manufacturerPoints)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.points - a.points);
-  };
+  }, [teams]);
 
   // Get car entries (teams) for Hypercar World Cup
-  const getHypercarEntries = () => {
+  const getHypercarEntries = useCallback(() => {
     return teams
       .filter(t => t.class === 'HYPERCAR')
       .sort((a, b) => b.points - a.points);
-  };
+  }, [teams]);
 
   // Get drivers sorted by points for each class
-  const getDriversStandings = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
+  const getDriversStandings = useCallback((carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
     const driverGroups: Record<string, typeof drivers> = {};
     
@@ -146,7 +146,7 @@ const Standings = () => {
     }));
 
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
-  };
+  }, [drivers]);
 
 
 
@@ -298,7 +298,7 @@ const Standings = () => {
       }));
     }
     return getDriversStandings('HYPERCAR');
-  }, [drivers, is2026, dbHypercarDrivers]);
+  }, [is2026, dbHypercarDrivers, getDriversStandings]);
 
   const manufacturersStandings = useMemo(() => {
     if (is2026) {
@@ -311,14 +311,14 @@ const Standings = () => {
       }));
     }
     return getManufacturersStandings();
-  }, [teams, is2026, dbHypercarMfg]);
+  }, [is2026, dbHypercarMfg, getManufacturersStandings]);
 
   const hypercarEntries = useMemo(() => {
     if (is2026) {
       return teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
     }
     return getHypercarEntries();
-  }, [teams, is2026]);
+  }, [teams, is2026, getHypercarEntries]);
 
   const lmgt3Drivers = useMemo(() => {
     if (is2026) {
@@ -333,7 +333,7 @@ const Standings = () => {
       }));
     }
     return getDriversStandings('LMGT3');
-  }, [drivers, is2026, dbLmgt3Drivers]);
+  }, [is2026, dbLmgt3Drivers, getDriversStandings]);
 
   const lmgt3Teams = useMemo(() => {
     if (is2026) {
@@ -352,7 +352,7 @@ const Standings = () => {
 
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
-    [drivers]
+    [getDriversStandings]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
 
