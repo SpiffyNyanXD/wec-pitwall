@@ -1,0 +1,52 @@
+--- src/pages/CookiePreferencesPage.tsx
++++ src/pages/CookiePreferencesPage.tsx
+@@ -10,30 +10,24 @@
+
+ const CookiePreferencesPage = () => {
+   const { consent } = useCookieConsent();
+-  const [termlyReady, setTermlyReady] = useState(false);
++  const [termlyReady, setTermlyReady] = useState(() => {
++    if (typeof window === 'undefined') return false;
++    const termlyLoaded = typeof window.displayPreferenceModal === 'function';
++    const iframeExists = document.querySelector('div[name="termly-embed"] iframe') !== null;
++    return termlyLoaded || iframeExists;
++  });
+
+   useEffect(() => {
++    if (termlyReady) return;
+     let isMounted = true;
+
+     // We check if Termly is loaded and injected the iframe
+     const checkTermly = () => {
+-      const termlyLoaded = typeof window !== 'undefined' &&
+-                           typeof window.displayPreferenceModal === 'function';
+-
++      const termlyLoaded = typeof window !== 'undefined' && typeof window.displayPreferenceModal === 'function';
+       const iframeExists = document.querySelector('div[name="termly-embed"] iframe') !== null;
+-
+-      if (termlyLoaded || iframeExists) {
+-        if (isMounted) setTermlyReady(true);
+-        return true;
+-      }
+-      return false;
++      return termlyLoaded || iframeExists;
+     };
+
+-    if (checkTermly()) return;
+-
+     // Set up an interval to check for Termly loading if it's not ready immediately
+     const interval = setInterval(() => {
+       if (checkTermly()) {
++        if (isMounted) setTermlyReady(true);
+         clearInterval(interval);
+       }
+     }, 500);
+@@ -48,7 +42,7 @@
+       isMounted = false;
+       clearInterval(interval);
+       clearTimeout(timeout);
+     };
+-  }, []); // Empty dependency array
++  }, [termlyReady]);
+
+   return (

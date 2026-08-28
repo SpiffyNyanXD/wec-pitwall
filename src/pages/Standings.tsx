@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
+import { useSeason } from '@/contexts/SeasonContext';
 
 type SeasonYear = 2024 | 2025 | 2026;
 
@@ -32,7 +33,8 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 );
 
 const Standings = () => {
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
+  const { currentSeason } = useSeason();
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(currentSeason);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
