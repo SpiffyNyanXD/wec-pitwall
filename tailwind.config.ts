@@ -104,6 +104,7 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px hsl(var(--wec-blue) / 0.4)" },
           "50%": { boxShadow: "0 0 40px hsl(var(--wec-blue) / 0.6)" },
         },
+        "boneyard-pulse": { "0%, 100%": { backgroundColor: "#1a1a1a" }, "50%": { backgroundColor: "rgba(232, 0, 45, 0.3)" } },
         "count-down": {
           "0%": { transform: "scale(1)" },
           "50%": { transform: "scale(1.05)" },
@@ -116,6 +117,7 @@ export default {
         "fade-in": "fade-in 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "boneyard-pulse": "boneyard-pulse 1.5s ease-in-out infinite",
         "count-down": "count-down 1s ease-in-out infinite",
       },
     },

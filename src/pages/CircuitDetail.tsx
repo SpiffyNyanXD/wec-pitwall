@@ -9,32 +9,12 @@ import BackButton from '@/components/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 
 
 import { circuits } from '@/data/wecData';
-
-
-
-const BoneyardSkeleton = {
-  Hero: () => (
-    <div className="min-h-screen bg-background">
-      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
-        <div className="animate-pulse flex flex-col gap-8">
-          <div className="h-6 w-32 bg-muted rounded"></div>
-          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
-            <div className="flex-1 space-y-4">
-              <div className="h-10 w-3/4 bg-muted rounded"></div>
-              <div className="h-6 w-1/2 bg-muted rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-};
 
 const circuitSlugToDbName: Record<string, string> = {
   'imola': 'Imola',
@@ -95,9 +75,21 @@ const CircuitDetail = () => {
   };
 
 
-  if (!circuit && isRaceLoading) {
-    return <BoneyardSkeleton.Hero />;
+  if (isRaceLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <BoneyardSkeleton.Card />
+            <BoneyardSkeleton.Card />
+          </div>
+        </main>
+      </div>
+    );
   }
+
   if (!circuit) {
     return <NotFound />;
   }

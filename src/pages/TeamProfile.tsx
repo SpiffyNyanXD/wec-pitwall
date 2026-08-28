@@ -1,3 +1,4 @@
+import { BoneyardSkeleton } from '@/components/ui/BoneyardSkeleton';
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
@@ -345,6 +346,21 @@ const TeamProfile = () => {
     }
   };
 
+    if (isProfileLoading || isDriversLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+          <BoneyardSkeleton.Hero className="mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <BoneyardSkeleton.List items={3} className="lg:col-span-1" />
+            <BoneyardSkeleton.List items={4} className="lg:col-span-2" />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (!team) {
     return <NotFound />;
   }
@@ -412,9 +428,9 @@ const TeamProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={team.name}
-        description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
-        url={`/teams/${team.id}`}
+        title={team ? team.name : 'Team'}
+        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
+        url={team ? `/teams/${team.id}` : '/teams'}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -437,7 +453,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}
