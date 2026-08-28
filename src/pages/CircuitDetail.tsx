@@ -1,5 +1,6 @@
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
+import NotFound from './NotFound';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react';
@@ -14,7 +15,6 @@ import { Badge } from '@/components/ui/badge';
 
 
 import { circuits } from '@/data/wecData';
-
 
 const circuitSlugToDbName: Record<string, string> = {
   'imola': 'Imola',
@@ -47,7 +47,7 @@ const CircuitDetail = () => {
     }
   }, [circuit]);
 
-  const { data: race, isLoading } = useQuery({
+  const { data: race, isLoading: isRaceLoading } = useQuery({
     queryKey: ['circuit-race', circuit?.id],
     queryFn: async () => {
       if (!supabase || !circuit?.id) return null;
@@ -75,7 +75,7 @@ const CircuitDetail = () => {
   };
 
 
-    if (isLoading) {
+  if (isRaceLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -91,17 +91,7 @@ const CircuitDetail = () => {
   }
 
   if (!circuit) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Circuit not found</h1>
-            <Link to="/circuits" className="text-primary hover:underline">Back to Circuits</Link>
-          </div>
-        </main>
-      </div>
-    );
+    return <NotFound />;
   }
 
   return (

@@ -362,19 +362,7 @@ const TeamProfile = () => {
   }
 
   if (!team) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Team not found</h1>
-            <Button asChild className="tap-highlight">
-              <Link to="/teams">Back to Teams</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const getClassBadge = (carClass: string) => {
