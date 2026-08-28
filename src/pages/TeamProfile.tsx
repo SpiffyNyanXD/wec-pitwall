@@ -14,6 +14,7 @@ import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getTeamById, getDriverById, Team } from '@/data/wecData';
+import BoneyardSkeleton from '@/components/ui/BoneyardSkeleton';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -261,7 +262,7 @@ const TeamProfile = () => {
   const mappedDbDrivers = useMemo(() => {
     if (!dbDrivers || dbDrivers.length === 0) return [];
 
-    return dbDrivers.map((d: Record<string, unknown>, index: number) => ({
+    return dbDrivers.map((d, index: number) => ({
       id: `db-driver-${index}`,
       name: d.full_name,
       nationality: d.nationality || 'Unknown',
@@ -349,6 +350,19 @@ const TeamProfile = () => {
     return <NotFound />;
   }
 
+  if (isProfileLoading || isDriversLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title={team.name}
+          description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
+          url={`/teams/${team.id}`}
+        />
+        <BoneyardSkeleton.Hero />
+      </div>
+    );
+  }
+
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
       case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
@@ -358,40 +372,11 @@ const TeamProfile = () => {
     }
   };
 
-  // Get class-appropriate default values
-  const getDefaultChassis = () => {
-    if (team.class === 'LMP2') return 'Oreca 07';
-    if (team.class === 'LMGT3') return `${team.manufacturer} GT3`;
-    return `${team.manufacturer} Hypercar`;
-  };
-
-  const getDefaultEngine = () => {
-    if (team.class === 'LMP2') return 'Gibson GK428 4.2L V8';
-    if (team.class === 'LMGT3') {
-      const gt3Engines: Record<string, string> = {
-        'Aston Martin': 'Aston Martin 4.0L Twin-Turbo V8',
-        'Porsche': 'Porsche 4.0L Flat-Six',
-        'Lamborghini': 'Lamborghini 5.2L V10',
-        'Ford': 'Ford 5.0L Coyote V8',
-        'Ferrari': 'Ferrari 3.0L Twin-Turbo V6',
-        'BMW': 'BMW 4.4L Twin-Turbo V8',
-        'Mercedes': 'Mercedes-AMG 4.0L Twin-Turbo V8',
-      };
-      return gt3Engines[team.manufacturer] || `${team.manufacturer} Engine`;
-    }
-    return `${team.manufacturer} Hybrid Power Unit`;
-  };
-
-  const getClassLabel = () => {
-    if (team.class === 'LMP2') return 'Le Mans 24h Only';
-    return team.class;
-  };
-
   // Default values for extended data
   const teamData = {
     fullName: team.fullName || team.name,
-    chassis: team.chassis || getDefaultChassis(),
-    engine: team.engine || getDefaultEngine(),
+    chassis: team.chassis || getDefaultChassis(team.class, team.manufacturer),
+    engine: team.engine || getDefaultEngine(team.class, team.manufacturer),
     teamPrincipal: team.teamPrincipal || 'TBC',
     base: team.base || team.country,
     founded: team.founded || '-',
@@ -458,74 +443,9 @@ const TeamProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            {/* About */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4">About</h2>
-              <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile?.bio || teamData.about}</p>
-            </div>
-
-            {/* Team Facts */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Quote className="w-5 h-5 text-primary" />
-                Team Facts
-              </h2>
-              <div className="space-y-3">
-                {teamData.facts.map((fact, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    className="flex items-start gap-3 p-4 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-border/50"
-                  >
-                    <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
-                    <p className="text-muted-foreground">{fact}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Drivers Grid */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-primary" />
-                Current Drivers
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {(mappedDbDrivers.length > 0 ? mappedDbDrivers : teamDrivers).map((driver, index) => (
-                  <motion.div
-                    key={driver?.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
-                    <Link 
-                      to={`/drivers/${driver?.id}`}
-                      className="block p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border/50 hover:border-primary/50"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-3xl">{driver?.countryFlag}</span>
-                        <div>
-                          <p className="font-bold text-foreground">{driver?.name}</p>
-                          <p className="text-xs text-muted-foreground">{driver?.nationality}</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-4 text-sm">
-                        <div>
-                          <span className="text-wec-gold font-bold">{driver?.championships}</span>
-                          <span className="text-muted-foreground ml-1">titles</span>
-                        </div>
-                        <div>
-                          <span className="text-secondary font-bold">{driver?.leMansWins}</span>
-                          <span className="text-muted-foreground ml-1">Le Mans</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <TeamAboutCard bio={profile?.bio as string} about={teamData.about} />
+            <TeamFactsCard facts={teamData.facts} />
+            <TeamDriversGridCard drivers={mappedDbDrivers.length > 0 ? mappedDbDrivers : teamDrivers} />
           </motion.div>
         </div>
       </main>

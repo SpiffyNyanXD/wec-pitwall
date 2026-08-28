@@ -1,8 +1,9 @@
+import SEOHead from '@/components/SEOHead';
 import { useParams, Link } from 'react-router-dom';
 import NotFound from './NotFound';
 
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -11,8 +12,11 @@ import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
-import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { useTimezone } from '@/hooks/useTimezone';
 import { parseMarginToSeconds } from '@/lib/raceUtils';
+import BoneyardSkeleton from '@/components/ui/BoneyardSkeleton';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CircuitFacts {
   lapLength: string;
@@ -30,29 +34,189 @@ interface CircuitFacts {
   longestStraight?: string;
 }
 
+// Circuit data with comprehensive facts
+const circuitDetails: Record<string, CircuitFacts> = {
+  'qatar': {
+    lapLength: '5.380 km',
+    corners: 16,
+    description: 'Lusail International Circuit is a motorsport venue in Lusail, Qatar. Originally built for MotoGP, it was upgraded for Formula 1 and WEC racing with extensive lighting for night races.',
+    opened: 2004,
+    designer: 'Tilke GmbH',
+    elevation: '12m change',
+    longestStraight: '1.068 km',
+    lapRecords: {
+      hypercar: { time: '1:46.783', driver: 'Kamui Kobayashi', year: 2024 },
+      lmp2: { time: '1:51.234', driver: 'Louis Delétraz', year: 2024 },
+    },
+    notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
+  },
+  'imola': {
+    lapLength: '4.909 km',
+    corners: 19,
+    description: 'Autodromo Enzo e Dino Ferrari is a historic Italian circuit named after Ferrari founder Enzo Ferrari and his son Dino. Known for its challenging, old-school layout with elevation changes.',
+    opened: 1953,
+    designer: 'Various (modified over decades)',
+    elevation: '42m change',
+    longestStraight: '0.550 km',
+    lapRecords: {
+      hypercar: { time: '1:30.140', driver: 'Antonio Fuoco', year: 2024 },
+      lmp2: { time: '1:35.876', driver: 'Norman Nato', year: 2024 },
+      gt3: { time: '1:42.561', driver: 'Marco Sørensen', year: 2024 },
+    },
+    notableWinners: ['Ferrari 499P (2024)', 'Toyota GR010 (2025)']
+  },
+  'spa': {
+    lapLength: '7.004 km',
+    corners: 19,
+    description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single race.',
+    opened: 1921,
+    designer: 'Jules de Thier & Henri Langlois Van Ophem',
+    elevation: '104m change',
+    longestStraight: '1.933 km (Kemmel)',
+    lapRecords: {
+      hypercar: { time: '2:01.540', driver: 'Kévin Estre', year: 2024 },
+      lmp2: { time: '2:09.234', driver: 'Phil Hanson', year: 2024 },
+      gt3: { time: '2:18.123', driver: 'Klaus Bachler', year: 2024 },
+    },
+    notableWinners: ['Porsche 963 (2024, 2025)', 'Toyota TS050 (2019)', 'Audi R18 (2012)']
+  },
+  'le-mans': {
+    lapLength: '13.626 km',
+    corners: 38,
+    description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance race. The circuit combines permanent sections with public roads closed for the event.',
+    opened: 1923,
+    designer: 'ACO (evolved over 100 years)',
+    elevation: '30m change',
+    longestStraight: '6.0 km (Mulsanne)',
+    lapRecords: {
+      hypercar: { time: '3:26.9', driver: 'Ferrari AF Corse #50', year: 2024 },
+      lmp2: { time: '3:30.567', driver: 'Louis Delétraz', year: 2024 },
+      gt3: { time: '3:54.234', driver: 'Davide Rigon', year: 2024 },
+    },
+    notableWinners: ['Ferrari 499P (2023, 2024)', 'Toyota GR010 (2021, 2022, 2025)', 'Porsche 919 (2015-17)']
+  },
+  'sao-paulo': {
+    lapLength: '4.309 km',
+    corners: 15,
+    description: 'Autódromo José Carlos Pace (Interlagos) is a challenging circuit with significant elevation changes and passionate local fans. Known for unpredictable weather and dramatic racing.',
+    opened: 1940,
+    designer: 'Alfredo Guará',
+    elevation: '40m change',
+    longestStraight: '0.700 km',
+    lapRecords: {
+      hypercar: { time: '1:25.789', driver: 'Sébastien Buemi', year: 2024 },
+      lmp2: { time: '1:31.234', driver: 'Norman Nato', year: 2024 },
+      gt3: { time: '1:38.567', driver: 'Marco Sørensen', year: 2024 },
+    },
+    notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
+  },
+  'cota': {
+    lapLength: '5.513 km',
+    corners: 20,
+    description: 'Circuit of the Americas features a mix of high-speed straights and technical sections inspired by classic circuits. The iconic Turn 1 hill provides spectacular racing action.',
+    opened: 2012,
+    designer: 'Tilke GmbH',
+    elevation: '41m change',
+    longestStraight: '1.0 km',
+    lapRecords: {
+      hypercar: { time: '1:48.123', driver: 'Antonio Giovinazzi', year: 2024 },
+      lmp2: { time: '1:54.567', driver: 'Phil Hanson', year: 2024 },
+      gt3: { time: '2:02.345', driver: 'Laurin Heinrich', year: 2024 },
+    },
+    notableWinners: ['Porsche 963 (2024)', 'Ferrari 499P (2025)']
+  },
+  'fuji': {
+    lapLength: '4.563 km',
+    corners: 16,
+    description: 'Fuji Speedway sits at the base of Mount Fuji, offering stunning views and challenging racing conditions. The 1.475km start/finish straight is one of the longest in motorsport.',
+    opened: 1966,
+    designer: 'Various (modernized by Tilke in 2005)',
+    elevation: '35m change',
+    longestStraight: '1.475 km',
+    lapRecords: {
+      hypercar: { time: '1:28.234', driver: 'Ryo Hirakawa', year: 2024 },
+      lmp2: { time: '1:34.567', driver: 'Louis Delétraz', year: 2024 },
+      gt3: { time: '1:41.234', driver: 'Klaus Bachler', year: 2024 },
+    },
+    notableWinners: ['Toyota GR010 (2024, 2025)', 'Porsche 919 (2017)']
+  },
+  'bahrain': {
+    lapLength: '5.412 km',
+    corners: 15,
+    description: 'Bahrain International Circuit hosts the season finale under dramatic floodlights in the desert. The abrasive surface and high temperatures create unique challenges for teams.',
+    opened: 2004,
+    designer: 'Tilke GmbH',
+    elevation: '12m change',
+    longestStraight: '0.700 km',
+    lapRecords: {
+      hypercar: { time: '1:46.567', driver: 'Kévin Estre', year: 2024 },
+      lmp2: { time: '1:52.234', driver: 'Norman Nato', year: 2024 },
+      gt3: { time: '1:59.123', driver: 'Marco Sørensen', year: 2024 },
+    },
+    notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
+  },
+  'portimao': {
+    lapLength: '4.653 km',
+    corners: 15,
+    description: 'Algarve International Circuit is known for its dramatic elevation changes and blind corners. The rollercoaster layout provides unique challenges for drivers.',
+    opened: 2008,
+    designer: 'Ricardo Pina',
+    elevation: '61m change',
+    longestStraight: '0.969 km',
+    lapRecords: {
+      hypercar: { time: '1:32.456', driver: 'Brendon Hartley', year: 2024 },
+    },
+    notableWinners: ['Alpine A480 (2022)', 'Toyota GR010 (2023)']
+  },
+  'monza': {
+    lapLength: '5.793 km',
+    corners: 11,
+    description: 'Autodromo Nazionale Monza is the Temple of Speed, featuring long straights and historic chicanes. The circuit has hosted racing since 1922.',
+    opened: 1922,
+    designer: 'Alfredo Rosselli',
+    elevation: '11m change',
+    longestStraight: '1.1 km',
+    lapRecords: {
+      hypercar: { time: '1:36.789', driver: 'Antonio Fuoco', year: 2024 },
+      gt3: { time: '1:48.567', driver: 'Davide Rigon', year: 2024 },
+    },
+    notableWinners: ['Ferrari 499P', 'Porsche 963']
+  },
+};
 
-const BoneyardSkeleton = {
-  Hero: () => (
-    <div className="min-h-screen bg-background">
-      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
-        <div className="animate-pulse flex flex-col gap-8">
-          <div className="h-6 w-32 bg-muted rounded"></div>
-          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
-            <div className="flex-1 space-y-4">
-              <div className="h-10 w-3/4 bg-muted rounded"></div>
-              <div className="h-6 w-1/2 bg-muted rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+const getCircuitKey = (raceId: string) => {
+  if (raceId.includes('qatar')) return 'qatar';
+  if (raceId.includes('imola')) return 'imola';
+  if (raceId.includes('spa')) return 'spa';
+  if (raceId.includes('le-mans') || raceId.includes('lemans')) return 'le-mans';
+  if (raceId.includes('sao-paulo') || raceId.includes('interlagos')) return 'sao-paulo';
+  if (raceId.includes('cota') || raceId.includes('austin')) return 'cota';
+  if (raceId.includes('fuji')) return 'fuji';
+  if (raceId.includes('bahrain')) return 'bahrain';
+  if (raceId.includes('portimao')) return 'portimao';
+  if (raceId.includes('monza')) return 'monza';
+  return null;
+};
+
+const getUtcOffset = (circuitKey: string | null) => {
+  switch (circuitKey) {
+    case 'qatar': return 'UTC+3';
+    case 'imola': return 'UTC+2 (CEST)';
+    case 'spa': return 'UTC+2 (CEST)';
+    case 'le-mans': return 'UTC+2 (CEST)';
+    case 'sao-paulo': return 'UTC-3';
+    case 'cota': return 'UTC-5 (CDT)';
+    case 'fuji': return 'UTC+9';
+    case 'bahrain': return 'UTC+3';
+    case 'portimao': return 'UTC+1 (WEST)';
+    case 'monza': return 'UTC+2 (CEST)';
+    default: return '';
+  }
 };
 
 const RaceProfile = () => {
   const { id } = useParams();
-  const { convertTime, timezone } = useTimezone();
+  const { convertTime } = useTimezone();
   
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
@@ -87,18 +251,27 @@ const RaceProfile = () => {
 
   const finalRace = React.useMemo(() => race || (dbRace ? { ...dbRace, flag: '🏁' } as unknown as typeof race : null), [race, dbRace]);
 
-
   useEffect(() => {
     if (finalRace) {
       document.title = `${finalRace.name} | Races | WEC Pitwall`;
     }
   }, [finalRace]);
 
-  if (!finalRace && isRaceLoading) {
-    return <BoneyardSkeleton.Hero />;
-  }
   if (!finalRace) {
     return <NotFound />;
+  }
+
+  if (isRaceLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title={`${finalRace.name} | Races | WEC Pitwall`}
+          description={`Race profile for ${finalRace.name}.`}
+          url={`/race/${finalRace.id}`}
+        />
+        <BoneyardSkeleton.Hero />
+      </div>
+    );
   }
 
   const formatDate = (dateString: string, endDate?: string) => {
@@ -112,193 +285,19 @@ const RaceProfile = () => {
     return start.toLocaleDateString('en-US', options);
   };
 
-
-  // Circuit data with comprehensive facts
-  const circuitDetails: Record<string, CircuitFacts> = {
-    'qatar': { 
-      lapLength: '5.380 km', 
-      corners: 16, 
-      description: 'Lusail International Circuit is a motorsport venue in Lusail, Qatar. Originally built for MotoGP, it was upgraded for Formula 1 and WEC racing with extensive lighting for night races.',
-      opened: 2004,
-      designer: 'Tilke GmbH',
-      elevation: '12m change',
-      longestStraight: '1.068 km',
-      lapRecords: {
-        hypercar: { time: '1:46.783', driver: 'Kamui Kobayashi', year: 2024 },
-        lmp2: { time: '1:51.234', driver: 'Louis Delétraz', year: 2024 },
-      },
-      notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
-    },
-    'imola': { 
-      lapLength: '4.909 km', 
-      corners: 19, 
-      description: 'Autodromo Enzo e Dino Ferrari is a historic Italian circuit named after Ferrari founder Enzo Ferrari and his son Dino. Known for its challenging, old-school layout with elevation changes.',
-      opened: 1953,
-      designer: 'Various (modified over decades)',
-      elevation: '42m change',
-      longestStraight: '0.550 km',
-      lapRecords: {
-        hypercar: { time: '1:30.140', driver: 'Antonio Fuoco', year: 2024 },
-        lmp2: { time: '1:35.876', driver: 'Norman Nato', year: 2024 },
-        gt3: { time: '1:42.561', driver: 'Marco Sørensen', year: 2024 },
-      },
-      notableWinners: ['Ferrari 499P (2024)', 'Toyota GR010 (2025)']
-    },
-    'spa': { 
-      lapLength: '7.004 km', 
-      corners: 19, 
-      description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single finalRace.',
-      opened: 1921,
-      designer: 'Jules de Thier & Henri Langlois Van Ophem',
-      elevation: '104m change',
-      longestStraight: '1.933 km (Kemmel)',
-      lapRecords: {
-        hypercar: { time: '2:01.540', driver: 'Kévin Estre', year: 2024 },
-        lmp2: { time: '2:09.234', driver: 'Phil Hanson', year: 2024 },
-        gt3: { time: '2:18.123', driver: 'Klaus Bachler', year: 2024 },
-      },
-      notableWinners: ['Porsche 963 (2024, 2025)', 'Toyota TS050 (2019)', 'Audi R18 (2012)']
-    },
-    'le-mans': { 
-      lapLength: '13.626 km', 
-      corners: 38, 
-      description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance finalRace. The circuit combines permanent sections with public roads closed for the event.',
-      opened: 1923,
-      designer: 'ACO (evolved over 100 years)',
-      elevation: '30m change',
-      longestStraight: '6.0 km (Mulsanne)',
-      lapRecords: {
-        hypercar: { time: '3:26.9', driver: 'Ferrari AF Corse #50', year: 2024 }, // Note: Kobayashi holds all-time circuit record (3:14.791) set in LMP1 era
-        lmp2: { time: '3:30.567', driver: 'Louis Delétraz', year: 2024 },
-        gt3: { time: '3:54.234', driver: 'Davide Rigon', year: 2024 },
-      },
-      notableWinners: ['Ferrari 499P (2023, 2024)', 'Toyota GR010 (2021, 2022, 2025)', 'Porsche 919 (2015-17)']
-    },
-    'sao-paulo': { 
-      lapLength: '4.309 km', 
-      corners: 15, 
-      description: 'Autódromo José Carlos Pace (Interlagos) is a challenging circuit with significant elevation changes and passionate local fans. Known for unpredictable weather and dramatic racing.',
-      opened: 1940,
-      designer: 'Alfredo Guará',
-      elevation: '40m change',
-      longestStraight: '0.700 km',
-      lapRecords: {
-        hypercar: { time: '1:25.789', driver: 'Sébastien Buemi', year: 2024 },
-        lmp2: { time: '1:31.234', driver: 'Norman Nato', year: 2024 },
-        gt3: { time: '1:38.567', driver: 'Marco Sørensen', year: 2024 },
-      },
-      notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
-    },
-    'cota': { 
-      lapLength: '5.513 km', 
-      corners: 20, 
-      description: 'Circuit of the Americas features a mix of high-speed straights and technical sections inspired by classic circuits. The iconic Turn 1 hill provides spectacular racing action.',
-      opened: 2012,
-      designer: 'Tilke GmbH',
-      elevation: '41m change',
-      longestStraight: '1.0 km',
-      lapRecords: {
-        hypercar: { time: '1:48.123', driver: 'Antonio Giovinazzi', year: 2024 },
-        lmp2: { time: '1:54.567', driver: 'Phil Hanson', year: 2024 },
-        gt3: { time: '2:02.345', driver: 'Laurin Heinrich', year: 2024 },
-      },
-      notableWinners: ['Porsche 963 (2024)', 'Ferrari 499P (2025)']
-    },
-    'fuji': { 
-      lapLength: '4.563 km', 
-      corners: 16, 
-      description: 'Fuji Speedway sits at the base of Mount Fuji, offering stunning views and challenging racing conditions. The 1.475km start/finish straight is one of the longest in motorsport.',
-      opened: 1966,
-      designer: 'Various (modernized by Tilke in 2005)',
-      elevation: '35m change',
-      longestStraight: '1.475 km',
-      lapRecords: {
-        hypercar: { time: '1:28.234', driver: 'Ryo Hirakawa', year: 2024 },
-        lmp2: { time: '1:34.567', driver: 'Louis Delétraz', year: 2024 },
-        gt3: { time: '1:41.234', driver: 'Klaus Bachler', year: 2024 },
-      },
-      notableWinners: ['Toyota GR010 (2024, 2025)', 'Porsche 919 (2017)']
-    },
-    'bahrain': { 
-      lapLength: '5.412 km', 
-      corners: 15, 
-      description: 'Bahrain International Circuit hosts the season finale under dramatic floodlights in the desert. The abrasive surface and high temperatures create unique challenges for teams.',
-      opened: 2004,
-      designer: 'Tilke GmbH',
-      elevation: '12m change',
-      longestStraight: '0.700 km',
-      lapRecords: {
-        hypercar: { time: '1:46.567', driver: 'Kévin Estre', year: 2024 },
-        lmp2: { time: '1:52.234', driver: 'Norman Nato', year: 2024 },
-        gt3: { time: '1:59.123', driver: 'Marco Sørensen', year: 2024 },
-      },
-      notableWinners: ['Toyota GR010 (2024)', 'Porsche 963 (2025)']
-    },
-    'portimao': { 
-      lapLength: '4.653 km', 
-      corners: 15, 
-      description: 'Algarve International Circuit is known for its dramatic elevation changes and blind corners. The rollercoaster layout provides unique challenges for drivers.',
-      opened: 2008,
-      designer: 'Ricardo Pina',
-      elevation: '61m change',
-      longestStraight: '0.969 km',
-      lapRecords: {
-        hypercar: { time: '1:32.456', driver: 'Brendon Hartley', year: 2024 },
-      },
-      notableWinners: ['Alpine A480 (2022)', 'Toyota GR010 (2023)']
-    },
-    'monza': { 
-      lapLength: '5.793 km', 
-      corners: 11, 
-      description: 'Autodromo Nazionale Monza is the Temple of Speed, featuring long straights and historic chicanes. The circuit has hosted racing since 1922.',
-      opened: 1922,
-      designer: 'Alfredo Rosselli',
-      elevation: '11m change',
-      longestStraight: '1.1 km',
-      lapRecords: {
-        hypercar: { time: '1:36.789', driver: 'Antonio Fuoco', year: 2024 },
-        gt3: { time: '1:48.567', driver: 'Davide Rigon', year: 2024 },
-      },
-      notableWinners: ['Ferrari 499P', 'Porsche 963']
-    },
-  };
-
-  const getCircuitKey = (raceId: string) => {
-    if (raceId.includes('qatar')) return 'qatar';
-    if (raceId.includes('imola')) return 'imola';
-    if (raceId.includes('spa')) return 'spa';
-    if (raceId.includes('le-mans') || raceId.includes('lemans')) return 'le-mans';
-    if (raceId.includes('sao-paulo') || raceId.includes('interlagos')) return 'sao-paulo';
-    if (raceId.includes('cota') || raceId.includes('austin')) return 'cota';
-    if (raceId.includes('fuji')) return 'fuji';
-    if (raceId.includes('bahrain')) return 'bahrain';
-    if (raceId.includes('portimao')) return 'portimao';
-    if (raceId.includes('monza')) return 'monza';
-    return null;
-  };
-
-  const getUtcOffset = (circuitKey: string | null) => {
-    switch (circuitKey) {
-      case 'qatar': return 'UTC+3';
-      case 'imola': return 'UTC+2 (CEST)';
-      case 'spa': return 'UTC+2 (CEST)';
-      case 'le-mans': return 'UTC+2 (CEST)';
-      case 'sao-paulo': return 'UTC-3';
-      case 'cota': return 'UTC-5 (CDT)';
-      case 'fuji': return 'UTC+9';
-      case 'bahrain': return 'UTC+3';
-      case 'portimao': return 'UTC+1 (WEST)';
-      case 'monza': return 'UTC+2 (CEST)';
-      default: return '';
-    }
-  };
-
   const circuitKey = getCircuitKey(finalRace.id);
   const circuit = circuitKey ? circuitDetails[circuitKey] : null;
   const utcOffset = getUtcOffset(circuitKey);
+  const raceStatuses = computeAllRaceStatuses([{ id: finalRace.id, scheduled_date: finalRace.date, duration_hours: finalRace.duration_hours || 6, status: finalRace.status }]);
+  const raceStatus = raceStatuses.get(finalRace.id);
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${finalRace.name} | Races | WEC Pitwall`}
+        description={`Race profile for ${finalRace.name} at ${finalRace.circuit}.`}
+        url={`/race/${finalRace.id}`}
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

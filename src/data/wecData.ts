@@ -112,6 +112,7 @@ export interface Race {
   circuit: string;
   country: string;
   date: string;
+  scheduled_date?: string;
   endDate?: string;
   duration: string;
   duration_hours?: number;
@@ -2443,6 +2444,16 @@ export const standings2025 = {
       team: 'Manthey 1st Phorm #92',
       manufacturer: 'Porsche',
     },
+    drivers: [
+      { position: 1, drivers: 'Lietz / Hardwick / Pera', team: 'Manthey 1st Phorm #92', points: 139 },
+      { position: 2, drivers: 'Bachler / Malykhin / Sturm', team: 'Manthey PureRxcing #92', points: 104 },
+      { position: 3, drivers: 'Farfus / Gelael / Leung', team: 'Team WRT #31', points: 85 },
+    ],
+    teams: [
+      { position: 1, team: 'Manthey 1st Phorm #92', points: 139 },
+      { position: 2, team: 'Manthey PureRxcing #92', points: 104 },
+      { position: 3, team: 'Team WRT #31', points: 85 },
+    ],
   },
 };
 

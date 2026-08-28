@@ -183,9 +183,11 @@ const Schedule = () => {
               {races2026
                 .slice()
                 .sort((a, b) => {
-                  if (a.round === null) return 1;
-                  if (b.round === null) return -1;
-                  return a.round - b.round;
+                  const dateA = a.scheduled_date || a.date;
+                  const dateB = b.scheduled_date || b.date;
+                  if (!dateA) return 1;
+                  if (!dateB) return -1;
+                  return dateA.localeCompare(dateB);
                 })
                 .map((race, index) => (
                   <RaceCard key={race.id} race={race} index={index} />

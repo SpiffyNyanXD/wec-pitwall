@@ -17,24 +17,7 @@ import { circuits } from '@/data/wecData';
 
 
 
-const BoneyardSkeleton = {
-  Hero: () => (
-    <div className="min-h-screen bg-background">
-      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
-        <div className="animate-pulse flex flex-col gap-8">
-          <div className="h-6 w-32 bg-muted rounded"></div>
-          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
-            <div className="flex-1 space-y-4">
-              <div className="h-10 w-3/4 bg-muted rounded"></div>
-              <div className="h-6 w-1/2 bg-muted rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-};
+import BoneyardSkeleton from '@/components/ui/BoneyardSkeleton';
 
 const circuitSlugToDbName: Record<string, string> = {
   'imola': 'Imola',
@@ -95,15 +78,30 @@ const CircuitDetail = () => {
   };
 
 
-  if (!circuit && isRaceLoading) {
-    return <BoneyardSkeleton.Hero />;
-  }
   if (!circuit) {
     return <NotFound />;
   }
 
+  if (isRaceLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title={`${circuit.name} | Circuits | WEC Pitwall`}
+          description={`Circuit details for ${circuit.name}.`}
+          url={`/circuits/${circuit.id}`}
+        />
+        <BoneyardSkeleton.Hero />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${circuit.name} | Circuits | WEC Pitwall`}
+        description={`Circuit details for ${circuit.name}, ${circuit.location}. ${circuit.description?.slice(0, 120) ?? ''}`}
+        url={`/circuits/${circuit.id}`}
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
