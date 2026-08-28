@@ -22,7 +22,7 @@ const Drivers = lazy(() => import("./pages/Drivers"));
 const DriverProfile = lazy(() => import("./pages/DriverProfile"));
 const Teams = lazy(() => import("./pages/Teams"));
 const Circuits = lazy(() => import("./pages/Circuits"));
-const CircuitDetail = lazy(() => import("./pages/CircuitDetail"));
+const CircuitPage = lazy(() => import("./pages/CircuitPage"));
 const TeamProfile = lazy(() => import("./pages/TeamProfile"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const RaceProfile = lazy(() => import("./pages/RaceProfile"));
@@ -90,7 +90,7 @@ const App = () => (
               <Route path="/teams" element={<Teams />} />
               <Route path="/teams/:id" element={<TeamProfile />} />
               <Route path="/circuits" element={<Circuits />} />
-              <Route path="/circuit/:id" element={<CircuitDetail />} />
+              <Route path="/circuit/:id" element={<CircuitPage />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/race/:id" element={<RaceProfile />} />
               <Route path="/standings" element={<Standings />} />
