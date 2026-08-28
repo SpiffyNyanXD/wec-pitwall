@@ -443,74 +443,9 @@ const TeamProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            {/* About */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4">About</h2>
-              <p className="text-muted-foreground leading-relaxed text-zinc-300 font-sans">{profile?.bio || teamData.about}</p>
-            </div>
-
-            {/* Team Facts */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Quote className="w-5 h-5 text-primary" />
-                Team Facts
-              </h2>
-              <div className="space-y-3">
-                {teamData.facts.map((fact, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    className="flex items-start gap-3 p-4 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-border/50"
-                  >
-                    <Star className="w-4 h-4 text-wec-gold mt-0.5 shrink-0" />
-                    <p className="text-muted-foreground">{fact}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Drivers Grid */}
-            <div className="glass-card p-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-primary" />
-                Current Drivers
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {(mappedDbDrivers.length > 0 ? mappedDbDrivers : teamDrivers).map((driver, index) => (
-                  <motion.div
-                    key={driver?.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
-                    <Link 
-                      to={`/drivers/${driver?.id}`}
-                      className="block p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border/50 hover:border-primary/50"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-3xl">{driver?.countryFlag}</span>
-                        <div>
-                          <p className="font-bold text-foreground">{driver?.name}</p>
-                          <p className="text-xs text-muted-foreground">{driver?.nationality}</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-4 text-sm">
-                        <div>
-                          <span className="text-wec-gold font-bold">{driver?.championships}</span>
-                          <span className="text-muted-foreground ml-1">titles</span>
-                        </div>
-                        <div>
-                          <span className="text-secondary font-bold">{driver?.leMansWins}</span>
-                          <span className="text-muted-foreground ml-1">Le Mans</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <TeamAboutCard bio={profile?.bio as string} about={teamData.about} />
+            <TeamFactsCard facts={teamData.facts} />
+            <TeamDriversGridCard drivers={mappedDbDrivers.length > 0 ? mappedDbDrivers : teamDrivers} />
           </motion.div>
         </div>
       </main>
