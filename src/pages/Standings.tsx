@@ -18,6 +18,21 @@ type SeasonYear = 2024 | 2025 | 2026;
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
+type HistoricalStanding = Record<string, unknown>;
+
+type HistoricalSeasonStandings = {
+  hypercars: {
+    drivers: HistoricalStanding[];
+    teams?: HistoricalStanding[];
+    manufacturers: HistoricalStanding[];
+  };
+  lmgt3: {
+    champion: HistoricalStanding;
+    drivers?: HistoricalStanding[];
+    teams?: HistoricalStanding[];
+  };
+};
+
 const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: typeof teams2024; races: typeof races2024; status: SeasonStatus }> = {
   2024: { drivers: drivers2024, teams: teams2024, races: races2024, status: 'completed' },
   2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
@@ -36,6 +51,12 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 const Standings = () => {
   const { loading: isLoading } = useActiveSeasonId();
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
+  const historicalStandings: HistoricalSeasonStandings | undefined =
+    selectedSeason === 2025
+      ? standings2025
+      : selectedSeason === 2024
+        ? standings2024
+        : undefined;
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
@@ -393,9 +414,9 @@ const Standings = () => {
                   <BoneyardSkeleton.Table rows={8} />
                 ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                ) : historicalStandings ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {(selectedSeason === 2025 ? standings2025 : standings2024).hypercars.drivers.map((driver: Record<string, unknown>, index: number) => (
+                    {historicalStandings.hypercars.drivers.map((driver, index) => (
                       <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
@@ -425,7 +446,9 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
                   </span>
                 </div>
-                {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
+                {isLoading ? (
+                  <BoneyardSkeleton.Table rows={8} />
+                ) : selectedSeason === 2026 && hypercarEntries.length > 0 ? (
                   <>
                     <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -440,9 +463,9 @@ const Standings = () => {
                       <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                     ))}
                   </div>
-                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                ) : historicalStandings?.hypercars.teams?.length ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {(selectedSeason === 2025 ? standings2025 : standings2024).hypercars.teams.map((team: Record<string, unknown>, index: number) => (
+                    {historicalStandings.hypercars.teams.map((team, index) => (
                       <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
@@ -470,9 +493,9 @@ const Standings = () => {
                   <BoneyardSkeleton.Table rows={8} />
                 ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                ) : historicalStandings ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {(selectedSeason === 2025 ? standings2025 : standings2024).hypercars.manufacturers?.map((manufacturer: Record<string, unknown>, index: number) => (
+                    {historicalStandings.hypercars.manufacturers.map((manufacturer, index) => (
                       <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-muted-foreground w-4">{String(manufacturer.position)}</span>
@@ -530,10 +553,10 @@ const Standings = () => {
                   <BoneyardSkeleton.Table rows={8} />
                 ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
-                  (selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers ? (
+                ) : historicalStandings ? (
+                  historicalStandings.lmgt3.drivers?.length ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      {historicalStandings.lmgt3.drivers.map((driver, index) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
                             <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
@@ -570,10 +593,10 @@ const Standings = () => {
                   <BoneyardSkeleton.Table rows={8} />
                 ) : selectedSeason === 2026 ? (
                   <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
-                  (selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams ? (
+                ) : historicalStandings ? (
+                  historicalStandings.lmgt3.teams?.length ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      {historicalStandings.lmgt3.teams.map((team, index) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
                             <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
