@@ -1,7 +1,7 @@
+import SEOHead from '@/components/SEOHead';
 import { useParams, Link } from 'react-router-dom';
 import NotFound from './NotFound';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -37,12 +37,6 @@ const RaceProfile = () => {
   const allRaces = [...races2026, ...races2025, ...races2024];
   const race = allRaces.find(r => r.id === id);
   const raceResult = raceResults.find(r => r.raceId === id);
-
-  useEffect(() => {
-    if (race) {
-      document.title = `${race.name} | Races | WEC Pitwall`;
-    }
-  }, [race]);
 
   if (!race) {
     return <NotFound />;
@@ -246,6 +240,11 @@ const RaceProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${race.name} | Races | WEC Pitwall`}
+        description={`Race details, schedule, results, and circuit information for ${race.name}.`}
+        url={`/races/${race.id}`}
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />

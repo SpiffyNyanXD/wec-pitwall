@@ -26,7 +26,7 @@ const CookiePreferencesPage = () => {
           </p>
         </div>
 
-        <div className="glass-card p-6 md:p-8 min-h-[500px]">
+        <div className="glass-card p-6 md:p-8 min-h-[500px] relative">
           <div id="termly-code-snippet-support">
             <div name="termly-embed" data-id="ff5c77aa-caca-4d6e-b6af-f7ef0e92df21" data-type="iframe" />
           </div>
