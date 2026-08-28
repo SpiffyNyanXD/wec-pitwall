@@ -372,40 +372,11 @@ const TeamProfile = () => {
     }
   };
 
-  // Get class-appropriate default values
-  const getDefaultChassis = () => {
-    if (team.class === 'LMP2') return 'Oreca 07';
-    if (team.class === 'LMGT3') return `${team.manufacturer} GT3`;
-    return `${team.manufacturer} Hypercar`;
-  };
-
-  const getDefaultEngine = () => {
-    if (team.class === 'LMP2') return 'Gibson GK428 4.2L V8';
-    if (team.class === 'LMGT3') {
-      const gt3Engines: Record<string, string> = {
-        'Aston Martin': 'Aston Martin 4.0L Twin-Turbo V8',
-        'Porsche': 'Porsche 4.0L Flat-Six',
-        'Lamborghini': 'Lamborghini 5.2L V10',
-        'Ford': 'Ford 5.0L Coyote V8',
-        'Ferrari': 'Ferrari 3.0L Twin-Turbo V6',
-        'BMW': 'BMW 4.4L Twin-Turbo V8',
-        'Mercedes': 'Mercedes-AMG 4.0L Twin-Turbo V8',
-      };
-      return gt3Engines[team.manufacturer] || `${team.manufacturer} Engine`;
-    }
-    return `${team.manufacturer} Hybrid Power Unit`;
-  };
-
-  const getClassLabel = () => {
-    if (team.class === 'LMP2') return 'Le Mans 24h Only';
-    return team.class;
-  };
-
   // Default values for extended data
   const teamData = {
     fullName: team.fullName || team.name,
-    chassis: team.chassis || getDefaultChassis(),
-    engine: team.engine || getDefaultEngine(),
+    chassis: team.chassis || getDefaultChassis(team.class, team.manufacturer),
+    engine: team.engine || getDefaultEngine(team.class, team.manufacturer),
     teamPrincipal: team.teamPrincipal || 'TBC',
     base: team.base || team.country,
     founded: team.founded || '-',
