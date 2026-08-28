@@ -29,6 +29,8 @@ const formatDateTime = (dateString: string) => {
   });
 };
 
+const optionalString = (value: unknown) => value == null ? undefined : String(value)
+
 const StatCard = ({ label, value, numeric }: { label: string, value: string, numeric?: boolean }) => (
   <div className="glass-card rounded-xl p-4 border border-glass-border flex flex-col justify-center">
     <div className="text-sm text-muted-foreground mb-1">{label}</div>
@@ -36,27 +38,32 @@ const StatCard = ({ label, value, numeric }: { label: string, value: string, num
   </div>
 )
 
-const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => (
-  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-    <Card className="glass-card border-glass-border h-full bg-transparent">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Info className="w-5 h-5 text-primary" />
-          Circuit Information
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-muted-foreground leading-relaxed">{circuit.description}</p>
-        {String(circuitExtended.wecHistory) && (
-          <p className="text-muted-foreground leading-relaxed">{String(circuitExtended.wecHistory)}</p>
-        )}
-        {String(circuitExtended.timezone) && (
-          <p className="text-xs text-muted-foreground">Local timezone: {String(circuitExtended.timezone)}</p>
-        )}
-      </CardContent>
-    </Card>
-  </motion.div>
-);
+const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => {
+  const wecHistory = optionalString(circuitExtended.wecHistory)
+  const timezone = optionalString(circuitExtended.timezone)
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+      <Card className="glass-card border-glass-border h-full bg-transparent">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5 text-primary" />
+            Circuit Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground leading-relaxed">{circuit.description}</p>
+          {wecHistory && (
+            <p className="text-muted-foreground leading-relaxed">{wecHistory}</p>
+          )}
+          {timezone && (
+            <p className="text-xs text-muted-foreground">Local timezone: {timezone}</p>
+          )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  )
+};
 
 const RaceInfoCard = ({ race, getStatusBadge }: { race: Record<string, unknown> | null, getStatusBadge: (status: string) => React.ReactNode }) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
@@ -85,33 +92,39 @@ const RaceInfoCard = ({ race, getStatusBadge }: { race: Record<string, unknown> 
   </motion.div>
 );
 
-const LapRecordSection = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => (
-  <section className="glass-card rounded-xl p-5 border border-glass-border">
-    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-      <Timer className="w-5 h-5 text-primary" />
-      Lap Record
-    </h2>
-    <div className="flex flex-col">
-      {String(circuitExtended.lapRecordTime) ? (
-        <>
-          <span className="font-racing text-2xl text-primary font-bold">{String(circuitExtended.lapRecordTime)}</span>
-          <span className="text-muted-foreground mt-1">
-            {String(circuitExtended.lapRecordHolder)} {String(circuitExtended.lapRecordYear) && <span className="font-racing ml-1">({String(circuitExtended.lapRecordYear)})</span>}
-          </span>
-        </>
-      ) : circuitExtended.lapRecords && (circuitExtended.lapRecords as Record<string, unknown>).hypercar ? (
-        <>
-          <span className="font-racing text-2xl text-primary font-bold">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).time}</span>
-          <span className="text-muted-foreground mt-1">
-            {((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).driver} (<span className="font-racing">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).year}</span>)
-          </span>
-        </>
-      ) : (
-        <span className="font-medium text-2xl font-racing text-secondary">{circuit.lapRecord}</span>
-      )}
-    </div>
-  </section>
-);
+const LapRecordSection = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => {
+  const lapRecordTime = optionalString(circuitExtended.lapRecordTime)
+  const lapRecordHolder = optionalString(circuitExtended.lapRecordHolder)
+  const lapRecordYear = optionalString(circuitExtended.lapRecordYear)
+
+  return (
+    <section className="glass-card rounded-xl p-5 border border-glass-border">
+      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
+        <Timer className="w-5 h-5 text-primary" />
+        Lap Record
+      </h2>
+      <div className="flex flex-col">
+        {lapRecordTime ? (
+          <>
+            <span className="font-racing text-2xl text-primary font-bold">{lapRecordTime}</span>
+            <span className="text-muted-foreground mt-1">
+              {lapRecordHolder} {lapRecordYear && <span className="font-racing ml-1">({lapRecordYear})</span>}
+            </span>
+          </>
+        ) : circuitExtended.lapRecords && (circuitExtended.lapRecords as Record<string, unknown>).hypercar ? (
+          <>
+            <span className="font-racing text-2xl text-primary font-bold">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).time}</span>
+            <span className="text-muted-foreground mt-1">
+              {((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).driver} (<span className="font-racing">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).year}</span>)
+            </span>
+          </>
+        ) : (
+          <span className="font-medium text-2xl font-racing text-secondary">{circuit.lapRecord}</span>
+        )}
+      </div>
+    </section>
+  )
+};
 
 export function CircuitPage() {
   const { id } = useParams<{ id: string }>()
@@ -162,8 +175,9 @@ export function CircuitPage() {
 
   // Handle differences in static data structure vs user prompt structure safely
   const circuitExtended = circuit as Record<string, unknown>;
-  const cityOrLocation = String(circuitExtended.city) || circuit.location;
-  const lengthToDisplay = String(circuitExtended.lengthKm) || circuit.length;
+  const cityOrLocation = optionalString(circuitExtended.city) || circuit.location;
+  const lengthToDisplay = optionalString(circuitExtended.lengthKm) || circuit.length;
+  const shortName = optionalString(circuitExtended.shortName) || circuit.name;
 
   return (
     <div className="min-h-screen bg-background">
@@ -188,7 +202,7 @@ export function CircuitPage() {
             <nav className="text-sm text-muted-foreground">
               <Link to="/circuits" className="hover:text-primary transition-colors">Circuits</Link>
               {' › '}
-              <span className="text-foreground">{String(circuitExtended.shortName) || circuit.name}</span>
+              <span className="text-foreground">{shortName}</span>
             </nav>
 
             <div className="flex items-start justify-between">
