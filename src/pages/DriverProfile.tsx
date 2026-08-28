@@ -11,6 +11,26 @@ import { getDriverById, getTeamById } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
 
 
+
+const BoneyardSkeleton = {
+  Hero: () => (
+    <div className="min-h-screen bg-background">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
+        <div className="animate-pulse flex flex-col gap-8">
+          <div className="h-6 w-32 bg-muted rounded"></div>
+          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
+            <div className="flex-1 space-y-4">
+              <div className="h-10 w-3/4 bg-muted rounded"></div>
+              <div className="h-6 w-1/2 bg-muted rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
 const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -23,33 +43,33 @@ const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, un
     />
     <div className="relative flex flex-col md:flex-row gap-8 items-start">
       <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-6xl md:text-7xl shrink-0">
-        {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
+        {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : resolvedDriver.countryFlag}
       </div>
       <div className="flex-1">
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <Badge variant="outline" className={`${team ? 'bg-primary/20 text-primary border-primary/30' : 'bg-muted text-muted-foreground'}`}>
-            {driver.class}
+            {resolvedDriver.class}
           </Badge>
-          <span className="font-racing text-xl text-primary">{driver.carNumber}</span>
+          <span className="font-racing text-xl text-primary">{resolvedDriver.carNumber}</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold mb-2">
-          <span className="text-muted-foreground">{driver.firstName}</span>{' '}
-          <span className="text-foreground">{driver.lastName}</span>
+          <span className="text-muted-foreground">{resolvedDriver.firstName}</span>{' '}
+          <span className="text-foreground">{resolvedDriver.lastName}</span>
         </h1>
-        <p className="text-lg text-muted-foreground mb-4">{driver.team}</p>
+        <p className="text-lg text-muted-foreground mb-4">{resolvedDriver.team}</p>
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
             <MapPin className="w-4 h-4" />
-            {profile?.nationality || driver.nationality}
+            {profile?.nationality || resolvedDriver.nationality}
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="w-4 h-4" />
             Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : 'Unknown'} {age ? `(Age ${age})` : ''}
           </div>
-          {driver.placeOfBirth && (
+          {resolvedDriver.placeOfBirth && (
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              {driver.placeOfBirth}
+              {resolvedDriver.placeOfBirth}
             </div>
           )}
         </div>
@@ -135,14 +155,14 @@ const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<
       )}
 
       {/* Fallback to static highlights if no profile highlights */}
-      {(!profile?.career_highlights || profile.career_highlights.length === 0) && driver.careerHighlights && driver.careerHighlights.length > 0 && (
+      {(!profile?.career_highlights || profile.career_highlights.length === 0) && resolvedDriver.careerHighlights && resolvedDriver.careerHighlights.length > 0 && (
         <div className="glass-card p-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <Medal className="w-5 h-5 text-wec-gold" />
             Career Highlights
           </h2>
           <ul className="space-y-3">
-            {driver.careerHighlights.map((highlight: string, index: number) => (
+            {resolvedDriver.careerHighlights.map((highlight: string, index: number) => (
               <motion.li
                 key={index}
                 initial={{ opacity: 0, x: -10 }}
@@ -164,20 +184,26 @@ const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<
 const DriverProfile = () => {
   const { id } = useParams<{ id: string }>();
   const driver = getDriverById(id || '');
+  const baseId = id?.split('-202')[0];
+  const resolvedDriver = driver || (baseId ? getDriverById(baseId) : null);
 
 
-  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
+  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(resolvedDriver?.name ?? '');
 
   // Calculate age from date_of_birth
   const age = profile?.date_of_birth
     ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
     : null;
 
-  if (!driver) {
+
+  if (!resolvedDriver && isProfileLoading) {
+    return <BoneyardSkeleton.Hero />;
+  }
+  if (!resolvedDriver) {
     return <NotFound />;
   }
 
-  const team = getTeamById(driver.teamId);
+  const team = getTeamById(resolvedDriver.teamId);
 
   const getClassBadge = (carClass: string) => {
     switch (carClass) {
@@ -207,9 +233,9 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`${driver.name} — WEC Pitwall`}
-        description={`WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
-        url={`/drivers/${driver.id}`}
+        title={`${resolvedDriver.name} — WEC Pitwall`}
+        description={`WEC career profile for ${resolvedDriver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
+        url={`/drivers/${resolvedDriver.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -232,7 +258,7 @@ const DriverProfile = () => {
           <BackButton to="/drivers" label="Back to Drivers" />
         </motion.div>
 
-        <DriverHero driver={driver} profile={profile} age={age} team={team} />
+        <DriverHero driver={resolvedDriver} profile={profile} age={age} team={team} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Stats Cards */}
@@ -253,7 +279,7 @@ const DriverProfile = () => {
                 className="p-4 rounded-lg border-l-4"
                 style={{ borderColor: team?.color || 'hsl(var(--primary))', background: `${team?.color || 'hsl(var(--primary))'}10` }}
               >
-                <p className="font-bold text-foreground">#{driver.carNumber} &middot; {driver.team} &middot; {driver.class}</p>
+                <p className="font-bold text-foreground">#{resolvedDriver.carNumber} &middot; {resolvedDriver.team} &middot; {resolvedDriver.class}</p>
                 {team && (
                   <p className="text-xs text-muted-foreground mt-1">{team.countryFlag} {team.country} &middot; {team.manufacturer}</p>
                 )}

@@ -16,6 +16,26 @@ import { Badge } from '@/components/ui/badge';
 import { circuits } from '@/data/wecData';
 
 
+
+const BoneyardSkeleton = {
+  Hero: () => (
+    <div className="min-h-screen bg-background">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
+        <div className="animate-pulse flex flex-col gap-8">
+          <div className="h-6 w-32 bg-muted rounded"></div>
+          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
+            <div className="flex-1 space-y-4">
+              <div className="h-10 w-3/4 bg-muted rounded"></div>
+              <div className="h-6 w-1/2 bg-muted rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
 const circuitSlugToDbName: Record<string, string> = {
   'imola': 'Imola',
   'spa': 'Spa',
@@ -47,7 +67,7 @@ const CircuitDetail = () => {
     }
   }, [circuit]);
 
-  const { data: race } = useQuery({
+  const { data: race, isLoading: isRaceLoading } = useQuery({
     queryKey: ['circuit-race', circuit?.id],
     queryFn: async () => {
       if (!supabase || !circuit?.id) return null;
@@ -75,6 +95,9 @@ const CircuitDetail = () => {
   };
 
 
+  if (!circuit && isRaceLoading) {
+    return <BoneyardSkeleton.Hero />;
+  }
   if (!circuit) {
     return <NotFound />;
   }
