@@ -85,8 +85,9 @@ export function CircuitPage() {
   }
 
   // Handle differences in static data structure vs user prompt structure safely
-  const cityOrLocation = (circuit as any).city || circuit.location;
-  const lengthToDisplay = (circuit as any).lengthKm || circuit.length;
+  const circuitExtended = circuit as Record<string, unknown>;
+  const cityOrLocation = String(circuitExtended.city) || circuit.location;
+  const lengthToDisplay = String(circuitExtended.lengthKm) || circuit.length;
 
   return (
     <div className="min-h-screen bg-background">
@@ -111,7 +112,7 @@ export function CircuitPage() {
             <nav className="text-sm text-muted-foreground">
               <Link to="/circuits" className="hover:text-primary transition-colors">Circuits</Link>
               {' › '}
-              <span className="text-foreground">{(circuit as any).shortName || circuit.name}</span>
+              <span className="text-foreground">{String(circuitExtended.shortName) || circuit.name}</span>
             </nav>
 
             <div className="flex items-start justify-between">
@@ -134,8 +135,8 @@ export function CircuitPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <StatCard label="Track Length" value={`${lengthToDisplay}`} numeric />
             <StatCard label="Turns" value={String(circuit.turns)} numeric />
-            {(circuit as any).established && (
-              <StatCard label="Established" value={String((circuit as any).established)} numeric />
+            {circuitExtended.established && (
+              <StatCard label="Established" value={String(circuitExtended.established)} numeric />
             )}
             {circuit.firstWEC && (
               <StatCard label="First WEC" value={String(circuit.firstWEC)} numeric />
@@ -159,14 +160,14 @@ export function CircuitPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     {circuit.description}
                   </p>
-                  {(circuit as any).wecHistory && (
+                  {String(circuitExtended.wecHistory) && (
                     <p className="text-muted-foreground leading-relaxed">
-                      {(circuit as any).wecHistory}
+                      {String(circuitExtended.wecHistory)}
                     </p>
                   )}
-                  {(circuit as any).timezone && (
+                  {String(circuitExtended.timezone) && (
                     <p className="text-xs text-muted-foreground">
-                      Local timezone: {(circuit as any).timezone}
+                      Local timezone: {String(circuitExtended.timezone)}
                     </p>
                   )}
                 </CardContent>
@@ -212,18 +213,18 @@ export function CircuitPage() {
               Lap Record
             </h2>
             <div className="flex flex-col">
-              {(circuit as any).lapRecordTime ? (
+              {String(circuitExtended.lapRecordTime) ? (
                 <>
-                  <span className="font-racing text-2xl text-primary font-bold">{(circuit as any).lapRecordTime}</span>
+                  <span className="font-racing text-2xl text-primary font-bold">{String(circuitExtended.lapRecordTime)}</span>
                   <span className="text-muted-foreground mt-1">
-                    {(circuit as any).lapRecordHolder} {(circuit as any).lapRecordYear && <span className="font-racing ml-1">({(circuit as any).lapRecordYear})</span>}
+                    {String(circuitExtended.lapRecordHolder)} {String(circuitExtended.lapRecordYear) && <span className="font-racing ml-1">({String(circuitExtended.lapRecordYear)})</span>}
                   </span>
                 </>
-              ) : (circuit as any).lapRecords?.hypercar ? (
+              ) : circuitExtended.lapRecords && (circuitExtended.lapRecords as Record<string, unknown>).hypercar ? (
                 <>
-                  <span className="font-racing text-2xl text-primary font-bold">{(circuit as any).lapRecords.hypercar.time}</span>
+                  <span className="font-racing text-2xl text-primary font-bold">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).time}</span>
                   <span className="text-muted-foreground mt-1">
-                    {(circuit as any).lapRecords.hypercar.driver} (<span className="font-racing">{(circuit as any).lapRecords.hypercar.year}</span>)
+                    {((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).driver} (<span className="font-racing">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).year}</span>)
                   </span>
                 </>
               ) : (
