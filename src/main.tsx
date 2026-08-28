@@ -33,14 +33,8 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
 async function bootstrap() {
   try {
-    let Sentry: typeof import("@sentry/react") | null = null;
-    try {
-      await import("./instrument");
-      Sentry = await import("@sentry/react");
-    } catch (telemetryError) {
-      console.error("Telemetry initialization failed:", telemetryError);
-    }
-
+    await import("./instrument");
+    const Sentry = await import("@sentry/react");
     const { default: App } = await import("./App.tsx");
     const { HelmetProvider } = await import('react-helmet-async');
     const { QueryClient, QueryClientProvider } = await import('@tanstack/react-query');
@@ -56,22 +50,19 @@ async function bootstrap() {
       },
     });
 
-    const app = React.createElement(BootErrorBoundary, null,
-      React.createElement(App, null)
-    );
-    const appWithTelemetry = Sentry
-      ? React.createElement(Sentry.ErrorBoundary, {
-          fallback: React.createElement('div', { style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace" } },
-            "An error has occurred during Sentry boundary."
-          )
-        }, app)
-      : app;
-
     createRoot(document.getElementById("root")!).render(
       React.createElement(React.StrictMode, null,
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
-            appWithTelemetry
+            React.createElement(Sentry.ErrorBoundary, {
+              fallback: React.createElement('div', { style: { color: "red", padding: "20px", background: "#000", fontFamily: "monospace" } },
+                "An error has occurred during Sentry boundary."
+              )
+            },
+              React.createElement(BootErrorBoundary, null,
+                React.createElement(App, null)
+              )
+            )
           )
         )
       )

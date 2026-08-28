@@ -529,15 +529,8 @@ const Standings = () => {
                     {CHAMPIONSHIPS.LMGT3_TEAMS}
                   </span>
                 </div>
-                {selectedSeason === 2026 && lmgt3Teams.length > 0 ? (
-                  <>
-                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      {lmgt3Teams.map((team, index) => (
-                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
-                      ))}
-                    </div>
-                  </>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
                 ) : lmgt3Teams.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {lmgt3Teams.map((team, index) => (
