@@ -1,4 +1,3 @@
-import "./instrument";
 import * as Sentry from "@sentry/react";
 import "./lib/posthog";
 import { injectSpeedInsights } from '@vercel/speed-insights';
@@ -36,6 +35,7 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
 async function bootstrap() {
   try {
+    await import("./instrument");
     const Sentry = await import("@sentry/react");
     const { default: App } = await import("./App.tsx");
     const { HelmetProvider } = await import('react-helmet-async');

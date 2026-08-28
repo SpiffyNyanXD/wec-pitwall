@@ -1,8 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
-import NotFound from './NotFound';
-
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -11,7 +11,7 @@ import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
-import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { useTimezone, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 import { parseMarginToSeconds } from '@/lib/raceUtils';
 
 interface CircuitFacts {
@@ -52,7 +52,7 @@ const BoneyardSkeleton = {
 
 const RaceProfile = () => {
   const { id } = useParams();
-  const { convertTime, timezone } = useTimezone();
+  const { convertTime } = useTimezone();
   
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
@@ -85,8 +85,7 @@ const RaceProfile = () => {
     enabled: !!id && !!supabase,
   });
 
-  const finalRace = React.useMemo(() => race || (dbRace ? { ...dbRace, flag: '🏁' } as unknown as typeof race : null), [race, dbRace]);
-
+  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, flag: '🏁' } as unknown as typeof race : null), [race, dbRace]);
 
   useEffect(() => {
     if (finalRace) {
@@ -97,8 +96,21 @@ const RaceProfile = () => {
   if (!finalRace && isRaceLoading) {
     return <BoneyardSkeleton.Hero />;
   }
+
   if (!finalRace) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Race Not Found</h1>
+            <Link to="/schedule" className="text-primary hover:underline">
+              Back to Schedule
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const formatDate = (dateString: string, endDate?: string) => {

@@ -43,33 +43,33 @@ const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, un
     />
     <div className="relative flex flex-col md:flex-row gap-8 items-start">
       <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-6xl md:text-7xl shrink-0">
-        {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : resolvedDriver.countryFlag}
+        {profile?.nationality_code ? getFlagEmoji(profile.nationality_code) : driver.countryFlag}
       </div>
       <div className="flex-1">
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <Badge variant="outline" className={`${team ? 'bg-primary/20 text-primary border-primary/30' : 'bg-muted text-muted-foreground'}`}>
-            {resolvedDriver.class}
+            {driver.class}
           </Badge>
-          <span className="font-racing text-xl text-primary">{resolvedDriver.carNumber}</span>
+          <span className="font-racing text-xl text-primary">{driver.carNumber}</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold mb-2">
-          <span className="text-muted-foreground">{resolvedDriver.firstName}</span>{' '}
-          <span className="text-foreground">{resolvedDriver.lastName}</span>
+          <span className="text-muted-foreground">{driver.firstName}</span>{' '}
+          <span className="text-foreground">{driver.lastName}</span>
         </h1>
-        <p className="text-lg text-muted-foreground mb-4">{resolvedDriver.team}</p>
+        <p className="text-lg text-muted-foreground mb-4">{driver.team}</p>
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
             <MapPin className="w-4 h-4" />
-            {profile?.nationality || resolvedDriver.nationality}
+            {profile?.nationality || driver.nationality}
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="w-4 h-4" />
             Born: {profile?.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : 'Unknown'} {age ? `(Age ${age})` : ''}
           </div>
-          {resolvedDriver.placeOfBirth && (
+          {driver.placeOfBirth && (
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              {resolvedDriver.placeOfBirth}
+              {driver.placeOfBirth}
             </div>
           )}
         </div>
@@ -155,14 +155,14 @@ const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<
       )}
 
       {/* Fallback to static highlights if no profile highlights */}
-      {(!profile?.career_highlights || profile.career_highlights.length === 0) && resolvedDriver.careerHighlights && resolvedDriver.careerHighlights.length > 0 && (
+      {(!profile?.career_highlights || profile.career_highlights.length === 0) && driver.careerHighlights && driver.careerHighlights.length > 0 && (
         <div className="glass-card p-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <Medal className="w-5 h-5 text-wec-gold" />
             Career Highlights
           </h2>
           <ul className="space-y-3">
-            {resolvedDriver.careerHighlights.map((highlight: string, index: number) => (
+            {driver.careerHighlights.map((highlight: string, index: number) => (
               <motion.li
                 key={index}
                 initial={{ opacity: 0, x: -10 }}
@@ -187,7 +187,6 @@ const DriverProfile = () => {
   const baseId = id?.split('-202')[0];
   const resolvedDriver = driver || (baseId ? getDriverById(baseId) : null);
 
-
   const { data: profile, isLoading: isProfileLoading } = useDriverProfile(resolvedDriver?.name ?? '');
 
   // Calculate age from date_of_birth
@@ -195,40 +194,30 @@ const DriverProfile = () => {
     ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
     : null;
 
-
   if (!resolvedDriver && isProfileLoading) {
     return <BoneyardSkeleton.Hero />;
   }
+
   if (!resolvedDriver) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center py-20">
+            <h1 className="text-2xl mb-4">Driver not found</h1>
+            <Button asChild className="tap-highlight">
+              <Link to="/drivers">Back to Drivers</Link>
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const team = getTeamById(resolvedDriver.teamId);
 
-  const getClassBadge = (carClass: string) => {
-    switch (carClass) {
-      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
-      case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      default: return 'bg-muted text-muted-foreground';
-    }
-  };
 
 
-
-  const formatDate = (dateString?: string) => {
-    const date = new Date(dateString);
-
-    if (!dateString || Number.isNaN(date.getTime())) {
-      return 'Unknown';
-    }
-
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -294,7 +283,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver} />
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={resolvedDriver as unknown as Record<string, unknown>} />
           </motion.div>
         </div>
       </AuthGate>
