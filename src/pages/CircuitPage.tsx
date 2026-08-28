@@ -1,12 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect } from 'react'
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react'
 import SEOHead from '@/components/SEOHead'
 import Header from '@/components/Header'
 import { circuits } from '@/data/wecData'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
-import { useActiveSeasonId } from '@/hooks/useWecData'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
@@ -38,15 +36,91 @@ const StatCard = ({ label, value, numeric }: { label: string, value: string, num
   </div>
 )
 
+const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: any, circuitExtended: any }) => (
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+    <Card className="glass-card border-glass-border h-full bg-transparent">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Info className="w-5 h-5 text-primary" />
+          Circuit Information
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-muted-foreground leading-relaxed">{circuit.description}</p>
+        {String(circuitExtended.wecHistory) && (
+          <p className="text-muted-foreground leading-relaxed">{String(circuitExtended.wecHistory)}</p>
+        )}
+        {String(circuitExtended.timezone) && (
+          <p className="text-xs text-muted-foreground">Local timezone: {String(circuitExtended.timezone)}</p>
+        )}
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
+const RaceInfoCard = ({ race, getStatusBadge }: { race: any, getStatusBadge: (status: string) => any }) => (
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+    <Card className="glass-card border-glass-border h-full bg-transparent">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-secondary" />
+          2026 WEC RACE
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {race ? (
+          <div className="space-y-4">
+            <p className="font-bold text-lg text-foreground">{race.name}</p>
+            <div className="flex flex-col space-y-2 text-muted-foreground">
+              <p>Date: {formatDateTime(race.scheduled_date)}</p>
+              <p>Duration: {race.duration_hours} hours</p>
+              <div className="flex items-center gap-2 mt-2">Status: {getStatusBadge(race.status)}</div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-muted-foreground">Race information not available yet.</p>
+        )}
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
+const LapRecordSection = ({ circuit, circuitExtended }: { circuit: any, circuitExtended: any }) => (
+  <section className="glass-card rounded-xl p-5 border border-glass-border">
+    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
+      <Timer className="w-5 h-5 text-primary" />
+      Lap Record
+    </h2>
+    <div className="flex flex-col">
+      {String(circuitExtended.lapRecordTime) ? (
+        <>
+          <span className="font-racing text-2xl text-primary font-bold">{String(circuitExtended.lapRecordTime)}</span>
+          <span className="text-muted-foreground mt-1">
+            {String(circuitExtended.lapRecordHolder)} {String(circuitExtended.lapRecordYear) && <span className="font-racing ml-1">({String(circuitExtended.lapRecordYear)})</span>}
+          </span>
+        </>
+      ) : circuitExtended.lapRecords && (circuitExtended.lapRecords as Record<string, unknown>).hypercar ? (
+        <>
+          <span className="font-racing text-2xl text-primary font-bold">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).time}</span>
+          <span className="text-muted-foreground mt-1">
+            {((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).driver} (<span className="font-racing">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).year}</span>)
+          </span>
+        </>
+      ) : (
+        <span className="font-medium text-2xl font-racing text-secondary">{circuit.lapRecord}</span>
+      )}
+    </div>
+  </section>
+);
+
 export function CircuitPage() {
   const { id } = useParams<{ id: string }>()
   const circuit = circuits.find(c => c.id === id)
-  const { seasonId } = useActiveSeasonId()
 
-  const { data: race, isError: isRaceError } = useQuery({
-    queryKey: ['circuit-race', circuit?.id, seasonId],
+  const { data: race } = useQuery({
+    queryKey: ['circuit-race', circuit?.id],
     queryFn: async () => {
-      if (!supabase || !circuit?.id || !seasonId) return null;
+      if (!supabase || !circuit?.id) return null;
       const dbCircuitName = circuitSlugToDbName[circuit.id];
       if (!dbCircuitName) return null;
 
@@ -54,19 +128,12 @@ export function CircuitPage() {
         .from('races')
         .select('name, scheduled_date, duration_hours, status, start_time_utc')
         .ilike('circuit', `%${dbCircuitName}%`)
-        .eq('season_id', seasonId)
         .maybeSingle();
-      if (error) {
-        if (error.code === 'PGRST116') {
-          console.warn('Race information unavailable:', error);
-          return null;
-        }
-        throw error;
-      }
+      if (error) return null;
       return data;
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !!circuit?.id && !!seasonId && !!supabase
+    enabled: !!circuit?.id && !!supabase
   });
 
   const getStatusBadge = (status: string) => {
@@ -80,12 +147,6 @@ export function CircuitPage() {
   if (!circuit) {
     return (
       <div className="min-h-screen bg-background">
-        <SEOHead
-          title="Circuit Not Found | WEC Pitwall"
-          description="The requested WEC circuit could not be found. Browse all circuits on WEC Pitwall."
-          url={`/circuit/${id ?? ''}`}
-          noIndex
-        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -159,97 +220,11 @@ export function CircuitPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Card className="glass-card border-glass-border h-full bg-transparent">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Info className="w-5 h-5 text-primary" />
-                    Circuit Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
-                    {circuit.description}
-                  </p>
-                  {String(circuitExtended.wecHistory) && (
-                    <p className="text-muted-foreground leading-relaxed">
-                      {String(circuitExtended.wecHistory)}
-                    </p>
-                  )}
-                  {String(circuitExtended.timezone) && (
-                    <p className="text-xs text-muted-foreground">
-                      Local timezone: {String(circuitExtended.timezone)}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card className="glass-card border-glass-border h-full bg-transparent">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-secondary" />
-                    2026 WEC RACE
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isRaceError ? (
-                    <p className="text-muted-foreground" role="alert">Unable to load race information.</p>
-                  ) : race ? (
-                    <div className="space-y-4">
-                      <p className="font-bold text-lg text-foreground">{race.name}</p>
-                      <div className="flex flex-col space-y-2 text-muted-foreground">
-                        <p>Date: {formatDateTime(race.scheduled_date)}</p>
-                        <p>Duration: {race.duration_hours} hours</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          Status: {getStatusBadge(race.status)}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">Race information not available yet.</p>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
+            <CircuitInfoCard circuit={circuit} circuitExtended={circuitExtended} />
+            <RaceInfoCard race={race} getStatusBadge={getStatusBadge} />
           </div>
 
-          {/* Lap Record */}
-          <section className="glass-card rounded-xl p-5 border border-glass-border">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-              <Timer className="w-5 h-5 text-primary" />
-              Lap Record
-            </h2>
-            <div className="flex flex-col">
-              {String(circuitExtended.lapRecordTime) ? (
-                <>
-                  <span className="font-racing text-2xl text-primary font-bold">{String(circuitExtended.lapRecordTime)}</span>
-                  <span className="text-muted-foreground mt-1">
-                    {String(circuitExtended.lapRecordHolder)} {String(circuitExtended.lapRecordYear) && <span className="font-racing ml-1">({String(circuitExtended.lapRecordYear)})</span>}
-                  </span>
-                </>
-              ) : circuitExtended.lapRecords && (circuitExtended.lapRecords as Record<string, unknown>).hypercar ? (
-                <>
-                  <span className="font-racing text-2xl text-primary font-bold">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).time}</span>
-                  <span className="text-muted-foreground mt-1">
-                    {((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).driver} (<span className="font-racing">{((circuitExtended.lapRecords as Record<string, unknown>).hypercar as Record<string, string>).year}</span>)
-                  </span>
-                </>
-              ) : (
-                <span className="font-medium text-2xl font-racing text-secondary">{circuit.lapRecord}</span>
-              )}
-            </div>
-          </section>
-
+          <LapRecordSection circuit={circuit} circuitExtended={circuitExtended} />
         </div>
       </main>
     </div>
