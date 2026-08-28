@@ -4,43 +4,22 @@ import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, drivers2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
-import { SEASONS, useSeason, type SeasonYear } from '@/contexts/SeasonContext';
+import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
-interface WidgetDriver {
-  id: string;
-  name: string;
-  lastName?: string;
-  class: string;
-  teamId: string;
-  points: number;
-  countryFlag: string;
-}
-
-const STANDINGS_BY_SEASON: Record<SeasonYear, {
-  teams: typeof teams2024;
-  drivers: WidgetDriver[];
-}> = {
-  2024: { teams: teams2024, drivers: drivers2024 },
-  2025: { teams: teams2025, drivers: drivers2025 },
-  2026: { teams: hypercars2026, drivers: standings2026.hypercars.drivers },
-};
-
 const StandingsWidget = () => {
-  const { currentSeason: defaultSeason, availableSeasons } = useSeason();
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(defaultSeason);
+  const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
 
-  const { teams, drivers } = STANDINGS_BY_SEASON[selectedSeason];
-  const selectedSeasonInfo = SEASONS[selectedSeason];
   const completedRounds = useMemo(() => races2026.filter(r => r.status === 'completed').length, []);
   const totalRounds = races2026.length;
 
+  const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
+  const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
 
   const getMedalIcon = (position: number) => {
     switch (position) {
@@ -196,26 +175,33 @@ const StandingsWidget = () => {
           </div>
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              {availableSeasons.map((season) => (
-                <button
-                  key={season}
-                  onClick={() => setSelectedSeason(season)}
-                  className={`px-2 py-1 text-xs rounded transition-colors ${
-                    selectedSeason === season
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                  }`}
-                >
-                  {season}
-                </button>
-              ))}
+              <button
+                onClick={() => setSelectedSeason(2025)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  selectedSeason === 2025
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                2025
+              </button>
+              <button
+                onClick={() => setSelectedSeason(2026)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  selectedSeason === 2026
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                2026
+              </button>
             </div>
           </div>
         </div>
 
         <div className="flex items-center justify-between mb-3">
-          <Badge variant="outline" className={`text-xs ${selectedSeasonInfo.status !== 'completed' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeasonInfo.status !== 'completed' ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
+          <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
+            {selectedSeason === 2026 ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
