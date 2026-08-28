@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { HypercardDriverStanding, RaceResult, SeasonStats } from '@/types/wec';
+import type { Race, HypercardDriverStanding, Lmgt3Standing, SeasonStats } from '@/types/wec';
 
 interface RawRaceResultRow {
   id: string;
@@ -35,7 +35,8 @@ export const winnerMap: WinnerMap = {};
 
 // Season statistics overrides constant when DB entries are incomplete
 export const SEASON_STAT_OVERRIDES: Record<string, Partial<SeasonStats>> = {
-  '2026': { totalTeams: 18, seasonHours: 72 },
+  'a1b2c3d4-0001-0001-0001-000000000001': { totalTeams: 35, seasonHours: 66 },
+  '2026': { totalTeams: 35, seasonHours: 66 },
 };
 
 export function getStaleTimeForSeason(seasonId: string | null, defaultStaleTime: number): number {
@@ -97,18 +98,61 @@ export function useRaces(seasonId: string | null) {
   const { data = [], isLoading, error } = useQuery({
     queryKey: ['races', seasonId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: racesData, error: racesError } = await supabase
         .from('races')
         .select('*')
         .eq('season_id', seasonId!)
         .order('scheduled_date');
-      if (error) throw error;
-      return (data ?? []).map(r => ({
-        ...r,
-        flag: r.country_code ? getFlagEmoji(r.country_code) : (r.flag ?? '🏁'),
-        date: r.scheduled_date || r.date,
-        duration: r.duration || (r.duration_hours ? `${r.duration_hours} Hours` : undefined),
-      }));
+      if (racesError) throw racesError;
+
+      const races = racesData ?? [];
+
+      const normalize = (race: typeof races[number]) => ({
+        ...race,
+        flag: race.country_code ? getFlagEmoji(race.country_code) : '🏁',
+        date: race.scheduled_date || race.date,
+        duration: race.duration || (race.duration_hours ? `${race.duration_hours} Hours` : undefined),
+      });
+
+      // Fetch winners for completed races
+      const completedRaceIds = races.filter(r => r.status === 'completed').map(r => r.id);
+      if (completedRaceIds.length > 0) {
+        const { data: resultsData, error: resultsError } = await supabase
+          .from('race_results')
+          .select(`
+            race_id,
+            finish_position,
+            cars!inner (
+              car_number,
+              team_name,
+              category,
+              manufacturers!inner(name)
+            )
+          `)
+          .in('race_id', completedRaceIds)
+          .eq('finish_position', 1)
+          .eq('cars.category', 'Hypercar');
+
+        if (!resultsError && resultsData) {
+          const winnerMap = new Map();
+          for (const result of resultsData) {
+            const car = result.cars as Record<string, unknown>;
+            const mfrName = car?.manufacturers ? (car.manufacturers as Record<string, unknown>).name : '';
+            const winnerName = car?.car_number ? `${mfrName} #${car.car_number}`.trim() : null;
+            winnerMap.set(result.race_id, {
+              winner: winnerName,
+              winningTeam: car?.team_name
+            });
+          }
+
+          return races.map(race => {
+            const winnerInfo = winnerMap.get(race.id);
+            return winnerInfo ? { ...normalize(race), ...winnerInfo } : normalize(race);
+          });
+        }
+      }
+
+      return races.map(normalize);
     },
     enabled: !!seasonId,
     staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
@@ -243,15 +287,15 @@ export function useSeasonStats(seasonId: string | null) {
         supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId!),
         supabase.from('cars').select('manufacturer_id').eq('season_id', seasonId!),
       ]);
-      const calculatedHours = (racesRes.data ?? []).reduce((sum, r) => sum + (r.duration_hours || 0), 0);
+      const calculatedHours = (racesRes.data ?? []).reduce((sum, r) => sum + (r.duration_hours ?? 0), 0);
       const uniqueMfrs = new Set((mfrsRes.data ?? []).map(c => c.manufacturer_id)).size;
 
       const year = seasonId ? seasonYearMap[seasonId] : null;
       const override = (seasonId ? SEASON_STAT_OVERRIDES[seasonId] : null) || (year ? SEASON_STAT_OVERRIDES[String(year)] : null) || {};
 
       return {
-        totalRaces: racesRes.count || override.totalRaces || 0,
-        totalTeams: carsRes.count || override.totalTeams || 0,
+        totalRaces: racesRes.count ?? override.totalRaces ?? 0,
+        totalTeams: carsRes.count ?? override.totalTeams ?? 0,
         totalManufacturers: uniqueMfrs || override.totalManufacturers || 0,
         seasonHours: calculatedHours || override.seasonHours || 0,
       };

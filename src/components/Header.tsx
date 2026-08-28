@@ -1,9 +1,9 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import WecLogo from '@/components/WecLogo';
-import { Menu, Bell, Settings, LogIn, LogOut, Home, Trophy, Calendar, Users, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
+import { Users, Menu, Bell, Settings, LogIn, LogOut, Home, Trophy, Calendar, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';

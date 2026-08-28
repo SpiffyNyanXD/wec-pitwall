@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import "./lib/posthog";
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { inject } from '@vercel/analytics';
@@ -11,7 +10,6 @@ injectSpeedInsights();
 inject();
 
 class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
-  resetErrorBoundary = () => { this.setState({ hasError: false, error: null }); };
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -21,13 +19,9 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
-    Sentry.captureException(error, { contexts: { react: { componentStack: info.componentStack } } });
-  }
-
   render() {
     if (this.state.hasError) {
-      return React.createElement(ErrorFallback, { error: this.state.error, resetErrorBoundary: this.resetErrorBoundary });
+      return React.createElement(ErrorFallback, { error: this.state.error });
     }
     return this.props.children;
   }
@@ -57,7 +51,7 @@ async function bootstrap() {
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
             React.createElement(Sentry.ErrorBoundary, {
-              fallback: ({ error, resetError }) => React.createElement(ErrorFallback, { error, resetErrorBoundary: resetError })
+              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
             },
               React.createElement(BootErrorBoundary, null,
                 React.createElement(App, null)
@@ -68,12 +62,7 @@ async function bootstrap() {
       )
     );
   } catch (err) {
-    window.addEventListener('popstate', () => {
-      document.body.innerHTML = '<div id="root"></div>';
-      bootstrap();
-    }, { once: true });
     console.error("Boot error:", err);
-    Sentry.captureException(err);
     document.getElementById("root")!.innerHTML = `
       <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">
         <h2>Failed to boot the application</h2>
