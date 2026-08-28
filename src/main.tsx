@@ -12,6 +12,7 @@ injectSpeedInsights();
 inject();
 
 class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
+  resetErrorBoundary = () => { this.setState({ hasError: false, error: null }); };
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -27,7 +28,7 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
   render() {
     if (this.state.hasError) {
-      return React.createElement(ErrorFallback, { error: this.state.error });
+      return React.createElement(ErrorFallback, { error: this.state.error, resetErrorBoundary: this.resetErrorBoundary });
     }
     return this.props.children;
   }
@@ -56,7 +57,7 @@ async function bootstrap() {
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
             React.createElement(Sentry.ErrorBoundary, {
-              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
+              fallback: ({ error, resetError }) => React.createElement(ErrorFallback, { error, resetErrorBoundary: resetError })
             },
               React.createElement(BootErrorBoundary, null,
                 React.createElement(App, null)
@@ -67,6 +68,10 @@ async function bootstrap() {
       )
     );
   } catch (err) {
+    window.addEventListener('popstate', () => {
+      document.body.innerHTML = '<div id="root"></div>';
+      bootstrap();
+    }, { once: true });
     console.error("Boot error:", err);
     Sentry.captureException(err);
     document.getElementById("root")!.innerHTML = `

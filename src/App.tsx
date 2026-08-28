@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { SeasonProvider } from "@/contexts/SeasonContext";
 import { SkeletonBox } from "@/components/PageSkeleton";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CookieConsentListener } from "@/components/CookieConsentListener";
 
@@ -97,7 +98,7 @@ const App = () => (
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
             <PageTracker />
-            <RouteWrapper><Routes>
+            <RouteWrapper><ErrorBoundary><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
               <Route path="/drivers" element={<Drivers />} />
@@ -165,7 +166,7 @@ const App = () => (
               } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
-              </Routes></RouteWrapper>
+              </Routes></ErrorBoundary></RouteWrapper>
           </Suspense>
         </BrowserRouter>
         </TooltipProvider>
