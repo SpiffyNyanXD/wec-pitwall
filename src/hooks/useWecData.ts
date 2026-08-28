@@ -50,7 +50,6 @@ export function getStaleTimeForSeason(seasonId: string | null, defaultStaleTime:
 // Active season ID hook
 export function useActiveSeasonId() {
   const [seasonId, setSeasonId] = useState<string | null>(null);
-  const [seasonYear, setSeasonYear] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     supabase.from('seasons').select('id, year').eq('is_active', true).single()
@@ -58,12 +57,11 @@ export function useActiveSeasonId() {
         if (data) {
           seasonYearMap[data.id] = data.year;
           setSeasonId(data.id);
-          setSeasonYear(data.year);
         }
         setTimeout(() => setLoading(false), 0);
       });
   }, []);
-  return { seasonId, seasonYear, loading };
+  return { seasonId, loading };
 }
 
 // Season by year hook

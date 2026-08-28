@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -12,7 +12,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 import { useSeason, SeasonYear } from '@/contexts/SeasonContext';
-import { useActiveSeasonId } from '@/hooks/useWecData';
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
@@ -33,10 +32,7 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 
 const Standings = () => {
   const { currentSeason } = useSeason();
-  const [userSelectedSeason, setUserSelectedSeason] = useState<SeasonYear | null>(null);
-  const { seasonYear: activeSeasonYear } = useActiveSeasonId();
-  const selectedSeason = userSelectedSeason
-    ?? (activeSeasonYear && activeSeasonYear in SEASON_DATA ? activeSeasonYear as SeasonYear : currentSeason);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(currentSeason);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
@@ -88,7 +84,7 @@ const Standings = () => {
   };
 
   // Calculate Manufacturers Championship (aggregate points by manufacturer for Hypercar only)
-  const getManufacturersStandings = () => {
+  const getManufacturersStandings = useCallback(() => {
     const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR');
     const manufacturerPoints: Record<string, { points: number; color: string; country: string; countryFlag: string; wins: number; entries: number }> = {};
     
@@ -110,17 +106,17 @@ const Standings = () => {
     return Object.entries(manufacturerPoints)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.points - a.points);
-  };
+  }, [teams]);
 
   // Get car entries (teams) for Hypercar World Cup
-  const getHypercarEntries = () => {
+  const getHypercarEntries = useCallback(() => {
     return teams
       .filter(t => t.class === 'HYPERCAR')
       .sort((a, b) => b.points - a.points);
-  };
+  }, [teams]);
 
   // Get drivers sorted by points for each class
-  const getDriversStandings = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
+  const getDriversStandings = useCallback((carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
     const driverGroups: Record<string, typeof drivers> = {};
     
@@ -140,11 +136,11 @@ const Standings = () => {
     }));
 
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
-  };
+  }, [drivers]);
 
   const hypercarEntries = useMemo(
     () => getHypercarEntries(),
-    [teams]
+    [getHypercarEntries]
   );
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
@@ -283,24 +279,18 @@ const Standings = () => {
 
   const manufacturersStandings = useMemo(() => {
     if (selectedSeason === 2026) {
-      return standings2026.hypercars.manufacturers.map(m => {
-        const matchingTeam = hypercars2026.find(team => team.manufacturer === m.manufacturer);
-
-        return {
-          name: m.manufacturer,
-          points: m.points,
-          color: matchingTeam?.color ?? '#E8002D',
-          country: matchingTeam?.country ?? '',
-          countryFlag: matchingTeam?.countryFlag ?? '🏁',
-          wins: matchingTeam?.wecWins ?? 0,
-          entries: matchingTeam
-            ? hypercars2026.filter(team => team.manufacturer === m.manufacturer).length
-            : 0,
-        };
-      });
+      return standings2026.hypercars.manufacturers.map(m => ({
+        name: m.manufacturer,
+        points: m.points,
+        color: '#E8002D',
+        country: '',
+        countryFlag: '🏁',
+        wins: 0,
+        entries: 0,
+      }));
     }
     return getManufacturersStandings();
-  }, [teams, selectedSeason]);
+  }, [selectedSeason, getManufacturersStandings]);
 
   const hypercarDrivers = useMemo(() => {
     if (selectedSeason === 2026) {
@@ -328,7 +318,7 @@ const Standings = () => {
       }));
     }
     return getDriversStandings('HYPERCAR');
-  }, [drivers, selectedSeason]);
+  }, [selectedSeason, getDriversStandings]);
 
   const lmgt3Drivers = useMemo(
     () => getDriversStandings('LMGT3'),
@@ -372,7 +362,7 @@ const Standings = () => {
             {/* Season Selector */}
             <Select 
               value={selectedSeason.toString()} 
-              onValueChange={(val) => setUserSelectedSeason(parseInt(val) as SeasonYear)}
+              onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
             >
               <SelectTrigger className="w-[140px] bg-card border-border min-h-[44px] md:min-h-0">
                 <Calendar className="w-4 h-4 mr-2" />
