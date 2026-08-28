@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { races2025, races2026 } from '@/data/wecData';
+import { useRaces } from '@/hooks/useWecData';
 import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Link } from 'react-router-dom';
@@ -9,8 +10,20 @@ import { Link } from 'react-router-dom';
 const CalendarWidget = () => {
 
 
+  const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+
   // Determine which season to show based on current date or status
-  const currentSeasonRaces = races2026.length > 0 ? races2026 : races2025;
+  const mappedRaces2026 = (dbRaces2026 || []).map(r => ({
+    ...r,
+    date: r.scheduled_date || r.date,
+    duration: r.duration_hours ? `${r.duration_hours} Hours` : r.duration,
+    flag: r.country_code ? r.flag : '🏁',
+    circuit: r.circuit_name || r.circuit || 'Unknown Circuit',
+    season: 2026
+  }));
+
+  const currentSeasonRaces = mappedRaces2026.length > 0 ? mappedRaces2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
 
   const [now, setNow] = useState(Date.now());

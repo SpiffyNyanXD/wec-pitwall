@@ -2301,8 +2301,8 @@ export const hypercars2026: Team[] = [
   { id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', points: 26, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
   { id: 'porsche-5', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#5', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
   { id: 'porsche-6', name: 'Porsche Penske Motorsport', manufacturer: 'Porsche', carNumber: '#6', class: 'HYPERCAR', points: 0, position: 0, color: '#C4A747', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
-  { id: 'cadillac-2', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#2', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
-  { id: 'cadillac-3', name: 'Cadillac Racing', manufacturer: 'Cadillac', carNumber: '#3', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'USA', countryFlag: '🇺🇸', drivers: [] },
+  { id: 'cadillac-12', name: 'Hertz Team JOTA', manufacturer: 'Cadillac', carNumber: '#12', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
+  { id: 'cadillac-38', name: 'Hertz Team JOTA', manufacturer: 'Cadillac', carNumber: '#38', class: 'HYPERCAR', points: 0, position: 0, color: '#6B9FD4', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
   { id: 'peugeot-93', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#93', class: 'HYPERCAR', points: 0, position: 0, color: '#E8C840', country: 'France', countryFlag: '🇫🇷', drivers: [] },
   { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 0, position: 0, color: '#E8C840', country: 'France', countryFlag: '🇫🇷', drivers: [] },
   { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 0, position: 0, color: '#0039A6', country: 'France', countryFlag: '🇫🇷', drivers: [] },
@@ -2395,11 +2395,19 @@ export const lmgt3Teams2026: Team[] = [
 export const standings2026 = {
   hypercars: {
     drivers: [
-      { id: 'rast-2026', position: 1, drivers: 'Rast / Frijns / van der Linde', name: 'Rast / Frijns / van der Linde', displayName: 'Rast / Frijns / van der Linde', team: 'BMW M Team WRT #20', class: 'HYPERCAR', teamId: 'bmw-20', points: 35, countryFlag: '🇩🇪' },
+      { id: 'rast-2026', position: 1, drivers: 'Frijns / Rast / van der Linde', name: 'Frijns / Rast / van der Linde', displayName: 'Frijns / Rast / van der Linde', team: 'BMW M Team WRT #20', class: 'HYPERCAR', teamId: 'bmw-20', points: 35, countryFlag: '🇩🇪' },
       { id: 'buemi-2026', position: 2, drivers: 'Buemi / Hartley / Hirakawa', name: 'Buemi / Hartley / Hirakawa', displayName: 'Buemi / Hartley / Hirakawa', team: 'Toyota Gazoo Racing #8', class: 'HYPERCAR', teamId: 'toyota-8', points: 26, countryFlag: '🇯🇵' },
       { id: 'conway-2026', position: 3, drivers: 'Conway / Kobayashi / de Vries', name: 'Conway / Kobayashi / de Vries', displayName: 'Conway / Kobayashi / de Vries', team: 'Toyota Gazoo Racing #7', class: 'HYPERCAR', teamId: 'toyota-7', points: 25, countryFlag: '🇯🇵' },
-      { id: 'kevin-magnussen', position: 4, drivers: 'Magnussen / ...', name: 'Magnussen / ...', displayName: 'Magnussen / ...', team: 'BMW M Team WRT #10', class: 'HYPERCAR', teamId: 'bmw-10', points: 24, countryFlag: '🇩🇪' },
+      { id: 'kevin-magnussen', position: 4, drivers: 'Magnussen / Marciello / Vanthoor', name: 'Magnussen / Marciello / Vanthoor', displayName: 'Magnussen / Marciello / Vanthoor', team: 'BMW M Team WRT #15', class: 'HYPERCAR', teamId: 'bmw-15', points: 24, countryFlag: '🇩🇪' },
       { id: 'fuoco-2026', position: 5, drivers: 'Fuoco / Molina / Nielsen', name: 'Fuoco / Molina / Nielsen', displayName: 'Fuoco / Molina / Nielsen', team: 'Ferrari AF Corse #50', class: 'HYPERCAR', teamId: 'ferrari-50', points: 24, countryFlag: '🇮🇹' },
+      { id: 'guidi-2026', position: 6, drivers: 'Pier Guidi / Calado / Giovinazzi', name: 'Pier Guidi / Calado / Giovinazzi', displayName: 'Pier Guidi / Calado / Giovinazzi', team: 'Ferrari AF Corse #51', class: 'HYPERCAR', teamId: 'ferrari-51', points: 0, countryFlag: '🇮🇹' },
+      { id: 'deletraz-2026', position: 7, drivers: 'Delétraz / Stevens / Nato', name: 'Delétraz / Stevens / Nato', displayName: 'Delétraz / Stevens / Nato', team: 'Hertz Team JOTA #12', class: 'HYPERCAR', teamId: 'cadillac-12', points: 0, countryFlag: '🇬🇧' },
+      { id: 'bourdais-2026', position: 8, drivers: 'Bourdais / Bamber / Aitken', name: 'Bourdais / Bamber / Aitken', displayName: 'Bourdais / Bamber / Aitken', team: 'Hertz Team JOTA #38', class: 'HYPERCAR', teamId: 'cadillac-38', points: 0, countryFlag: '🇬🇧' },
+      { id: 'lotterer-2026', position: 9, drivers: 'Lotterer / Derani / Jaubert', name: 'Lotterer / Derani / Jaubert', displayName: 'Lotterer / Derani / Jaubert', team: 'Genesis Magma Racing #17', class: 'HYPERCAR', teamId: 'genesis-17', points: 0, countryFlag: '🇰🇷' },
+      { id: 'estre-2026', position: 10, drivers: 'Estre / Campbell / Andlauer', name: 'Estre / Campbell / Andlauer', displayName: 'Estre / Campbell / Andlauer', team: 'Porsche Penske Motorsport #6', class: 'HYPERCAR', teamId: 'porsche-6', points: 0, countryFlag: '🇩🇪' },
+      { id: 'dacosta-2026', position: 11, drivers: 'da Costa / Milesi / Habsburg', name: 'da Costa / Milesi / Habsburg', displayName: 'da Costa / Milesi / Habsburg', team: 'Alpine Endurance Team #35', class: 'HYPERCAR', teamId: 'alpine-35', points: 0, countryFlag: '🇫🇷' },
+      { id: 'makowiecki-2026', position: 12, drivers: 'Makowiecki / Gounon / Martins', name: 'Makowiecki / Gounon / Martins', displayName: 'Makowiecki / Gounon / Martins', team: 'Alpine Endurance Team #36', class: 'HYPERCAR', teamId: 'alpine-36', points: 0, countryFlag: '🇫🇷' },
+      { id: 'tincknell-2026', position: 13, drivers: 'Tincknell / Gamble / Gunn', name: 'Tincknell / Gamble / Gunn', displayName: 'Tincknell / Gamble / Gunn', team: 'Aston Martin Thor Team #007', class: 'HYPERCAR', teamId: 'aston-007', points: 0, countryFlag: '🇬🇧' },
     ],
     manufacturers: [
       { position: 1, manufacturer: 'Toyota', points: 50 },

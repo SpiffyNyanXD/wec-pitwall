@@ -10,9 +10,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AuthGate } from "@/components/AuthGate";
+import { useRaces } from "@/hooks/useWecData";
+
+const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
 
 const Schedule = () => {
-  const allRaces = useMemo(() => [...races2026, ...races2025, ...races2024], []);
+  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+
+  // Transform dbRaces2026 to match the format expected by RaceCard
+  const mappedRaces2026 = useMemo(() => {
+    return dbRaces2026.map(r => ({
+      ...r,
+      date: r.scheduled_date || r.date,
+      duration: r.duration_hours ? `${r.duration_hours} Hours` : r.duration,
+      flag: r.country_code ? r.flag : '🏁',
+      circuit: r.circuit_name || r.circuit || 'Unknown Circuit',
+      round: r.round_number,
+      winner: r.winner || null,
+      winningTeam: r.winningTeam || null,
+    }));
+  }, [dbRaces2026]);
+
+  const allRaces = useMemo(() => [...mappedRaces2026, ...races2025, ...races2024], [mappedRaces2026]);
   const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
     allRaces.map(r => ({
       id: r.id,
@@ -180,7 +199,7 @@ const Schedule = () => {
 
           <TabsContent value="2026">
             <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
-              {races2026
+              {mappedRaces2026
                 .slice()
                 .sort((a, b) => {
                   if (a.round === null) return 1;
