@@ -33,8 +33,10 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 
 const Standings = () => {
   const { currentSeason } = useSeason();
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(currentSeason);
-  const { seasonId: activeSeasonId } = useActiveSeasonId();
+  const [userSelectedSeason, setUserSelectedSeason] = useState<SeasonYear | null>(null);
+  const { seasonYear: activeSeasonYear } = useActiveSeasonId();
+  const selectedSeason = userSelectedSeason
+    ?? (activeSeasonYear && activeSeasonYear in SEASON_DATA ? activeSeasonYear as SeasonYear : currentSeason);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
@@ -140,7 +142,6 @@ const Standings = () => {
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
   };
 
-  const manufacturersStandings = getManufacturersStandings();
   const hypercarEntries = useMemo(
     () => getHypercarEntries(),
     [teams]
@@ -282,15 +283,21 @@ const Standings = () => {
 
   const manufacturersStandings = useMemo(() => {
     if (selectedSeason === 2026) {
-      return standings2026.hypercars.manufacturers.map(m => ({
-        name: m.manufacturer,
-        points: m.points,
-        color: '#E8002D',
-        country: '',
-        countryFlag: '🏁',
-        wins: 0,
-        entries: 0,
-      }));
+      return standings2026.hypercars.manufacturers.map(m => {
+        const matchingTeam = hypercars2026.find(team => team.manufacturer === m.manufacturer);
+
+        return {
+          name: m.manufacturer,
+          points: m.points,
+          color: matchingTeam?.color ?? '#E8002D',
+          country: matchingTeam?.country ?? '',
+          countryFlag: matchingTeam?.countryFlag ?? '🏁',
+          wins: matchingTeam?.wecWins ?? 0,
+          entries: matchingTeam
+            ? hypercars2026.filter(team => team.manufacturer === m.manufacturer).length
+            : 0,
+        };
+      });
     }
     return getManufacturersStandings();
   }, [teams, selectedSeason]);
@@ -365,7 +372,7 @@ const Standings = () => {
             {/* Season Selector */}
             <Select 
               value={selectedSeason.toString()} 
-              onValueChange={(val) => setSelectedSeason(parseInt(val) as SeasonYear)}
+              onValueChange={(val) => setUserSelectedSeason(parseInt(val) as SeasonYear)}
             >
               <SelectTrigger className="w-[140px] bg-card border-border min-h-[44px] md:min-h-0">
                 <Calendar className="w-4 h-4 mr-2" />
