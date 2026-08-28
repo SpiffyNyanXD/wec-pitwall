@@ -5,44 +5,51 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { SkeletonBox as BoneyardSkeleton } from "@/components/PageSkeleton";
-import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
 const CookiePreferencesPage = () => {
-  const { consent, acceptAll, rejectAll } = useCookieConsent();
-  const [termlyStatus, setTermlyStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading');
-  const [retryCount, setRetryCount] = useState(0);
+  const { consent } = useCookieConsent();
+  const [termlyReady, setTermlyReady] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const termlyLoaded = typeof window.displayPreferenceModal === 'function';
+    const iframeExists = document.querySelector('div[name="termly-embed"] iframe') !== null;
+    return termlyLoaded || iframeExists;
+  });
 
   useEffect(() => {
-    const mountPoint = document.querySelector('div[name="termly-embed"]');
-    const iframeExists = () => Boolean(mountPoint?.querySelector('iframe'));
+    if (termlyReady) return;
+    let isMounted = true;
 
-    if (iframeExists()) {
-      setTermlyStatus('ready');
-      return;
-    }
+    // We check if Termly is loaded and injected the iframe
+    const checkTermly = () => {
+      const termlyLoaded = typeof window !== 'undefined' &&
+                           typeof window.displayPreferenceModal === 'function';
+      const iframeExists = document.querySelector('div[name="termly-embed"] iframe') !== null;
+      return termlyLoaded || iframeExists;
+    };
 
+    // Set up an interval to check for Termly loading if it's not ready immediately
+    const interval = setInterval(() => {
+      if (checkTermly()) {
+        if (isMounted) setTermlyReady(true);
+        clearInterval(interval);
+      }
+    }, 500);
+
+    // Timeout after 5 seconds to show content anyway to prevent hanging
     const timeout = setTimeout(() => {
-      setTermlyStatus('unavailable');
+      if (isMounted) {
+        setTermlyReady(true);
+        clearInterval(interval);
+      }
     }, 5000);
 
-    const observer = new MutationObserver(() => {
-      if (iframeExists()) {
-        setTermlyStatus('ready');
-        clearTimeout(timeout);
-        observer.disconnect();
-      }
-    });
-
-    if (mountPoint) {
-      observer.observe(mountPoint, { childList: true, subtree: true });
-    }
-
     return () => {
-      observer.disconnect();
+      isMounted = false;
+      clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [retryCount]);
+  }, [termlyReady]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#000000]">
@@ -67,12 +74,8 @@ const CookiePreferencesPage = () => {
         </div>
 
         <div className="glass-card p-6 md:p-8 min-h-[500px] relative">
-          {termlyStatus === 'loading' && (
-            <div
-              className="absolute inset-0 p-6 md:p-8 z-10 bg-background/80 backdrop-blur-sm rounded-xl"
-              role="status"
-              aria-label="Loading cookie preferences"
-            >
+          {!termlyReady && (
+            <div className="absolute inset-0 p-6 md:p-8 z-10 bg-background/80 backdrop-blur-sm rounded-xl">
               <div className="space-y-4">
                 <BoneyardSkeleton className="h-8 w-1/3" />
                 <BoneyardSkeleton className="h-4 w-full" />
@@ -80,34 +83,6 @@ const CookiePreferencesPage = () => {
                 <BoneyardSkeleton className="h-4 w-4/6" />
                 <div className="pt-8">
                   <BoneyardSkeleton className="h-64 w-full" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {termlyStatus === 'unavailable' && (
-            <div className="absolute inset-0 p-6 md:p-8 z-10 bg-background rounded-xl flex items-center justify-center" role="alert">
-              <div className="max-w-lg text-center space-y-4">
-                <h2 className="text-xl font-semibold">Cookie preferences are temporarily unavailable</h2>
-                <p className="text-muted-foreground">
-                  You can retry loading the detailed preferences or choose a privacy setting below.
-                </p>
-                <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      setTermlyStatus('loading');
-                      setRetryCount((count) => count + 1);
-                    }}
-                  >
-                    Retry loading preferences
-                  </Button>
-                  <Button type="button" variant="outline" onClick={rejectAll}>
-                    Reject non-essential cookies
-                  </Button>
-                  <Button type="button" variant="outline" onClick={acceptAll}>
-                    Accept all cookies
-                  </Button>
                 </div>
               </div>
             </div>
