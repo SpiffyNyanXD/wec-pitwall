@@ -36,7 +36,7 @@ const StatCard = ({ label, value, numeric }: { label: string, value: string, num
   </div>
 )
 
-const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: any, circuitExtended: any }) => (
+const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
     <Card className="glass-card border-glass-border h-full bg-transparent">
       <CardHeader>
@@ -58,7 +58,7 @@ const CircuitInfoCard = ({ circuit, circuitExtended }: { circuit: any, circuitEx
   </motion.div>
 );
 
-const RaceInfoCard = ({ race, getStatusBadge }: { race: any, getStatusBadge: (status: string) => any }) => (
+const RaceInfoCard = ({ race, getStatusBadge }: { race: Record<string, unknown> | null, getStatusBadge: (status: string) => React.ReactNode }) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
     <Card className="glass-card border-glass-border h-full bg-transparent">
       <CardHeader>
@@ -85,7 +85,7 @@ const RaceInfoCard = ({ race, getStatusBadge }: { race: any, getStatusBadge: (st
   </motion.div>
 );
 
-const LapRecordSection = ({ circuit, circuitExtended }: { circuit: any, circuitExtended: any }) => (
+const LapRecordSection = ({ circuit, circuitExtended }: { circuit: Record<string, unknown>, circuitExtended: Record<string, unknown> }) => (
   <section className="glass-card rounded-xl p-5 border border-glass-border">
     <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
       <Timer className="w-5 h-5 text-primary" />
