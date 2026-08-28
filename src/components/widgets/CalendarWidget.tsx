@@ -1,16 +1,31 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, CheckCircle, ChevronRight } from 'lucide-react';
-import { races2025 } from '@/data/wecData';
-import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
+import { races2025, races2026 } from '@/data/wecData';
+import { useRaces } from '@/hooks/useWecData';
 import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 
 const CalendarWidget = () => {
-  const { seasonId, loading: seasonLoading } = useActiveSeasonId();
-  const { data: dbRaces2026, loading: racesLoading } = useRaces(seasonId);
+
+
+  const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+
+  // Determine which season to show based on current date or status
+  const mappedRaces2026 = (dbRaces2026 || []).map(r => ({
+    ...r,
+    date: r.scheduled_date || r.date,
+    duration: r.duration_hours ? `${r.duration_hours} Hours` : r.duration,
+    flag: r.country_code ? r.flag : '🏁',
+    circuit: r.circuit_name || r.circuit || 'Unknown Circuit',
+    season: 2026
+  }));
+
+  const currentSeasonRaces = mappedRaces2026.length > 0 ? mappedRaces2026 : races2025;
+  const currentYear = currentSeasonRaces[0]?.season || 2026;
+
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -20,38 +35,12 @@ const CalendarWidget = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (seasonLoading || racesLoading) {
-    return (
-      <div className="glass-card p-4 md:p-5 col-span-full md:col-span-1 space-y-4">
-        <Skeleton className="h-5 w-32" />
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Skeleton key={index} className="h-[72px] w-full" />
-        ))}
-      </div>
-    );
-  }
-
-  // Determine which season to show based on current date or status
-  const mappedRaces2026 = dbRaces2026.map(r => ({
-    ...r,
-    date: r.scheduled_date,
-    duration: `${r.duration_hours} Hours`,
-    flag: r.flag ?? '🏁',
-    circuit: r.circuit || 'Unknown Circuit',
-    season: 2026
-  }));
-
-  const currentSeasonRaces = mappedRaces2026.length > 0 ? mappedRaces2026 : races2025;
-  const currentYear = currentSeasonRaces[0]?.season || 2026;
-
   const raceStatuses = computeAllRaceStatuses(
     currentSeasonRaces.map(r => ({
       id: r.id,
       scheduled_date: r.date,
       duration_hours: r.duration_hours || 6,
-      status: (r.status === 'postponed' || r.status === 'cancelled')
-        ? 'cancelled' as const
-        : (r.status === 'completed' ? 'completed' as const : 'scheduled' as const)
+      status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
     }))
   );
 

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { getFlagEmoji } from '@/lib/flagUtils';
-import type { Race, HypercardDriverStanding, ManufacturerStanding } from '@/types/wec';
+import type { Race, HypercardDriverStanding, Lmgt3Standing, SeasonStats } from '@/types/wec';
 
 interface RawRaceResultRow {
   id: string;
@@ -96,10 +95,7 @@ export function useRaces(seasonId: string | null) {
         .order('scheduled_date');
       if (racesError) throw racesError;
 
-      const races: Race[] = ((racesData ?? []) as unknown as Omit<Race, 'flag'>[]).map(race => ({
-        ...race,
-        flag: race.country_code ? getFlagEmoji(race.country_code) : '🏁',
-      }));
+      const races = racesData ?? [];
 
       // Fetch winners for completed races
       const completedRaceIds = races.filter(r => r.status === 'completed').map(r => r.id);
@@ -120,17 +116,15 @@ export function useRaces(seasonId: string | null) {
           .eq('finish_position', 1)
           .eq('cars.category', 'Hypercar');
 
-        if (resultsError) {
-          console.error('Failed to fetch race winners:', resultsError);
-        } else if (resultsData) {
-          const winnerMap = new Map<string, { winner: string | null; winningTeam: string | null }>();
+        if (!resultsError && resultsData) {
+          const winnerMap = new Map();
           for (const result of resultsData) {
             const car = result.cars as Record<string, unknown>;
             const mfrName = car?.manufacturers ? (car.manufacturers as Record<string, unknown>).name : '';
             const winnerName = car?.car_number ? `${mfrName} #${car.car_number}`.trim() : null;
             winnerMap.set(result.race_id, {
               winner: winnerName,
-              winningTeam: typeof car?.team_name === 'string' ? car.team_name : null,
+              winningTeam: car?.team_name
             });
           }
 
@@ -161,9 +155,10 @@ export function useHypercarDriversStandings(seasonId: string | null) {
       const { data, error } = await supabase
         .from('v_hypercar_drivers_standings')
         .select('*')
+        .eq('season_id', seasonId!)
         .order('position');
       if (error) throw error;
-      return ((data ?? []) as unknown as HypercardDriverStanding[]).map(r => ({ ...r, total_points: Number(r.total_points) }));
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
     },
     enabled: !!seasonId,
     staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
@@ -180,9 +175,10 @@ export function useHypercarManufacturersStandings(seasonId: string | null) {
       const { data, error } = await supabase
         .from('v_hypercar_manufacturers_standings')
         .select('*')
+        .eq('season_id', seasonId!)
         .order('position');
       if (error) throw error;
-      return ((data ?? []) as unknown as ManufacturerStanding[]).map(r => ({ ...r, total_points: Number(r.total_points) }));
+      return (data ?? []).map((r: Record<string, unknown>) => ({ ...r, total_points: Number(r.total_points) }));
     },
     enabled: !!seasonId,
     staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 10),
@@ -421,4 +417,13 @@ export function useLastRace() {
   });
 
   return { data, loading: isLoading, error: error?.message ?? null };
+}
+
+function getFlagEmoji(countryCode: string) {
+  if (!countryCode) return '🏁';
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char =>  127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
 }
