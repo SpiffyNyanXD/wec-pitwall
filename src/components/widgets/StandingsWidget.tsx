@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, drivers2025, standings2026, hypercars2026 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, drivers2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
 import { SEASONS, useSeason, type SeasonYear } from '@/contexts/SeasonContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
@@ -38,6 +38,9 @@ const StandingsWidget = () => {
 
   const { teams, drivers } = STANDINGS_BY_SEASON[selectedSeason];
   const selectedSeasonInfo = SEASONS[selectedSeason];
+  const completedRounds = useMemo(() => races2026.filter(r => r.status === 'completed').length, []);
+  const totalRounds = races2026.length;
+
 
   const getMedalIcon = (position: number) => {
     switch (position) {
@@ -128,7 +131,7 @@ const StandingsWidget = () => {
   );
 
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
-    const handleClick = (e: React.MouseEvent) => {
+    const handleDriverClick = (e: React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
       if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
@@ -137,8 +140,21 @@ const StandingsWidget = () => {
       }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        handleDriverClick(e);
+      }
+    };
+
     return (
-      <div onClick={handleClick} className="cursor-pointer relative">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={`View driver ${driver.displayName}`}
+        onClick={handleDriverClick}
+        onKeyDown={handleKeyDown}
+        className="cursor-pointer relative focus:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
+      >
         <motion.div
           className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
@@ -199,7 +215,7 @@ const StandingsWidget = () => {
 
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeasonInfo.status !== 'completed' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeasonInfo.status !== 'completed' ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
+            {selectedSeasonInfo.status !== 'completed' ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>

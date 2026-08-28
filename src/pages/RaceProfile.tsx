@@ -1,16 +1,16 @@
 import SEOHead from '@/components/SEOHead';
 import { useParams, Link } from 'react-router-dom';
-import NotFound from './NotFound';
 import { motion } from 'framer-motion';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
-import { computeAllRaceStatuses } from '@/utils/raceStatus';
-import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
-import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { useTimezone, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 import { parseMarginToSeconds } from '@/lib/raceUtils';
 
 interface CircuitFacts {
@@ -29,17 +29,84 @@ interface CircuitFacts {
   longestStraight?: string;
 }
 
+const BoneyardSkeleton = {
+  Hero: () => (
+    <div className="min-h-screen bg-background">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 mt-16 relative z-10">
+        <div className="animate-pulse flex flex-col gap-8">
+          <div className="h-6 w-32 bg-muted rounded"></div>
+          <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-muted/50 shrink-0"></div>
+            <div className="flex-1 space-y-4">
+              <div className="h-10 w-3/4 bg-muted rounded"></div>
+              <div className="h-6 w-1/2 bg-muted rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
 const RaceProfile = () => {
   const { id } = useParams();
-  const { convertTime, timezone } = useTimezone();
-  
+  const { convertTime } = useTimezone();
+
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
   const race = allRaces.find(r => r.id === id);
   const raceResult = raceResults.find(r => r.raceId === id);
 
-  if (!race) {
-    return <NotFound />;
+  const { data: dbRace, isLoading: isRaceLoading } = useQuery({
+    queryKey: ['race', id],
+    queryFn: async () => {
+      if (!supabase) return null;
+      const season = id?.includes('2025') ? 2025 : (id?.includes('2026') ? 2026 : 2024);
+      let queryName = id?.split('-202')[0]?.replace('-', ' ');
+      if (!queryName) return null;
+      if (queryName === 'lemans') queryName = 'Le Mans';
+      if (queryName === 'sao-paulo') queryName = 'São Paulo';
+      if (queryName === 'fuji') queryName = 'Fuji';
+      if (queryName === 'bahrain') queryName = 'Bahrain';
+
+      const { data, error } = await supabase
+        .from('races')
+        .select('*')
+        .ilike('name', `%${queryName}%`)
+        .eq('season_id', season.toString())
+        .maybeSingle();
+      if (error) return null;
+      return data;
+    },
+    enabled: !!id && !!supabase,
+  });
+
+  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, flag: '🏁' } as unknown as typeof race : null), [race, dbRace]);
+
+  useEffect(() => {
+    if (finalRace) {
+      document.title = `${finalRace.name} | Races | WEC Pitwall`;
+    }
+  }, [finalRace]);
+
+  if (!finalRace && isRaceLoading) {
+    return <BoneyardSkeleton.Hero />;
+  }
+
+  if (!finalRace) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Race Not Found</h1>
+            <Link to="/schedule" className="text-primary hover:underline">
+              Back to Schedule
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const formatDate = (dateString: string, endDate?: string) => {
@@ -234,16 +301,16 @@ const RaceProfile = () => {
     }
   };
 
-  const circuitKey = getCircuitKey(race.id);
+  const circuitKey = getCircuitKey(finalRace.id);
   const circuit = circuitKey ? circuitDetails[circuitKey] : null;
   const utcOffset = getUtcOffset(circuitKey);
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`${race.name} | Races | WEC Pitwall`}
-        description={`Race details, schedule, results, and circuit information for ${race.name}.`}
-        url={`/races/${race.id}`}
+        title={`${finalRace.name} | Races | WEC Pitwall`}
+        description={`Race details, schedule, results, and circuit information for ${finalRace.name}.`}
+        url={`/races/${finalRace.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -271,32 +338,31 @@ const RaceProfile = () => {
         >
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-muted/50 flex items-center justify-center text-5xl md:text-6xl shrink-0">
-              {race.flag}
+              {finalRace.flag}
             </div>
             
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <Badge variant="outline" className="text-xs">Round {race.round}</Badge>
-                <Badge variant="outline" className="text-xs">{race.season} Season</Badge>
-                {raceStatus && <RaceBadge status={raceStatus} />}
+                <Badge variant="outline" className="text-xs">Round {finalRace.round}</Badge>
+                <Badge variant="outline" className="text-xs">{finalRace.season} Season</Badge>
               </div>
               
               <h1 className="text-2xl md:text-4xl font-bold mb-2">
-                <span className="text-gradient">{race.name}</span>
+                <span className="text-gradient">{finalRace.name}</span>
               </h1>
               
               <div className="flex flex-wrap gap-4 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
-                  <span>{race.circuit}</span>
+                  <span>{finalRace.circuit}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  <span>{formatDate(race.date, race.endDate)}</span>
+                  <span>{formatDate(finalRace.date, finalRace.endDate)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  <span>{race.duration}</span>
+                  <span>{finalRace.duration}</span>
                 </div>
               </div>
             </div>
@@ -318,10 +384,10 @@ const RaceProfile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {(race.trackLength || circuit?.lapLength) && (
+                {(finalRace.trackLength || circuit?.lapLength) && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Lap Length</span>
-                    <span className="font-medium">{race.trackLength || circuit?.lapLength}</span>
+                    <span className="font-medium">{finalRace.trackLength || circuit?.lapLength}</span>
                   </div>
                 )}
                 {circuit && (
@@ -357,7 +423,7 @@ const RaceProfile = () => {
                     </p>
                   </>
                 )}
-                {!circuit && !race.trackLength && (
+                {!circuit && !finalRace.trackLength && (
                   <p className="text-sm text-muted-foreground">Circuit details coming soon.</p>
                 )}
               </CardContent>
@@ -374,20 +440,20 @@ const RaceProfile = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Trophy className="w-5 h-5 text-wec-gold" />
-                  {race.status === 'completed' ? 'Race Results' : 'Race Information'}
+                  {finalRace.status === 'completed' ? 'Race Results' : 'Race Information'}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {race.winner && (
+                {finalRace.winner && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Winner</span>
-                    <span className="font-medium text-wec-gold">{race.winner}</span>
+                    <span className="font-medium text-wec-gold">{finalRace.winner}</span>
                   </div>
                 )}
-                {race.winningTeam && (
+                {finalRace.winningTeam && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Winning Team</span>
-                    <span className="font-medium">{race.winningTeam}</span>
+                    <span className="font-medium">{finalRace.winningTeam}</span>
                   </div>
                 )}
                 {raceResult?.polePosition ? (
@@ -395,10 +461,10 @@ const RaceProfile = () => {
                     <span className="text-muted-foreground">Pole Position</span>
                     <span className="font-medium">{raceResult.polePosition} — {raceResult.poleTime}</span>
                   </div>
-                ) : race.polePosition && (
+                ) : finalRace.polePosition && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Pole Position</span>
-                    <span className="font-medium">{race.polePosition}</span>
+                    <span className="font-medium">{finalRace.polePosition}</span>
                   </div>
                 )}
                 {raceResult?.fastestLap ? (
@@ -406,13 +472,13 @@ const RaceProfile = () => {
                     <span className="text-muted-foreground">Fastest Lap</span>
                     <span className="font-medium text-wec-gold">{raceResult.fastestLapTime}</span>
                   </div>
-                ) : race.fastestLap && (
+                ) : finalRace.fastestLap && (
                   <div className="flex justify-between items-center py-2 border-b border-glass-border">
                     <span className="text-muted-foreground">Fastest Lap</span>
-                    <span className="font-medium">{race.fastestLap}</span>
+                    <span className="font-medium">{finalRace.fastestLap}</span>
                   </div>
                 )}
-                {race.status === 'upcoming' && !race.winner && (
+                {finalRace.status === 'upcoming' && !finalRace.winner && (
                   <p className="text-sm text-muted-foreground">
                     Results will be available after the race.
                   </p>
@@ -422,7 +488,7 @@ const RaceProfile = () => {
           </motion.div>
 
           {/* Full Results Table */}
-          {raceResult && race.status === 'completed' && (
+          {raceResult && finalRace.status === 'completed' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -536,7 +602,7 @@ const RaceProfile = () => {
           )}
 
           {/* Race Pace Analysis — shown only for completed races */}
-          {race.status === 'completed' && raceResult && (
+          {finalRace.status === 'completed' && raceResult && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -703,7 +769,7 @@ const RaceProfile = () => {
           )}
 
           {/* Sessions (if available) */}
-          {race.sessions && race.sessions.length > 0 && (
+          {finalRace.sessions && finalRace.sessions.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -724,7 +790,7 @@ const RaceProfile = () => {
                     </p>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {race.sessions.map((session, index) => (
+                    {finalRace.sessions.map((session, index) => (
                       <div 
                         key={index}
                         className="p-4 rounded-lg bg-muted/30 border border-glass-border"
@@ -735,7 +801,7 @@ const RaceProfile = () => {
                         </p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                           <Clock className="w-4 h-4" />
-                          {convertTime(session.date, session.startTime, race.circuit)} - {convertTime(session.date, session.endTime, race.circuit)}
+                          {convertTime(session.date, session.startTime, finalRace.circuit)} - {convertTime(session.date, session.endTime, finalRace.circuit)}
                         </div>
                       </div>
                     ))}

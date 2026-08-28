@@ -1,4 +1,3 @@
-import "./instrument";
 import "./lib/posthog";
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { inject } from '@vercel/analytics';
@@ -11,6 +10,7 @@ injectSpeedInsights();
 inject();
 
 class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
+  resetErrorBoundary = () => { this.setState({ hasError: false, error: null }); };
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -20,9 +20,13 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("Boot error boundary caught:", error, info);
+  }
+
   render() {
     if (this.state.hasError) {
-      return React.createElement(ErrorFallback, { error: this.state.error });
+      return React.createElement(ErrorFallback, { error: this.state.error, resetErrorBoundary: this.resetErrorBoundary });
     }
     return this.props.children;
   }
@@ -30,6 +34,7 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 
 async function bootstrap() {
   try {
+    await import("./instrument");
     const Sentry = await import("@sentry/react");
     const { default: App } = await import("./App.tsx");
     const { HelmetProvider } = await import('react-helmet-async');
@@ -51,7 +56,7 @@ async function bootstrap() {
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
             React.createElement(Sentry.ErrorBoundary, {
-              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
+              fallback: ({ error, resetError }) => React.createElement(ErrorFallback, { error, resetErrorBoundary: resetError })
             },
               React.createElement(BootErrorBoundary, null,
                 React.createElement(App, null)
@@ -62,6 +67,10 @@ async function bootstrap() {
       )
     );
   } catch (err) {
+    window.addEventListener('popstate', () => {
+      document.body.innerHTML = '<div id="root"></div>';
+      bootstrap();
+    }, { once: true });
     console.error("Boot error:", err);
     document.getElementById("root")!.innerHTML = `
       <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">

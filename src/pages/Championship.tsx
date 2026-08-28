@@ -5,7 +5,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuthGate } from "@/components/AuthGate";
 import Header from '@/components/Header';
-import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
 import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useSeasonDrivers, useRaces, useSeasonStats, useCarSeasonStats } from '@/hooks/useWecData';
 
@@ -148,6 +147,8 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: { lmgt3Drivers: R
   </motion.div>
 );
 
+
+
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 
@@ -161,9 +162,6 @@ export default function Championship() {
   useLmgt3TeamsStandings(SEASON_2026_ID);
   useSeasonStats(SEASON_2026_ID);
   useCarSeasonStats(SEASON_2026_ID);
-
-  const mfgData = season === '2025' ? manufacturerData2025 : manufacturerData2024;
-  const driverData = season === '2025' ? driversData2025 : driversData2024;
   const standings = season === '2025' ? standings2025 : standings2024;
 
   return (
