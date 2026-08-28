@@ -5,6 +5,12 @@ working on the WEC Pitwall codebase.
 
 ---
 
+## Environment Setup
+
+When starting a new session, Jules must run the setup script to ensure dependencies are installed and the environment is cached:
+- Run: `./setup.sh`
+
+---
 
 ## Design & UI Rules
 
