@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom';
-import NotFound from './NotFound';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lucide-react';
@@ -45,7 +44,19 @@ const RaceProfile = () => {
   }, [race]);
 
   if (!race) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Race Not Found</h1>
+            <Link to="/schedule" className="text-primary hover:underline">
+              Back to Schedule
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const formatDate = (dateString: string, endDate?: string) => {
