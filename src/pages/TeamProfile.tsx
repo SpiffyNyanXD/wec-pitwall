@@ -14,6 +14,7 @@ import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getTeamById, getDriverById, Team } from '@/data/wecData';
+import BoneyardSkeleton from '@/components/ui/BoneyardSkeleton';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -261,7 +262,7 @@ const TeamProfile = () => {
   const mappedDbDrivers = useMemo(() => {
     if (!dbDrivers || dbDrivers.length === 0) return [];
 
-    return dbDrivers.map((d: Record<string, unknown>, index: number) => ({
+    return dbDrivers.map((d, index: number) => ({
       id: `db-driver-${index}`,
       name: d.full_name,
       nationality: d.nationality || 'Unknown',
@@ -347,6 +348,19 @@ const TeamProfile = () => {
 
   if (!team) {
     return <NotFound />;
+  }
+
+  if (isProfileLoading || isDriversLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title={team.name}
+          description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
+          url={`/teams/${team.id}`}
+        />
+        <BoneyardSkeleton.Hero />
+      </div>
+    );
   }
 
   const getClassBadge = (carClass: string) => {

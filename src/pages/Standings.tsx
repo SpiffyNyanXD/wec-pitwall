@@ -11,6 +11,14 @@ import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
+import BoneyardSkeleton from '@/components/ui/BoneyardSkeleton';
+import {
+  useHypercarDriversStandings,
+  useHypercarManufacturersStandings,
+  useLmgt3DriversStandings,
+  useLmgt3TeamsStandings,
+  useSeasonByYear
+} from '@/hooks/useWecData';
 
 type SeasonYear = 2024 | 2025 | 2026;
 
@@ -35,6 +43,14 @@ const Standings = () => {
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
+
+  const season2026Query = useSeasonByYear(2026);
+  const season2026Id = season2026Query.data?.id ?? null;
+
+  const { data: hcDriversLive, loading: hcDriversLoading } = useHypercarDriversStandings(selectedSeason === 2026 ? season2026Id : null);
+  const { data: hcMfgLive, loading: hcMfgLoading } = useHypercarManufacturersStandings(selectedSeason === 2026 ? season2026Id : null);
+  const { data: gt3DriversLive, loading: gt3DriversLoading } = useLmgt3DriversStandings(selectedSeason === 2026 ? season2026Id : null);
+  const { data: gt3TeamsLive, loading: gt3TeamsLoading } = useLmgt3TeamsStandings(selectedSeason === 2026 ? season2026Id : null);
   
   // Calculate completed rounds
   const completedRounds = races.filter(r => r.status === 'completed').length;
@@ -299,15 +315,31 @@ const Standings = () => {
   const historicData = selectedSeason === 2025 ? standings2025 : selectedSeason === 2024 ? standings2024 : null;
 
   // Helpers to check if we have data to display
-  const hasHypercarDrivers = isHistoric ? !!historicData?.hypercars?.drivers?.length : hypercarDrivers.length > 0;
+  const hasHypercarDrivers = isHistoric ? !!historicData?.hypercars?.drivers?.length : (hcDriversLive?.length ? true : hypercarDrivers.length > 0);
   const hasHypercarTeams = isHistoric ? !!historicData?.hypercars?.teams?.length : hypercarEntries.length > 0;
-  const hasHypercarManufacturers = isHistoric ? !!historicData?.hypercars?.manufacturers?.length : manufacturersStandings.length > 0;
+  const hasHypercarManufacturers = isHistoric ? !!historicData?.hypercars?.manufacturers?.length : (hcMfgLive?.length ? true : manufacturersStandings.length > 0);
 
-  const hasLmgt3Drivers = isHistoric ? !!historicData?.lmgt3?.drivers?.length : lmgt3Drivers.length > 0;
-  const hasLmgt3Teams = isHistoric ? !!historicData?.lmgt3?.teams?.length : lmgt3Teams.length > 0;
+  const lmgt3DriversSource = !isHistoric
+    ? (gt3DriversLive?.length ? gt3DriversLive : lmgt3Drivers)
+    : ((historicData?.lmgt3 as Record<string, unknown> | undefined)?.drivers as Record<string, unknown>[] | undefined || standings2024.lmgt3.drivers);
 
-  const hasLmp2Drivers = isHistoric ? !!historicData?.lmp2?.drivers?.length : lmp2Drivers.length > 0;
-  const hasLmp2Teams = isHistoric ? !!historicData?.lmp2?.teams?.length : lmp2Teams.length > 0;
+  const lmgt3TeamsSource = !isHistoric
+    ? (gt3TeamsLive?.length ? gt3TeamsLive : lmgt3Teams)
+    : ((historicData?.lmgt3 as Record<string, unknown> | undefined)?.teams as Record<string, unknown>[] | undefined || standings2024.lmgt3.teams);
+
+  const lmp2TeamsSource = !isHistoric
+    ? lmp2Teams
+    : ((historicData?.lmp2 as Record<string, unknown> | undefined)?.teams as Record<string, unknown>[] | undefined || standings2024.lmp2.teams);
+
+  const lmp2DriversSource = !isHistoric
+    ? lmp2Drivers
+    : ((historicData?.lmp2 as Record<string, unknown> | undefined)?.drivers as Record<string, unknown>[] | undefined || standings2024.lmp2.drivers);
+
+  const hasLmgt3Drivers = isHistoric ? !!(historicData?.lmgt3 as Record<string, unknown> | undefined)?.drivers?.length || !!standings2024.lmgt3.drivers?.length : (gt3DriversLive?.length ? true : lmgt3Drivers.length > 0);
+  const hasLmgt3Teams = isHistoric ? !!(historicData?.lmgt3 as Record<string, unknown> | undefined)?.teams?.length || !!standings2024.lmgt3.teams?.length : (gt3TeamsLive?.length ? true : lmgt3Teams.length > 0);
+
+  const hasLmp2Drivers = isHistoric ? !!(historicData?.lmp2 as Record<string, unknown> | undefined)?.drivers?.length || !!standings2024.lmp2.drivers?.length : lmp2Drivers.length > 0;
+  const hasLmp2Teams = isHistoric ? !!(historicData?.lmp2 as Record<string, unknown> | undefined)?.teams?.length || !!standings2024.lmp2.teams?.length : lmp2Teams.length > 0;
 
   const content = (
     <div className="space-y-10">
@@ -345,7 +377,9 @@ const Standings = () => {
                   {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                 </span>
               </div>
-              {hasHypercarDrivers ? (
+              {selectedSeason === 2026 && hcDriversLoading ? (
+                <BoneyardSkeleton.Grid />
+              ) : hasHypercarDrivers ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? hypercarDrivers.map((driver, index) => (
@@ -462,19 +496,21 @@ const Standings = () => {
                   {CHAMPIONSHIPS.LMGT3_DRIVERS}
                 </span>
               </div>
-              {hasLmgt3Drivers ? (
+              {selectedSeason === 2026 && gt3DriversLoading ? (
+                <BoneyardSkeleton.Grid />
+              ) : hasLmgt3Drivers ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? lmgt3Drivers.map((driver, index) => (
                         <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
                       ))
-                    : historicData!.lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                    : (lmgt3DriversSource as Record<string, unknown>[]).map((driver: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
-                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                            <span className="font-bold text-muted-foreground w-4">{String(driver.position || index + 1)}</span>
+                            <span className="font-medium text-sm">{String(driver.drivers || driver.name || 'TBC')}</span>
                           </div>
-                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                          <span className="font-racing text-lg">{String(driver.points || 0)} pts</span>
                         </div>
                       ))
                   }
@@ -493,19 +529,21 @@ const Standings = () => {
                   {CHAMPIONSHIPS.LMGT3_TEAMS}
                 </span>
               </div>
-              {hasLmgt3Teams ? (
+              {selectedSeason === 2026 && gt3TeamsLoading ? (
+                <BoneyardSkeleton.Grid />
+              ) : hasLmgt3Teams ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   {!isHistoric
                     ? lmgt3Teams.map((team, index) => (
                         <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
                       ))
-                    : historicData!.lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                    : (lmgt3TeamsSource as Record<string, unknown>[]).map((team: Record<string, unknown>, index: number) => (
                         <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
                           <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
-                            <span className="font-medium text-sm">{String(team.team)}</span>
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position || index + 1)}</span>
+                            <span className="font-medium text-sm">{String(team.team || team.name || 'TBC')}</span>
                           </div>
-                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                          <span className="font-racing text-lg">{String(team.points || 0)} pts</span>
                         </div>
                       ))
                   }
