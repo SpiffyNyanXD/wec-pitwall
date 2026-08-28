@@ -12,8 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { AuthGate } from '@/components/AuthGate';
 import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useActiveSeasonId } from '@/hooks/useWecData';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
-
-type SeasonYear = 2024 | 2025 | 2026;
+import { SeasonYear } from '@/contexts/SeasonContext';
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
