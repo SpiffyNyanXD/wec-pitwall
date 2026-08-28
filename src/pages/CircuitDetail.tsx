@@ -1,11 +1,10 @@
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
-import NotFound from './NotFound';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react';
 import Header from '@/components/Header';
-import BackButton from '@/components/BackButton';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';
@@ -99,7 +98,17 @@ const CircuitDetail = () => {
     return <BoneyardSkeleton.Hero />;
   }
   if (!circuit) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+          <div className="text-center py-20">
+            <h1 className="text-2xl mb-4">Circuit not found</h1>
+            <Link to="/circuits" className="text-primary hover:underline">Back to Circuits</Link>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
