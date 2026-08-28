@@ -9,7 +9,7 @@ import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getDriverById, getTeamById } from '@/data/wecData';
+import { getDriverById, getTeamById, type Driver } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
 import { useDriverProfile } from '@/hooks/useDriverProfile';
 
@@ -92,7 +92,7 @@ const DriverStats = ({ profile }: { profile: Record<string, unknown> | null | un
 );
 
 
-const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<string, unknown> | null | undefined; isProfileLoading: boolean; driver: Record<string, unknown> }) => {
+const DriverDetails = ({ profile, isProfileLoading, driver }: { profile: Record<string, unknown> | null | undefined; isProfileLoading: boolean; driver: Driver }) => {
   if (!profile && !isProfileLoading) {
     return (
       <div className="glass-card p-12 text-center">
@@ -287,7 +287,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={resolvedDriver as unknown as Record<string, unknown>} />
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={resolvedDriver} />
           </motion.div>
         </div>
       </AuthGate>
