@@ -19,6 +19,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { getFlagEmoji } from '@/lib/flagUtils';
 
+type DatabaseDriverRow = {
+  full_name: string;
+  nationality: string | null;
+  nationality_code: string | null;
+};
+
 
 const TeamDetails = ({ teamDrivers, dbDrivers, dbDriversError, isDriversLoading, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; dbDriversError: Error | null; isDriversLoading: boolean; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
   <div className="glass-card p-6">
@@ -261,7 +267,8 @@ const TeamProfile = () => {
   const mappedDbDrivers = useMemo(() => {
     if (!dbDrivers || dbDrivers.length === 0) return [];
 
-    return dbDrivers.map((d: any, index: number) => ({
+    const driverRows = dbDrivers as unknown as DatabaseDriverRow[];
+    return driverRows.map((d, index) => ({
       id: `db-driver-${index}`,
       name: d.full_name,
       nationality: d.nationality || 'Unknown',
@@ -345,9 +352,18 @@ const TeamProfile = () => {
     }
   };
 
+  const seoHead = (
+    <SEOHead
+      title={team ? team.name : 'WEC Team Profiles'}
+      description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : 'Explore FIA WEC team profiles, car entries, and driver lineups.'}
+      url={team ? `/teams/${team.id}` : '/teams'}
+    />
+  );
+
   if (!team) {
     return (
       <div className="min-h-screen bg-background">
+        {seoHead}
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -419,11 +435,7 @@ const TeamProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead
-        title={team ? team.name : 'Team'}
-        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
-        url={team ? `/teams/${team.id}` : '/teams'}
-      />
+      {seoHead}
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div 

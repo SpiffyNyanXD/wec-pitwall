@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, drivers2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,9 @@ const StandingsWidget = () => {
   const navigate = useNavigate();
 
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
-  const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
+  const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? drivers2025 : drivers2024);
+  const completedRounds = races2026.filter(race => race.status === 'completed').length;
+  const totalRounds = races2026.length;
 
   const getMedalIcon = (position: number) => {
     switch (position) {
@@ -53,7 +55,7 @@ const StandingsWidget = () => {
       return Object.values(driverGroups)
         .map(crew => ({
           ...crew[0],
-          displayName: crew.map(d => d.lastName || d.name.split(' ').pop()).join(' / ')
+          displayName: crew.map(d => ('lastName' in d ? d.lastName : undefined) || d.name.split(' ').pop()).join(' / ')
         }))
         .sort((a, b) => b.points - a.points);
     };
@@ -101,13 +103,12 @@ const StandingsWidget = () => {
           </span>
           <span className="text-xs text-muted-foreground ml-0.5">pts</span>
         </div>
-        {AUTH_ENABLED && showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
     </motion.div>
     </Link>
   );
 
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
       if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
@@ -117,7 +118,18 @@ const StandingsWidget = () => {
     };
 
     return (
-      <div onClick={handleClick} className="cursor-pointer relative">
+      <div
+        onClick={handleClick}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            handleClick(event);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={`View profile for ${driver.displayName}`}
+        className="cursor-pointer relative"
+      >
         <motion.div
           className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
@@ -185,7 +197,7 @@ const StandingsWidget = () => {
 
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
+            {selectedSeason === 2026 ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
@@ -213,8 +225,9 @@ const StandingsWidget = () => {
           ))}
         </TabsContent>
       </Tabs>
-
-
+      {AUTH_ENABLED && showAuthModal && (
+        <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />
+      )}
     </motion.div>
   );
 };

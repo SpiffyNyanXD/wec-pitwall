@@ -173,9 +173,18 @@ const DriverProfile = () => {
     ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
     : null;
 
+  const seoHead = (
+    <SEOHead
+      title={driver ? `${driver.name} — WEC Pitwall` : 'WEC Driver Profiles'}
+      description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : 'Explore FIA WEC driver profiles, teams, and career highlights.'}
+      url={driver ? `/drivers/${driver.id}` : '/drivers'}
+    />
+  );
+
   if (!driver) {
     return (
       <div className="min-h-screen bg-background">
+        {seoHead}
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -195,11 +204,7 @@ const DriverProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead
-        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
-        description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
-        url={driver ? `/drivers/${driver.id}` : '/drivers'}
-      />
+      {seoHead}
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
