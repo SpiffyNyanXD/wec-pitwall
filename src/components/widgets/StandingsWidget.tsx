@@ -1,10 +1,10 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
+import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +14,10 @@ const StandingsWidget = () => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-  
+
+  const completedRounds = useMemo(() => races2026.filter(r => r.status === 'completed').length, []);
+  const totalRounds = races2026.length;
+
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
   const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
 
@@ -77,12 +80,12 @@ const StandingsWidget = () => {
             </span>
           )}
         </div>
-        
-        <div 
+
+        <div
           className="w-1 h-6 rounded-full"
           style={{ backgroundColor: team.color }}
         />
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="font-racing text-xs font-bold text-primary">{team.carNumber}</span>
@@ -94,7 +97,7 @@ const StandingsWidget = () => {
             {team.manufacturer}
           </p>
         </div>
-        
+
         <div className="text-right">
           <span className="font-racing text-sm font-bold text-foreground">
             {team.points}
@@ -107,7 +110,7 @@ const StandingsWidget = () => {
   );
 
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
-    const handleClick = (e: React.MouseEvent) => {
+    const handleDriverClick = (e: React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
       if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
@@ -116,8 +119,21 @@ const StandingsWidget = () => {
       }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        handleDriverClick(e);
+      }
+    };
+
     return (
-      <div onClick={handleClick} className="cursor-pointer relative">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={`View driver ${driver.displayName}`}
+        onClick={handleDriverClick}
+        onKeyDown={handleKeyDown}
+        className="cursor-pointer relative focus:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
+      >
         <motion.div
           className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
@@ -145,7 +161,7 @@ const StandingsWidget = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="glass-card p-5 col-span-full md:col-span-1"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -163,7 +179,7 @@ const StandingsWidget = () => {
                 onClick={() => setSelectedSeason(2025)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
                   selectedSeason === 2025
-                    ? 'bg-primary text-primary-foreground' 
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -173,7 +189,7 @@ const StandingsWidget = () => {
                 onClick={() => setSelectedSeason(2026)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
                   selectedSeason === 2026
-                    ? 'bg-primary text-primary-foreground' 
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -182,14 +198,14 @@ const StandingsWidget = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
+            {selectedSeason === 2026 ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
-          
+
         <TabsList className="bg-muted/50 mb-4">
           <TabsTrigger value="entries" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Users className="w-3 h-3 mr-1" />
@@ -200,20 +216,20 @@ const StandingsWidget = () => {
             Drivers
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="entries" className="mt-0 space-y-1">
           {hypercarTeams.slice(0, 6).map((team, index) => (
             <EntryRow key={team.id} team={team} index={index} />
           ))}
         </TabsContent>
-        
+
         <TabsContent value="drivers" className="mt-0 space-y-1">
           {driversStandings.slice(0, 6).map((driver, index) => (
             <DriverRow key={driver.id} driver={driver} index={index} />
           ))}
         </TabsContent>
       </Tabs>
-      
+
 
     </motion.div>
   );

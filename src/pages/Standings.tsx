@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -51,7 +51,7 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 
 const Standings = () => {
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2026);
-  
+
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
   // Use DB hooks for 2026
@@ -382,7 +382,6 @@ const Standings = () => {
     [getDriversStandings]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
-
 
   // Data normalization for rendering
   const isHistoric = selectedSeason < 2026;
