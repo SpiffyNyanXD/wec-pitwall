@@ -8,12 +8,15 @@ import { teams2024, drivers2024, teams2025, standings2025, standings2026, hyperc
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
 
 const StandingsWidget = () => {
   const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
+  const { seasonId } = useActiveSeasonId();
+  const { data: races2026 } = useRaces(selectedSeason === 2026 ? seasonId : null);
 
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
   const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
@@ -61,6 +64,10 @@ const StandingsWidget = () => {
 
   const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
   const driversStandings = useMemo(() => getDriversStandings(), [getDriversStandings]);
+  const completedRounds = races2026.filter(race => race.status === 'completed').length;
+  const seasonProgress = races2026.length > 0
+    ? `Round ${completedRounds} / ${races2026.length}`
+    : 'Season in progress';
 
   const EntryRow = ({ team, index }: { team: typeof teams[0]; index: number }) => (
     <Link to={`/teams/${team.id.replace('-2025', '')}`}>
@@ -185,7 +192,7 @@ const StandingsWidget = () => {
 
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
+            {selectedSeason === 2026 ? seasonProgress : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
