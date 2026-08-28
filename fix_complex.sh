@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'INNER_EOF' > src/components/widgets/StandingsWidget.tsx
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -116,7 +118,7 @@ const MfrRow = ({ mfr, index }: { mfr: MfrEntry; index: number }) => (
   </motion.div>
 );
 
-const DriverRow = ({ driver, index, onDriverClick, user }: { driver: DriverEntry; index: number; onDriverClick: (e: React.MouseEvent, driverId: string) => void; user: unknown }) => (
+const DriverRow = ({ driver, index, onDriverClick, user }: { driver: DriverEntry; index: number; onDriverClick: (e: React.MouseEvent, driverId: string) => void; user: any }) => (
   <div onClick={(e) => onDriverClick(e, driver.id)} className="cursor-pointer relative" key={driver.id}>
     <motion.div
       className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
@@ -307,3 +309,4 @@ const StandingsWidget = () => {
 };
 
 export default StandingsWidget;
+INNER_EOF
