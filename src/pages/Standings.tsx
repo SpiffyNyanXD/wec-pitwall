@@ -17,6 +17,23 @@ type SeasonYear = 2024 | 2025 | 2026;
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
+type DriverStandingRow = {
+  id: string;
+  displayName: string;
+  points: number;
+  team?: string;
+  carNumber?: string;
+  countryFlag: string;
+};
+
+type ManufacturerStandingRow = {
+  name: string;
+  points: number;
+  color: string;
+  countryFlag: string;
+  entries: number;
+};
+
 const SEASON_DATA: Record<SeasonYear, { drivers: typeof drivers2024; teams: typeof teams2024; races: typeof races2024; status: SeasonStatus }> = {
   2024: { drivers: drivers2024, teams: teams2024, races: races2024, status: 'completed' },
   2025: { drivers: drivers2025, teams: teams2025, races: races2025, status: 'completed' },
@@ -32,8 +49,6 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
   </div>
 );
 
-const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-
 const Standings = () => {
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2026);
   
@@ -41,10 +56,12 @@ const Standings = () => {
   
   // Use DB hooks for 2026
   const is2026 = selectedSeason === 2026;
-  const { data: dbHypercarDrivers } = useHypercarDriversStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbHypercarMfg } = useHypercarManufacturersStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbLmgt3Drivers } = useLmgt3DriversStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbLmgt3Teams } = useLmgt3TeamsStandings(is2026 ? SEASON_2026_ID : null);
+  const { seasonId } = useActiveSeasonId();
+  const activeSeasonId = is2026 ? seasonId : null;
+  const { data: dbHypercarDrivers } = useHypercarDriversStandings(activeSeasonId);
+  const { data: dbHypercarMfg } = useHypercarManufacturersStandings(activeSeasonId);
+  const { data: dbLmgt3Drivers } = useLmgt3DriversStandings(activeSeasonId);
+  const { data: dbLmgt3Teams } = useLmgt3TeamsStandings(activeSeasonId);
 
   // Calculate completed rounds
   const completedRounds = races.filter(r => r.status === 'completed').length;
@@ -151,7 +168,7 @@ const Standings = () => {
 
 
 
-  const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
+  const DriverRow = ({ driver, position }: { driver: DriverStandingRow; position: number }) => (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
@@ -246,7 +263,7 @@ const Standings = () => {
     </motion.div>
   );
 
-  const ManufacturerRow = ({ manufacturer, position }: { manufacturer: ReturnType<typeof getManufacturersStandings>[0]; position: number }) => (
+  const ManufacturerRow = ({ manufacturer, position }: { manufacturer: ManufacturerStandingRow; position: number }) => (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
@@ -287,31 +304,41 @@ const Standings = () => {
 
   const hypercarDrivers = useMemo(() => {
     if (is2026) {
-      return (dbHypercarDrivers || []).map(d => ({
-        id: d.id,
-        name: d.driver_names,
-        displayName: d.driver_names,
-        points: d.total_points,
-        position: d.position,
-        teamId: d.car_id,
-        countryFlag: d.flag || '🏁'
-      }));
+      return dbHypercarDrivers.map(d => {
+        const carNumber = `#${d.car_number}`;
+        const entry = teams.find(t => t.class === 'HYPERCAR' && t.carNumber === carNumber);
+        return {
+          id: entry?.id ?? d.car_number,
+          name: d.team_name,
+          displayName: d.team_name,
+          points: d.total_points,
+          position: d.position,
+          teamId: entry?.id ?? d.car_number,
+          team: d.team_name,
+          carNumber,
+          countryFlag: entry?.countryFlag ?? '🏁'
+        };
+      });
     }
     return getDriversStandings('HYPERCAR');
-  }, [is2026, dbHypercarDrivers, getDriversStandings]);
+  }, [is2026, dbHypercarDrivers, teams, getDriversStandings]);
 
   const manufacturersStandings = useMemo(() => {
     if (is2026) {
-      return (dbHypercarMfg || []).map(m => ({
-        name: m.manufacturer_name,
-        points: m.total_points,
-        position: m.position,
-        color: m.color || '#E8002D',
-        countryFlag: m.flag || '🏁'
-      }));
+      return dbHypercarMfg.map(m => {
+        const entries = teams.filter(t => t.class === 'HYPERCAR' && t.manufacturer === m.manufacturer);
+        return {
+          name: m.manufacturer,
+          points: m.total_points,
+          position: m.position,
+          color: entries[0]?.color ?? '#E8002D',
+          countryFlag: entries[0]?.countryFlag ?? '🏁',
+          entries: entries.length
+        };
+      });
     }
     return getManufacturersStandings();
-  }, [is2026, dbHypercarMfg, getManufacturersStandings]);
+  }, [is2026, dbHypercarMfg, teams, getManufacturersStandings]);
 
   const hypercarEntries = useMemo(() => {
     if (is2026) {

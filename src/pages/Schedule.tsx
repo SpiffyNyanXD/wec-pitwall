@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,24 +7,37 @@ import Header from '@/components/Header';
 import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { races2024, races2025, races2026 } from '@/data/wecData';
+import { races2024, races2025 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AuthGate } from "@/components/AuthGate";
-import { useRaces } from "@/hooks/useWecData";
+import { useActiveSeasonId, useRaces } from "@/hooks/useWecData";
 
-const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+type ScheduleRace = {
+  id: string;
+  flag: string;
+  round: number | null;
+  name: string;
+  circuit: string;
+  date: string;
+  endDate?: string;
+  duration: string;
+  duration_hours?: number;
+  status: 'upcoming' | 'live' | 'completed' | 'postponed' | 'scheduled' | 'cancelled';
+  winner?: string | null;
+};
 
 const Schedule = () => {
-  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+  const { seasonId } = useActiveSeasonId();
+  const { data: dbRaces2026 } = useRaces(seasonId);
 
   // Transform dbRaces2026 to match the format expected by RaceCard
   const mappedRaces2026 = useMemo(() => {
     return dbRaces2026.map(r => ({
       ...r,
-      date: r.scheduled_date || r.date,
-      duration: r.duration_hours ? `${r.duration_hours} Hours` : r.duration,
-      flag: r.country_code ? r.flag : '🏁',
-      circuit: r.circuit_name || r.circuit || 'Unknown Circuit',
+      date: r.scheduled_date,
+      duration: `${r.duration_hours} Hours`,
+      flag: r.flag ?? '🏁',
+      circuit: r.circuit || 'Unknown Circuit',
       round: r.round_number,
       winner: r.winner || null,
       winningTeam: r.winningTeam || null,
@@ -37,7 +50,9 @@ const Schedule = () => {
       id: r.id,
       scheduled_date: r.date,
       duration_hours: r.duration_hours || 6,
-      status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
+      status: (r.status === 'postponed' || r.status === 'cancelled')
+        ? 'cancelled' as const
+        : (r.status === 'completed' ? 'completed' as const : 'scheduled' as const)
     }))
   ), [allRaces]);
 
@@ -55,7 +70,7 @@ const Schedule = () => {
 
 
 
-  const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => (
+  const RaceCard = ({ race, index }: { race: ScheduleRace; index: number }) => (
     <Link to={`/race/${race.id}`}>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -76,7 +91,7 @@ const Schedule = () => {
               <p className="text-base font-bold truncate">{race.name}</p>
             </div>
             <div className="md:hidden">
-              {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
+              {raceStatuses.has(race.id) && <RaceBadge status={raceStatuses.get(race.id)!} />}
             </div>
           </div>
 
@@ -109,7 +124,7 @@ const Schedule = () => {
 
           {/* Status & Winner */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
+            {raceStatuses.has(race.id) && <RaceBadge status={raceStatuses.get(race.id)!} />}
             
             {race.winner && (
               <div className="flex items-center gap-2 text-sm">

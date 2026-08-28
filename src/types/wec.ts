@@ -8,10 +8,12 @@ export interface Race {
   scheduled_date: string;
   duration_hours: number;
   status: 'scheduled' | 'completed' | 'cancelled';
+  flag: string;
+  winner?: string | null;
+  winningTeam?: string | null;
 }
 
 export interface HypercardDriverStanding {
-  season_id: string;
   car_number: string;
   team_name: string;
   manufacturer: string;
@@ -21,7 +23,6 @@ export interface HypercardDriverStanding {
 }
 
 export interface ManufacturerStanding {
-  season_id: string;
   manufacturer: string;
   total_points: number;
   position: number;
