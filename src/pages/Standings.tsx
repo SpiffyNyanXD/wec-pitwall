@@ -316,11 +316,22 @@ const Standings = () => {
 
   const hypercarEntries = useMemo(() => {
     if (is2026) {
-      return teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
+      return (dbHypercarDrivers || [])
+        .map(d => ({
+          id: d.car_id,
+          name: d.team_name,
+          carNumber: d.car_number,
+          manufacturer: d.manufacturer_name,
+          points: d.total_points,
+          position: d.position,
+          color: d.color || '#E8002D',
+          class: 'HYPERCAR' as const,
+        }))
+        .filter(team => team.class === 'HYPERCAR')
+        .sort((a, b) => b.points - a.points);
     }
     return getHypercarEntries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teams, is2026]);
+  }, [is2026, dbHypercarDrivers, getHypercarEntries]);
 
   const lmgt3Drivers = useMemo(() => {
     if (is2026) {
