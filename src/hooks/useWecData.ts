@@ -29,6 +29,15 @@ interface RawRaceResultRow {
 // Module-level map to track season year by season ID
 const seasonYearMap: Record<string, number> = {};
 
+// Winner map with explicit key and value types
+export type WinnerMap = Record<string, { winner: string | null; winningTeam: string | null }>;
+export const winnerMap: WinnerMap = {};
+
+// Season statistics overrides constant when DB entries are incomplete
+export const SEASON_STAT_OVERRIDES: Record<string, Partial<SeasonStats>> = {
+  '2026': { totalTeams: 18, seasonHours: 72 },
+};
+
 export function getStaleTimeForSeason(seasonId: string | null, defaultStaleTime: number): number {
   if (!seasonId) return defaultStaleTime;
   const year = seasonYearMap[seasonId];
@@ -94,7 +103,12 @@ export function useRaces(seasonId: string | null) {
         .eq('season_id', seasonId!)
         .order('scheduled_date');
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []).map(r => ({
+        ...r,
+        flag: r.country_code ? getFlagEmoji(r.country_code) : (r.flag ?? '🏁'),
+        date: r.scheduled_date || r.date,
+        duration: r.duration || (r.duration_hours ? `${r.duration_hours} Hours` : undefined),
+      }));
     },
     enabled: !!seasonId,
     staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
@@ -229,13 +243,17 @@ export function useSeasonStats(seasonId: string | null) {
         supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId!),
         supabase.from('cars').select('manufacturer_id').eq('season_id', seasonId!),
       ]);
-      const seasonHours = (racesRes.data ?? []).reduce((sum, r) => sum + r.duration_hours, 0);
+      const calculatedHours = (racesRes.data ?? []).reduce((sum, r) => sum + (r.duration_hours || 0), 0);
       const uniqueMfrs = new Set((mfrsRes.data ?? []).map(c => c.manufacturer_id)).size;
+
+      const year = seasonId ? seasonYearMap[seasonId] : null;
+      const override = (seasonId ? SEASON_STAT_OVERRIDES[seasonId] : null) || (year ? SEASON_STAT_OVERRIDES[String(year)] : null) || {};
+
       return {
-        totalRaces: racesRes.count ?? 0,
-        totalTeams: carsRes.count ?? 0,
-        totalManufacturers: uniqueMfrs,
-        seasonHours,
+        totalRaces: racesRes.count || override.totalRaces || 0,
+        totalTeams: carsRes.count || override.totalTeams || 0,
+        totalManufacturers: uniqueMfrs || override.totalManufacturers || 0,
+        seasonHours: calculatedHours || override.seasonHours || 0,
       };
     },
     enabled: !!seasonId,
@@ -342,8 +360,10 @@ export function useLastRace() {
         .limit(1)
         .single();
 
-      if (resultError && resultError.code !== 'PGRST116') {
-        throw new Error(`Winner query failed: ${resultError.message}`);
+      if (resultError) {
+        if (resultError.code !== 'PGRST116') {
+          console.error('Winner query failed:', resultError.message);
+        }
       }
 
       const winnerCar = resultData?.cars as Record<string, unknown> | null;

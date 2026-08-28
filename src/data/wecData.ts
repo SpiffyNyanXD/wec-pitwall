@@ -2295,7 +2295,7 @@ export const getTeamsBySeason = (season: number): Team[] => {
   return season === 2025 ? teams2025 : teams2024;
 };
 export const hypercars2026: Team[] = [
-  { id: 'ferrari-50', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', points: 0, position: 0, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
+  { id: 'ferrari-50', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#50', class: 'HYPERCAR', points: 24, position: 0, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
   { id: 'ferrari-51', name: 'Ferrari AF Corse', manufacturer: 'Ferrari', carNumber: '#51', class: 'HYPERCAR', points: 0, position: 0, color: '#DC0000', country: 'Italy', countryFlag: '🇮🇹', drivers: [] },
   { id: 'toyota-7', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#7', class: 'HYPERCAR', points: 25, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
   { id: 'toyota-8', name: 'Toyota Gazoo Racing', manufacturer: 'Toyota', carNumber: '#8', class: 'HYPERCAR', points: 26, position: 0, color: '#E60012', country: 'Japan', countryFlag: '🇯🇵', drivers: [] },
@@ -2307,7 +2307,7 @@ export const hypercars2026: Team[] = [
   { id: 'peugeot-94', name: 'Peugeot TotalEnergies', manufacturer: 'Peugeot', carNumber: '#94', class: 'HYPERCAR', points: 0, position: 0, color: '#E8C840', country: 'France', countryFlag: '🇫🇷', drivers: [] },
   { id: 'alpine-35', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#35', class: 'HYPERCAR', points: 0, position: 0, color: '#0039A6', country: 'France', countryFlag: '🇫🇷', drivers: [] },
   { id: 'alpine-36', name: 'Alpine Endurance Team', manufacturer: 'Alpine', carNumber: '#36', class: 'HYPERCAR', points: 0, position: 0, color: '#0039A6', country: 'France', countryFlag: '🇫🇷', drivers: [] },
-  { id: 'bmw-15', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#15', class: 'HYPERCAR', points: 0, position: 0, color: '#1C69D4', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
+  { id: 'bmw-15', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#15', class: 'HYPERCAR', points: 24, position: 0, color: '#1C69D4', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
   { id: 'bmw-20', name: 'BMW M Team WRT', manufacturer: 'BMW', carNumber: '#20', class: 'HYPERCAR', points: 35, position: 0, color: '#1C69D4', country: 'Germany', countryFlag: '🇩🇪', drivers: [] },
   { id: 'aston-007', name: 'Aston Martin Thor Team', manufacturer: 'Aston Martin', carNumber: '#007', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },
   { id: 'aston-009', name: 'Aston Martin Thor Team', manufacturer: 'Aston Martin', carNumber: '#009', class: 'HYPERCAR', points: 0, position: 0, color: '#006400', country: 'UK', countryFlag: '🇬🇧', drivers: [] },

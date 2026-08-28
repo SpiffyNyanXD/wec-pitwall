@@ -6,12 +6,13 @@ import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024 } from '@/data/wecData';
+import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, races2026, hypercars2026, lmgt3Teams2026, standings2025, standings2024, standings2026 } from '@/data/wecData';
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 import { useSeason, SeasonYear } from '@/contexts/SeasonContext';
+import { useActiveSeasonId } from '@/hooks/useWecData';
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
@@ -33,6 +34,7 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
 const Standings = () => {
   const { currentSeason } = useSeason();
   const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(currentSeason);
+  const { seasonId: activeSeasonId } = useActiveSeasonId();
   
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
@@ -278,10 +280,49 @@ const Standings = () => {
 
 
 
-  const hypercarDrivers = useMemo(
-    () => getDriversStandings('HYPERCAR'),
-    [drivers]
-  );
+  const manufacturersStandings = useMemo(() => {
+    if (selectedSeason === 2026) {
+      return standings2026.hypercars.manufacturers.map(m => ({
+        name: m.manufacturer,
+        points: m.points,
+        color: '#E8002D',
+        country: '',
+        countryFlag: '🏁',
+        wins: 0,
+        entries: 0,
+      }));
+    }
+    return getManufacturersStandings();
+  }, [teams, selectedSeason]);
+
+  const hypercarDrivers = useMemo(() => {
+    if (selectedSeason === 2026) {
+      return standings2026.hypercars.drivers.map(d => ({
+        id: d.id,
+        name: d.drivers,
+        firstName: '',
+        lastName: '',
+        nationality: '',
+        countryFlag: d.countryFlag || '🏁',
+        team: d.team,
+        teamId: d.teamId,
+        carNumber: '',
+        class: d.class as 'HYPERCAR',
+        points: d.points,
+        position: d.position,
+        biography: '',
+        careerHighlights: [],
+        facts: [],
+        championships: 0,
+        leMansWins: 0,
+        wecWins: 0,
+        crewNames: [d.drivers],
+        displayName: d.displayName || d.drivers,
+      }));
+    }
+    return getDriversStandings('HYPERCAR');
+  }, [drivers, selectedSeason]);
+
   const lmgt3Drivers = useMemo(
     () => getDriversStandings('LMGT3'),
     [drivers]
@@ -386,12 +427,10 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : hypercarDrivers.length > 0 ? (
+                {hypercarDrivers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {hypercarDrivers.map((driver, index) => (
-                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver as ReturnType<typeof getDriversStandings>[0]} position={index + 1} />
                     ))}
                   </div>
                 ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
@@ -461,12 +500,10 @@ const Standings = () => {
                     {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
                   </span>
                 </div>
-                {selectedSeason === 2026 ? (
-                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
-                ) : manufacturersStandings.length > 0 ? (
+                {manufacturersStandings.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {manufacturersStandings.map((manufacturer, index) => (
-                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
+                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer as ReturnType<typeof getManufacturersStandings>[0]} position={index + 1} />
                     ))}
                   </div>
                 ) : (
