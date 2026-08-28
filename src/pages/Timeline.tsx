@@ -37,6 +37,7 @@ const Timeline = () => {
   };
 
   const completedRaces = seasonRaces.filter(r => getRaceResult(r.id));
+  const upcomingRaces = seasonRaces.filter(r => !getRaceResult(r.id));
 
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split('-').map(Number);

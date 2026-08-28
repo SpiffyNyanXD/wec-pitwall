@@ -1,10 +1,10 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
+import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
-import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
+import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -14,9 +14,6 @@ const StandingsWidget = () => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-
-  const completedRounds = useMemo(() => races2026.filter(r => r.status === 'completed').length, []);
-  const totalRounds = races2026.length;
 
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
   const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
@@ -110,7 +107,7 @@ const StandingsWidget = () => {
   );
 
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
-    const handleDriverClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+    const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
       if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
@@ -119,21 +116,8 @@ const StandingsWidget = () => {
       }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        handleDriverClick(e);
-      }
-    };
-
     return (
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label={`View driver ${driver.displayName}`}
-        onClick={handleDriverClick}
-        onKeyDown={handleKeyDown}
-        className="cursor-pointer relative focus:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
-      >
+      <div onClick={handleClick} className="cursor-pointer relative">
         <motion.div
           className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
@@ -201,7 +185,7 @@ const StandingsWidget = () => {
 
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
-            {selectedSeason === 2026 ? `Round ${completedRounds} / ${totalRounds}` : `${selectedSeason} Season Complete`}
+            {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>

@@ -131,8 +131,7 @@ const Auth = () => {
         toast.error(error.message);
       }
     } else {
-      // Username is guaranteed to be non-empty here
-      {
+      if (username) {
         await supabase
           .from('profiles')
           .update({ username, display_name: displayName || null })

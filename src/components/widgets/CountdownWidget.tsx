@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Flag, Calendar, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { races, getNextRace } from '@/data/wecData';
+import { useRaces } from '@/hooks/useWecData';
 import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
 
 interface TimeLeft {
@@ -12,13 +13,35 @@ interface TimeLeft {
   seconds: number;
 }
 
+const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
+
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
   const { convertTime } = useTimezone();
+  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+
+  const mappedRaces2026 = (dbRaces2026 || []).map(r => ({
+    ...r,
+    date: r.scheduled_date || r.date,
+    duration: r.duration_hours ? `${r.duration_hours} Hours` : r.duration,
+    flag: r.country_code ? r.flag : '🏁',
+    circuit: r.circuit_name || r.circuit || 'Unknown Circuit',
+    status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'upcoming')
+  }));
+
+  // Create combined array, but only replace 2026 races with db
+  const allRaces = [...races.filter(r => r.season !== 2026), ...mappedRaces2026];
   
   // Find next upcoming race
-  const nextRace = getNextRace();
+  const nowTime = new Date();
+  const nextRaceDb = allRaces.find(r => new Date(r.date) > nowTime && r.status === 'upcoming');
+  if (nextRaceDb && !nextRaceDb.sessions && nextRaceDb.id === '1812-km-of-qatar-2026') {
+      nextRaceDb.name = 'Qatar 1812 km';
+  } else if (nextRaceDb && !nextRaceDb.sessions && nextRaceDb.id === 'lone-star-le-mans-2026') {
+      nextRaceDb.name = 'Lone Star Le Mans';
+  }
+  const nextRace = nextRaceDb || getNextRace();
   
   useEffect(() => {
     if (!nextRace) {
