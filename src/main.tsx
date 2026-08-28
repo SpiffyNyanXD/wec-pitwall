@@ -66,7 +66,7 @@ async function bootstrap() {
     window.addEventListener('popstate', () => {
       document.body.innerHTML = '<div id="root"></div>';
       bootstrap();
-    });
+    }, { once: true });
     console.error("Boot error:", err);
     document.getElementById("root")!.innerHTML = `
       <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">
