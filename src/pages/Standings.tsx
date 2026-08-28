@@ -298,7 +298,8 @@ const Standings = () => {
       }));
     }
     return getDriversStandings('HYPERCAR');
-  }, [is2026, dbHypercarDrivers, getDriversStandings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drivers, is2026, dbHypercarDrivers]);
 
   const manufacturersStandings = useMemo(() => {
     if (is2026) {
@@ -311,14 +312,16 @@ const Standings = () => {
       }));
     }
     return getManufacturersStandings();
-  }, [is2026, dbHypercarMfg, getManufacturersStandings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teams, is2026, dbHypercarMfg]);
 
   const hypercarEntries = useMemo(() => {
     if (is2026) {
       return teams.filter(t => t.class === 'HYPERCAR').sort((a, b) => b.points - a.points);
     }
     return getHypercarEntries();
-  }, [is2026, getHypercarEntries, teams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teams, is2026]);
 
   const lmgt3Drivers = useMemo(() => {
     if (is2026) {
@@ -333,7 +336,8 @@ const Standings = () => {
       }));
     }
     return getDriversStandings('LMGT3');
-  }, [is2026, dbLmgt3Drivers, getDriversStandings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drivers, is2026, dbLmgt3Drivers]);
 
   const lmgt3Teams = useMemo(() => {
     if (is2026) {
@@ -352,7 +356,8 @@ const Standings = () => {
 
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
-    [getDriversStandings]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [drivers]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
 
