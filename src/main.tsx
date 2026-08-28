@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import "./lib/posthog";
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { inject } from '@vercel/analytics';
@@ -22,7 +21,7 @@ class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    Sentry.captureException(error, { contexts: { react: { componentStack: info.componentStack } } });
+    console.error("Boot error boundary caught:", error, info);
   }
 
   render() {
@@ -73,7 +72,6 @@ async function bootstrap() {
       bootstrap();
     }, { once: true });
     console.error("Boot error:", err);
-    Sentry.captureException(err);
     document.getElementById("root")!.innerHTML = `
       <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">
         <h2>Failed to boot the application</h2>

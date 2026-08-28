@@ -1,3 +1,4 @@
+import SEOHead from '@/components/SEOHead';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
@@ -7,8 +8,6 @@ import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lu
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
-import { computeAllRaceStatuses } from '@/utils/raceStatus';
-import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
 import { useTimezone, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
@@ -29,7 +28,6 @@ interface CircuitFacts {
   elevation?: string;
   longestStraight?: string;
 }
-
 
 const BoneyardSkeleton = {
   Hero: () => (
@@ -53,12 +51,10 @@ const BoneyardSkeleton = {
 const RaceProfile = () => {
   const { id } = useParams();
   const { convertTime } = useTimezone();
-  
+
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];
-  const baseId = id?.split('-202')[0];
-  const is2026 = id?.includes('2026');
-  const race = allRaces.find(r => r.id === id || (baseId && r.id.startsWith(baseId) && (is2026 ? r.season === 2026 : true)));
+  const race = allRaces.find(r => r.id === id);
   const raceResult = raceResults.find(r => r.raceId === id);
 
   const { data: dbRace, isLoading: isRaceLoading } = useQuery({
@@ -159,7 +155,7 @@ const RaceProfile = () => {
     'spa': { 
       lapLength: '7.004 km', 
       corners: 19, 
-      description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single finalRace.',
+      description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single race.',
       opened: 1921,
       designer: 'Jules de Thier & Henri Langlois Van Ophem',
       elevation: '104m change',
@@ -174,7 +170,7 @@ const RaceProfile = () => {
     'le-mans': { 
       lapLength: '13.626 km', 
       corners: 38, 
-      description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance finalRace. The circuit combines permanent sections with public roads closed for the event.',
+      description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance race. The circuit combines permanent sections with public roads closed for the event.',
       opened: 1923,
       designer: 'ACO (evolved over 100 years)',
       elevation: '30m change',
@@ -311,6 +307,11 @@ const RaceProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${finalRace.name} | Races | WEC Pitwall`}
+        description={`Race details, schedule, results, and circuit information for ${finalRace.name}.`}
+        url={`/races/${finalRace.id}`}
+      />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
@@ -344,7 +345,6 @@ const RaceProfile = () => {
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <Badge variant="outline" className="text-xs">Round {finalRace.round}</Badge>
                 <Badge variant="outline" className="text-xs">{finalRace.season} Season</Badge>
-                {raceStatus && <RaceBadge status={raceStatus} />}
               </div>
               
               <h1 className="text-2xl md:text-4xl font-bold mb-2">
