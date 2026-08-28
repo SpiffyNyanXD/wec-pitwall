@@ -5,13 +5,31 @@ import { races2025, races2026 } from '@/data/wecData';
 import { useRaces } from '@/hooks/useWecData';
 import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
+import { CardSkeleton } from '@/components/PageSkeleton';
 import { Link } from 'react-router-dom';
 
 const CalendarWidget = () => {
 
 
   const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-  const { data: dbRaces2026 } = useRaces(SEASON_2026_ID);
+  const { data: dbRaces2026, loading: races2026Loading } = useRaces(SEASON_2026_ID);
+
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (races2026Loading) {
+    return (
+      <div className="col-span-full md:col-span-1">
+        <CardSkeleton />
+      </div>
+    );
+  }
 
   // Determine which season to show based on current date or status
   const mappedRaces2026 = (dbRaces2026 || []).map(r => ({
@@ -25,15 +43,6 @@ const CalendarWidget = () => {
 
   const currentSeasonRaces = mappedRaces2026.length > 0 ? mappedRaces2026 : races2025;
   const currentYear = currentSeasonRaces[0]?.season || 2026;
-
-  const [now, setNow] = useState(Date.now());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(Date.now());
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   const raceStatuses = computeAllRaceStatuses(
     currentSeasonRaces.map(r => ({
