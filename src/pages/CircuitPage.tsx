@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import { circuits } from '@/data/wecData'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
+import { useActiveSeasonId } from '@/hooks/useWecData'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
@@ -40,11 +41,12 @@ const StatCard = ({ label, value, numeric }: { label: string, value: string, num
 export function CircuitPage() {
   const { id } = useParams<{ id: string }>()
   const circuit = circuits.find(c => c.id === id)
+  const { seasonId } = useActiveSeasonId()
 
-  const { data: race } = useQuery({
-    queryKey: ['circuit-race', circuit?.id],
+  const { data: race, isError: isRaceError } = useQuery({
+    queryKey: ['circuit-race', circuit?.id, seasonId],
     queryFn: async () => {
-      if (!supabase || !circuit?.id) return null;
+      if (!supabase || !circuit?.id || !seasonId) return null;
       const dbCircuitName = circuitSlugToDbName[circuit.id];
       if (!dbCircuitName) return null;
 
@@ -52,12 +54,19 @@ export function CircuitPage() {
         .from('races')
         .select('name, scheduled_date, duration_hours, status, start_time_utc')
         .ilike('circuit', `%${dbCircuitName}%`)
+        .eq('season_id', seasonId)
         .maybeSingle();
-      if (error) return null;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.warn('Race information unavailable:', error);
+          return null;
+        }
+        throw error;
+      }
       return data;
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !!circuit?.id && !!supabase
+    enabled: !!circuit?.id && !!seasonId && !!supabase
   });
 
   const getStatusBadge = (status: string) => {
@@ -71,6 +80,12 @@ export function CircuitPage() {
   if (!circuit) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Circuit Not Found | WEC Pitwall"
+          description="The requested WEC circuit could not be found. Browse all circuits on WEC Pitwall."
+          url={`/circuit/${id ?? ''}`}
+          noIndex
+        />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">
@@ -187,7 +202,9 @@ export function CircuitPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {race ? (
+                  {isRaceError ? (
+                    <p className="text-muted-foreground" role="alert">Unable to load race information.</p>
+                  ) : race ? (
                     <div className="space-y-4">
                       <p className="font-bold text-lg text-foreground">{race.name}</p>
                       <div className="flex flex-col space-y-2 text-muted-foreground">
