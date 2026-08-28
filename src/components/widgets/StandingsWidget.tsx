@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton as BoneyardSkeleton } from '@/components/ui/skeleton';
+import { races2026 } from '@/data/wecData';
 import {
   useActiveSeasonId,
   useHypercarDriversStandings,
@@ -116,8 +117,21 @@ const MfrRow = ({ mfr, index }: { mfr: MfrEntry; index: number }) => (
   </motion.div>
 );
 
-const DriverRow = ({ driver, index, onDriverClick, user }: { driver: DriverEntry; index: number; onDriverClick: (e: React.MouseEvent, driverId: string) => void; user: unknown }) => (
-  <div onClick={(e) => onDriverClick(e, driver.id)} className="cursor-pointer relative" key={driver.id}>
+const DriverRow = ({ driver, index, onDriverClick, user }: { driver: DriverEntry; index: number; onDriverClick: (e: React.SyntheticEvent, driverId: string) => void; user: unknown }) => (
+  <div
+    role="button"
+    tabIndex={0}
+    aria-label={`View driver ${driver.displayName}`}
+    onClick={(e) => onDriverClick(e, driver.id)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onDriverClick(e, driver.id);
+      }
+    }}
+    className="cursor-pointer relative focus:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
+    key={driver.id}
+  >
     <motion.div
       className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
       initial={{ opacity: 0, x: -20 }}
@@ -150,6 +164,10 @@ const StandingsWidget = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [category, setCategory] = useState<'HYP' | 'LMGT3'>('HYP');
   const navigate = useNavigate();
+
+  const seasonYear = 2026;
+  const completedRounds = useMemo(() => races2026.filter(r => r.status === 'completed').length, []);
+  const totalRounds = races2026.length;
 
   const { data: seasonId, loading: seasonLoading } = useActiveSeasonId();
 
@@ -200,7 +218,7 @@ const StandingsWidget = () => {
     }));
   }, [lmgt3TeamsData]);
 
-  const handleDriverClick = (e: React.MouseEvent, driverId: string) => {
+  const handleDriverClick = (e: React.SyntheticEvent, driverId: string) => {
     e.preventDefault();
     if (!AUTH_ENABLED || user) {
       navigate(`/drivers/${driverId}`);
@@ -285,7 +303,7 @@ const StandingsWidget = () => {
 
       <div className="flex items-center justify-between mb-3">
         <Badge variant="outline" className="text-xs bg-primary/20 text-primary border-primary/30">
-          2026 Season
+          {seasonYear === 2026 ? `Round ${completedRounds} / ${totalRounds}` : 'Season Complete'}
         </Badge>
         <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
       </div>
