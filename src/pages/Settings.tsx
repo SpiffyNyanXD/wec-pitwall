@@ -1,4 +1,3 @@
-import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
@@ -16,21 +15,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-
 const SettingsPage = () => {
-  const { user, profile, refreshProfile, signOut } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { timezone, setTimezone } = useTimezone();
   const [editUsername, setEditUsername] = useState('');
@@ -47,7 +33,6 @@ const SettingsPage = () => {
   });
   const [marketingConsent, setMarketingConsent] = useState<boolean>(profile?.marketing_emails ?? true);
   const [loading, setLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -73,7 +58,7 @@ const SettingsPage = () => {
     const { error } = await supabase
       .from('profiles')
       .update({ marketing_emails: checked })
-      .eq('user_id', user?.id);
+      .eq('user_id', user.id);
     if (error) {
       console.error('Failed to update marketing consent:', error);
       setMarketingConsent(!checked); // revert on error
@@ -127,7 +112,7 @@ const SettingsPage = () => {
         username: editUsername || null,
         display_name: editDisplayName || null,
       })
-      .eq('user_id', user?.id);
+      .eq('user_id', user.id);
 
     if (error) {
       toast.error('Failed to save profile');
@@ -148,7 +133,7 @@ const SettingsPage = () => {
     const { data, error } = await supabase
       .from('notification_subscriptions')
       .select('*')
-      .eq('user_id', user?.id)
+      .eq('user_id', user.id)
       .single();
 
     if (data) {
@@ -162,7 +147,7 @@ const SettingsPage = () => {
   };
 
   const updateNotificationSetting = async (key: string, value: boolean) => {
-    if (AUTH_ENABLED && !user) {
+    if (!user) {
       toast.error('Please sign in to update settings');
       return;
     }
@@ -178,7 +163,7 @@ const SettingsPage = () => {
     const { error } = await supabase
       .from('notification_subscriptions')
       .update({ [dbKey]: value })
-      .eq('user_id', user?.id);
+      .eq('user_id', user.id);
 
     if (error) {
       toast.error('Failed to update setting');
@@ -188,7 +173,7 @@ const SettingsPage = () => {
     }
   };
 
-  if (AUTH_ENABLED && !user) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -240,7 +225,7 @@ const SettingsPage = () => {
                 {/* Email — read only */}
                 <div>
                   <Label className="text-muted-foreground text-xs uppercase tracking-wide">Email</Label>
-                  <p className="text-foreground mt-1 text-sm">{user?.email}</p>
+                  <p className="text-foreground mt-1 text-sm">{user.email}</p>
                 </div>
 
                 {/* Username */}
@@ -455,70 +440,6 @@ const SettingsPage = () => {
             </div>
             <ChevronRight className="w-5 h-5 text-muted-foreground" />
           </Link>
-
-          {/* Danger Zone */}
-          <div className="glass-card p-6 mt-6 border-destructive/20">
-            <h3 className="text-lg font-bold text-destructive mb-2">Danger Zone</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Once you delete your account, there is no going back. Please be certain.
-            </p>
-            <div className="flex gap-4">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Delete Account</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Account</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will permanently delete your account and all associated data. This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      disabled={isDeleting}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        setIsDeleting(true);
-
-                        if (!supabase) {
-                          setIsDeleting(false);
-                          toast.error('Failed to delete account. Please contact support.');
-                          return;
-                        }
-
-                        try {
-                          const { error } = await supabase.functions.invoke('delete-user');
-                          if (error) {
-                            setIsDeleting(false);
-                            toast.error('Failed to delete account. Please contact support.');
-                            return;
-                          }
-                          await signOut();
-                          toast.success('Account deleted successfully.');
-                          navigate('/');
-                        } catch (err) {
-                          setIsDeleting(false);
-                          toast.error('Failed to delete account. Please contact support.');
-                        }
-                      }}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {isDeleting ? 'Deleting...' : 'Delete Forever'}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-              <Button variant="outline" onClick={async () => {
-                await signOut();
-                navigate('/');
-              }}>
-                Sign Out
-              </Button>
-            </div>
-          </div>
-
         </motion.div>
       </main>
     </div>

@@ -1,5 +1,3 @@
-import { AUTH_ENABLED } from '@/lib/featureFlags';
-import { posthog } from '@/lib/posthog';
 import { Toaster } from "@/components/ui/toaster";
 
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -49,8 +47,6 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (!AUTH_ENABLED) return <>{children}</>;
-
   if (loading) return null;
   if (!user) {
     return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
@@ -70,15 +66,6 @@ const PageLoader = () => (
   </div>
 );
 
-
-const PageTracker = () => {
-  const location = useLocation();
-  useEffect(() => {
-    posthog.capture('$pageview');
-  }, [location]);
-  return null;
-};
-
 const RouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   return <div key={location.pathname}>{children}</div>;
@@ -95,7 +82,6 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
-            <PageTracker />
             <RouteWrapper><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />

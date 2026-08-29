@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -10,9 +10,9 @@ import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, r
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
-import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings } from '@/hooks/useWecData';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
-import { SeasonYear } from '@/contexts/SeasonContext';
+
+type SeasonYear = 2024 | 2025 | 2026;
 
 type SeasonStatus = 'completed' | 'in-progress' | 'upcoming';
 
@@ -31,20 +31,11 @@ const StandingsEmptyState = ({ message }: { message: string }) => (
   </div>
 );
 
-const SEASON_2026_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-
 const Standings = () => {
-  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2026);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonYear>(2025);
 
   const { drivers, teams, races, status } = SEASON_DATA[selectedSeason];
   
-  // Use DB hooks for 2026
-  const is2026 = selectedSeason === 2026;
-  const { data: dbHypercarDrivers } = useHypercarDriversStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbHypercarMfg } = useHypercarManufacturersStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbLmgt3Drivers } = useLmgt3DriversStandings(is2026 ? SEASON_2026_ID : null);
-  const { data: dbLmgt3Teams } = useLmgt3TeamsStandings(is2026 ? SEASON_2026_ID : null);
-
   // Calculate completed rounds
   const completedRounds = races.filter(r => r.status === 'completed').length;
   const totalRounds = races.length;
@@ -93,7 +84,7 @@ const Standings = () => {
   };
 
   // Calculate Manufacturers Championship (aggregate points by manufacturer for Hypercar only)
-  const getManufacturersStandings = useCallback(() => {
+  const getManufacturersStandings = () => {
     const hypercarTeams = teams.filter(t => t.class === 'HYPERCAR');
     const manufacturerPoints: Record<string, { points: number; color: string; country: string; countryFlag: string; wins: number; entries: number }> = {};
     
@@ -115,17 +106,17 @@ const Standings = () => {
     return Object.entries(manufacturerPoints)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.points - a.points);
-  }, [teams]);
+  };
 
   // Get car entries (teams) for Hypercar World Cup
-  const getHypercarEntries = useCallback(() => {
+  const getHypercarEntries = () => {
     return teams
       .filter(t => t.class === 'HYPERCAR')
       .sort((a, b) => b.points - a.points);
-  }, [teams]);
+  };
 
   // Get drivers sorted by points for each class
-  const getDriversStandings = useCallback((carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
+  const getDriversStandings = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
     const driverGroups: Record<string, typeof drivers> = {};
 
@@ -145,7 +136,13 @@ const Standings = () => {
     }));
 
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
-  }, [drivers]);
+  };
+
+  const manufacturersStandings = getManufacturersStandings();
+  const hypercarEntries = useMemo(
+    () => getHypercarEntries(),
+    [teams]
+  );
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
     <motion.div
@@ -279,410 +276,22 @@ const Standings = () => {
     </motion.div>
   );
 
-  const hypercarDrivers = useMemo(() => {
-    if (is2026) {
-      return (dbHypercarDrivers || []).map(d => ({
-        id: d.car_number,
-        name: d.team_name,
-        displayName: d.team_name,
-        points: d.total_points,
-        position: d.position,
-        teamId: d.car_number,
-        team: d.team_name,
-        carNumber: d.car_number,
-        countryFlag: '🏁'
-      }));
-    }
-    return getDriversStandings('HYPERCAR');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drivers, is2026, dbHypercarDrivers, getDriversStandings]);
 
-  const manufacturersStandings = useMemo(() => {
-    if (is2026) {
-      return (dbHypercarMfg || []).map(m => ({
-        name: m.manufacturer,
-        points: m.total_points,
-        position: m.position,
-        color: '#E8002D',
-        country: '',
-        countryFlag: '🏁',
-        wins: 0,
-        entries: 0
-      }));
-    }
-    return getManufacturersStandings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teams, is2026, dbHypercarMfg, getManufacturersStandings]);
 
-  const hypercarEntries = useMemo(() => {
-    if (is2026) {
-      return (dbHypercarDrivers || [])
-        .map(d => ({
-          id: d.car_number,
-          name: d.team_name,
-          carNumber: d.car_number,
-          manufacturer: d.manufacturer,
-          points: d.total_points,
-          position: d.position,
-          color: '#E8002D',
-          class: 'HYPERCAR' as const,
-        }))
-        .sort((a, b) => b.points - a.points);
-    }
-    return getHypercarEntries();
-  }, [is2026, dbHypercarDrivers, getHypercarEntries]);
-
-  const lmgt3Drivers = useMemo(() => {
-    if (is2026) {
-      return (dbLmgt3Drivers || []).map(d => ({
-        id: d.car_number,
-        name: d.team_name,
-        displayName: d.team_name,
-        points: d.total_points,
-        position: d.position,
-        teamId: d.car_number,
-        team: d.team_name,
-        carNumber: d.car_number,
-        countryFlag: '🏁'
-      }));
-    }
-    return getDriversStandings('LMGT3');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drivers, is2026, dbLmgt3Drivers, getDriversStandings]);
-
-  const lmgt3Teams = useMemo(() => {
-    if (is2026) {
-      return (dbLmgt3Teams || []).map(t => ({
-        id: t.car_number,
-        name: t.team_name,
-        carNumber: t.car_number,
-        manufacturer: '',
-        points: t.total_points,
-        position: t.position,
-        color: '#E8002D',
-        class: 'LMGT3' as const
-      }));
-    }
-    return teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
-  }, [teams, is2026, dbLmgt3Teams]);
+  const hypercarDrivers = useMemo(
+    () => getDriversStandings('HYPERCAR'),
+    [drivers]
+  );
+  const lmgt3Drivers = useMemo(
+    () => getDriversStandings('LMGT3'),
+    [drivers]
+  );
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [drivers]
   );
   const lmp2Teams = teams.filter(t => t.class === 'LMP2').sort((a, b) => b.points - a.points);
-
-
-  // Data normalization for rendering
-  const isHistoric = selectedSeason < 2026;
-  const historicData = selectedSeason === 2025 ? standings2025 : selectedSeason === 2024 ? standings2024 : null;
-
-  // Helpers to check if we have data to display
-  const hasHypercarDrivers = isHistoric ? !!historicData?.hypercars?.drivers?.length : hypercarDrivers.length > 0;
-  const hasHypercarTeams = isHistoric ? !!historicData?.hypercars?.teams?.length : hypercarEntries.length > 0;
-  const hasHypercarManufacturers = isHistoric ? !!historicData?.hypercars?.manufacturers?.length : manufacturersStandings.length > 0;
-
-  const hasLmgt3Drivers = isHistoric ? !!historicData?.lmgt3?.drivers?.length : lmgt3Drivers.length > 0;
-  const hasLmgt3Teams = isHistoric ? !!historicData?.lmgt3?.teams?.length : lmgt3Teams.length > 0;
-
-  const hasLmp2Drivers = isHistoric ? !!historicData?.lmp2?.drivers?.length : lmp2Drivers.length > 0;
-  const hasLmp2Teams = isHistoric ? !!historicData?.lmp2?.teams?.length : lmp2Teams.length > 0;
-
-  const content = (
-    <div className="space-y-10">
-      {/* Hypercar Championships */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-6">
-          <Trophy className="w-6 h-6 text-wec-gold" />
-          <h2 className="text-2xl font-bold">Hypercar</h2>
-          <Badge className="bg-primary/20 text-primary border-primary/30">
-            {CLASS_BADGES.HYPERCAR}
-          </Badge>
-        </div>
-
-        <Tabs defaultValue="drivers" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
-            <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
-              <User className="w-3 h-3" />
-              Drivers
-            </TabsTrigger>
-            <TabsTrigger value="entries" className="gap-2 text-xs font-bold">
-              <Users className="w-3 h-3" />
-              Entries
-            </TabsTrigger>
-            <TabsTrigger value="manufacturers" className="gap-2 text-xs font-bold">
-              <Factory className="w-3 h-3" />
-              Manufacturers
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="drivers">
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
-                </span>
-              </div>
-              {hasHypercarDrivers ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {!isHistoric
-                    ? hypercarDrivers.map((driver, index) => (
-                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
-                      ))
-                    : historicData!.hypercars.drivers.map((driver: Record<string, unknown>, index: number) => (
-                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
-                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
-                          </div>
-                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              ) : (
-                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="entries">
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
-                </span>
-              </div>
-              {hasHypercarTeams ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {!isHistoric
-                    ? hypercarEntries.map((team, index) => (
-                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
-                      ))
-                    : historicData!.hypercars.teams.map((team: Record<string, unknown>, index: number) => (
-                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
-                            <span className="font-medium text-sm">{String(team.team)}</span>
-                          </div>
-                          <span className="font-racing text-lg">{String(team.points)} pts</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              ) : (
-                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="manufacturers">
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
-                </span>
-              </div>
-              {hasHypercarManufacturers ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {!isHistoric
-                    ? manufacturersStandings.map((manufacturer, index) => (
-                        <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
-                      ))
-                    : historicData!.hypercars.manufacturers.map((manufacturer: Record<string, unknown>, index: number) => (
-                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(manufacturer.position)}</span>
-                            <span className="font-medium text-sm">{String(manufacturer.manufacturer)}</span>
-                          </div>
-                          <span className="font-racing text-lg">{String(manufacturer.points)} pts</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              ) : (
-                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* LMGT3 Championship */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-6">
-          <Trophy className="w-6 h-6 text-green-400" />
-          <h2 className="text-2xl font-bold">LMGT3</h2>
-          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-            {CLASS_BADGES.LMGT3}
-          </Badge>
-        </div>
-
-        <Tabs defaultValue="drivers" className="w-full">
-          <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
-            <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
-              <User className="w-3 h-3" />
-              Drivers
-            </TabsTrigger>
-            <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
-              <Users className="w-3 h-3" />
-              Teams
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="drivers">
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {CHAMPIONSHIPS.LMGT3_DRIVERS}
-                </span>
-              </div>
-              {hasLmgt3Drivers ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {!isHistoric
-                    ? lmgt3Drivers.map((driver, index) => (
-                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
-                      ))
-                    : historicData!.lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
-                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
-                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
-                          </div>
-                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              ) : (
-                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="teams">
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {CHAMPIONSHIPS.LMGT3_TEAMS}
-                </span>
-              </div>
-              {hasLmgt3Teams ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {!isHistoric
-                    ? lmgt3Teams.map((team, index) => (
-                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
-                      ))
-                    : historicData!.lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
-                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
-                            <span className="font-medium text-sm">{String(team.team)}</span>
-                          </div>
-                          <span className="font-racing text-lg">{String(team.points)} pts</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              ) : (
-                <StandingsEmptyState message={isHistoric ? EMPTY_STATES.NO_STANDINGS : "Season in progress — standings will update after each round."} />
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {!is2026 && (
-      <div className="mb-10">
-        {/* LMP2 - Le Mans Only */}
-        <div className="flex items-center gap-3 mb-6">
-          <Trophy className="w-6 h-6 text-blue-400" />
-          <h2 className="text-2xl font-bold">LMP2</h2>
-          <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
-            {CLASS_BADGES.LMP2}
-          </Badge>
-        </div>
-
-        <div className="glass-card p-4 md:p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Info className="w-4 h-4 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
-              {POINTS_INFO.LMP2_NOTE}
-            </span>
-          </div>
-
-          {hasLmp2Teams || hasLmp2Drivers ? (
-            <Tabs defaultValue="teams" className="w-full">
-              <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
-                <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
-                  <Users className="w-3 h-3" />
-                  Teams
-                </TabsTrigger>
-                <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
-                  <User className="w-3 h-3" />
-                  Drivers
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="teams">
-                {hasLmp2Teams ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {!isHistoric
-                      ? lmp2Teams.map((team, index) => (
-                          <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
-                        ))
-                      : historicData!.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
-                          <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                            <div className="flex items-center gap-3">
-                              <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
-                              <span className="font-medium text-sm">{String(team.team)}</span>
-                            </div>
-                            <span className="font-racing text-lg">{String(team.points)} pts</span>
-                          </div>
-                        ))
-                    }
-                  </div>
-                ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
-                )}
-              </TabsContent>
-
-              <TabsContent value="drivers">
-                {hasLmp2Drivers ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {!isHistoric
-                      ? lmp2Drivers.map((driver, index) => (
-                          <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
-                        ))
-                      : historicData!.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
-                          <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
-                            <div className="flex items-center gap-3">
-                              <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
-                              <span className="font-medium text-sm">{String(driver.drivers)}</span>
-                            </div>
-                            <span className="font-racing text-lg">{String(driver.points)} pts</span>
-                          </div>
-                        ))
-                    }
-                  </div>
-                ) : (
-                  <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
-                )}
-              </TabsContent>
-            </Tabs>
-          ) : (
-            <StandingsEmptyState message={EMPTY_STATES.NO_STANDINGS} />
-          )}
-        </div>
-      </div>
-      )}
-    </div>
-  );
+  const lmgt3Teams = teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
 
   return (
     <div className="min-h-screen bg-background">
@@ -738,11 +347,576 @@ const Standings = () => {
           </div>
         </motion.div>
 
-        {isHistoric ? (
+
+        {selectedSeason < 2026 ? (
           <AuthGate featureName="Historical Data">
-            {content}
+            <div className="space-y-10">
+              {/* Hypercar Championships */}
+
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-wec-gold" />
+            <h2 className="text-2xl font-bold">Hypercar</h2>
+            <Badge className="bg-primary/20 text-primary border-primary/30">
+              {CLASS_BADGES.HYPERCAR}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="entries" className="gap-2 text-xs font-bold">
+                <Users className="w-3 h-3" />
+                Entries
+              </TabsTrigger>
+              <TabsTrigger value="manufacturers" className="gap-2 text-xs font-bold">
+                <Factory className="w-3 h-3" />
+                Manufacturers
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : hypercarDrivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarDrivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                          <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="entries">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
+                  </span>
+                </div>
+                {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {hypercarEntries.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  </>
+                ) : hypercarEntries.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarEntries.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                          <span className="font-medium text-sm">{String(team.team)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(team.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="manufacturers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : manufacturersStandings.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {manufacturersStandings.map((manufacturer, index) => (
+                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMGT3 Championship */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-green-400" />
+            <h2 className="text-2xl font-bold">LMGT3</h2>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              {CLASS_BADGES.LMGT3}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <Users className="w-3 h-3" />
+                Teams
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_DRIVERS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Drivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Drivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="teams">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_TEAMS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Teams.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Teams.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMP2 - Le Mans Only */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-blue-400" />
+            <h2 className="text-2xl font-bold">LMP2</h2>
+            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+              {CLASS_BADGES.LMP2}
+            </Badge>
+          </div>
+
+          <div className="glass-card p-4 md:p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">
+                {POINTS_INFO.LMP2_NOTE}
+              </span>
+            </div>
+
+            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
+              <Tabs defaultValue="teams" className="w-full">
+                <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <Users className="w-3 h-3" />
+                    Teams
+                  </TabsTrigger>
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <User className="w-3 h-3" />
+                    Drivers
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="teams">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                            <span className="font-medium text-sm">{String(team.team)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Teams.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Teams.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+
+                <TabsContent value="drivers">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Drivers.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Drivers.map((driver, index) => (
+                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+            )}
+          </div>
+        </div>
+
+
+            </div>
           </AuthGate>
-        ) : content}
+        ) : (
+          <div className="space-y-10">
+            {/* Hypercar Championships */}
+
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-wec-gold" />
+            <h2 className="text-2xl font-bold">Hypercar</h2>
+            <Badge className="bg-primary/20 text-primary border-primary/30">
+              {CLASS_BADGES.HYPERCAR}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="entries" className="gap-2 text-xs font-bold">
+                <Users className="w-3 h-3" />
+                Entries
+              </TabsTrigger>
+              <TabsTrigger value="manufacturers" className="gap-2 text-xs font-bold">
+                <Factory className="w-3 h-3" />
+                Manufacturers
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_DRIVERS} • {POINTS_INFO.DRIVERS_SHARED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : hypercarDrivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarDrivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.drivers.map((driver: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                          <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="entries">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_TEAMS} • {POINTS_INFO.ENTRIES_INDEPENDENT}
+                  </span>
+                </div>
+                {selectedSeason === 2026 && hypercarEntries.length > 0 ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">Season in progress — standings will update after each round.</p>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {hypercarEntries.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  </>
+                ) : hypercarEntries.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {hypercarEntries.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : selectedSeason === 2025 || selectedSeason === 2024 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {(selectedSeason === 2025 ? standings2025 : standings2024).lmgt3.teams.map((team: Record<string, unknown>, index: number) => (
+                      <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                          <span className="font-medium text-sm">{String(team.team)}</span>
+                        </div>
+                        <span className="font-racing text-lg">{String(team.points)} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="manufacturers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.HYPERCAR_MANUFACTURERS} • {POINTS_INFO.MANUFACTURERS_COMBINED}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : manufacturersStandings.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {manufacturersStandings.map((manufacturer, index) => (
+                      <ManufacturerRow key={`${manufacturer.name}-${index}`} manufacturer={manufacturer} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMGT3 Championship */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-green-400" />
+            <h2 className="text-2xl font-bold">LMGT3</h2>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              {CLASS_BADGES.LMGT3}
+            </Badge>
+          </div>
+
+          <Tabs defaultValue="drivers" className="w-full">
+            <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
+              <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <User className="w-3 h-3" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                <Users className="w-3 h-3" />
+                Teams
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="drivers">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_DRIVERS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Drivers.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Drivers.map((driver, index) => (
+                      <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="teams">
+              <div className="glass-card p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {CHAMPIONSHIPS.LMGT3_TEAMS}
+                  </span>
+                </div>
+                {selectedSeason === 2026 ? (
+                  <StandingsEmptyState message="Season in progress — standings will update after each round." />
+                ) : lmgt3Teams.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    {lmgt3Teams.map((team, index) => (
+                      <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                    ))}
+                  </div>
+                ) : (
+                  <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* LMP2 - Le Mans Only */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy className="w-6 h-6 text-blue-400" />
+            <h2 className="text-2xl font-bold">LMP2</h2>
+            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+              {CLASS_BADGES.LMP2}
+            </Badge>
+          </div>
+
+          <div className="glass-card p-4 md:p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">
+                {POINTS_INFO.LMP2_NOTE}
+              </span>
+            </div>
+
+            {lmp2Teams.length > 0 || lmp2Drivers.length > 0 ? (
+              <Tabs defaultValue="teams" className="w-full">
+                <TabsList className="grid w-full max-w-xs grid-cols-2 mb-4">
+                  <TabsTrigger value="teams" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <Users className="w-3 h-3" />
+                    Teams
+                  </TabsTrigger>
+                  <TabsTrigger value="drivers" className="gap-2 text-xs font-bold min-h-[44px] md:min-h-0">
+                    <User className="w-3 h-3" />
+                    Drivers
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="teams">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.teams.map((team: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(team.position)}</span>
+                            <span className="font-medium text-sm">{String(team.team)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(team.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Teams.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Teams.map((team, index) => (
+                        <EntryRow key={`${team.id}-${index}`} team={team} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+
+                <TabsContent value="drivers">
+                  {selectedSeason === 2024 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {standings2024.lmp2.drivers.map((driver: Record<string, unknown>, index: number) => (
+                        <div key={`${index}`} className="flex justify-between items-center p-3 rounded-lg bg-muted/20 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-muted-foreground w-4">{String(driver.position)}</span>
+                            <span className="font-medium text-sm">{String(driver.drivers)}</span>
+                          </div>
+                          <span className="font-racing text-lg">{String(driver.points)} pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : lmp2Drivers.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                      {lmp2Drivers.map((driver, index) => (
+                        <DriverRow key={`${driver.id}-${index}`} driver={driver} position={index + 1} />
+                      ))}
+                    </div>
+                  ) : (
+                    <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+                  )}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <StandingsEmptyState message={selectedSeason < 2026 ? "Historical standings data not available" : EMPTY_STATES.NO_STANDINGS} />
+            )}
+          </div>
+        </div>
+
+
+          </div>
+        )}
         {/* Legend */}
         <motion.div 
           initial={{ opacity: 0 }}
