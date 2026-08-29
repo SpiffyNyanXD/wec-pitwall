@@ -1,75 +1,44 @@
+import "./instrument";
 import "./lib/posthog";
+
+import { createRoot } from "react-dom/client";
+import * as Sentry from "@sentry/react";
+import App from "./App.tsx";
+import "./index.css";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { inject } from '@vercel/analytics';
-import React from 'react';
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import ErrorFallback from "./components/ErrorFallback";
 
 injectSpeedInsights();
 inject();
 
-class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
 
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
-  }
+import { HelmetProvider } from 'react-helmet-async';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-  render() {
-    if (this.state.hasError) {
-      return React.createElement(ErrorFallback, { error: this.state.error });
-    }
-    return this.props.children;
-  }
-}
+Sentry.init({
+  dsn: "https://3c5169ab31c2f8fcdde00d5009c7f0fa@o4511398217318400.ingest.us.sentry.io/4511398282657792",
+  sendDefaultPii: true,
+});
 
-async function bootstrap() {
-  try {
-    await import("./instrument");
-    const Sentry = await import("@sentry/react");
-    const { default: App } = await import("./App.tsx");
-    const { HelmetProvider } = await import('react-helmet-async');
-    const { QueryClient, QueryClientProvider } = await import('@tanstack/react-query');
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10,
+      gcTime: 1000 * 60 * 60,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: 1000 * 60 * 10,
-          gcTime: 1000 * 60 * 60,
-          retry: 2,
-          refetchOnWindowFocus: false,
-        },
-      },
-    });
-
-    createRoot(document.getElementById("root")!).render(
-      React.createElement(React.StrictMode, null,
-        React.createElement(QueryClientProvider, { client: queryClient },
-          React.createElement(HelmetProvider, null,
-            React.createElement(Sentry.ErrorBoundary, {
-              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
-            },
-              React.createElement(BootErrorBoundary, null,
-                React.createElement(App, null)
-              )
-            )
-          )
-        )
-      )
-    );
-  } catch (err) {
-    console.error("Boot error:", err);
-    document.getElementById("root")!.innerHTML = `
-      <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">
-        <h2>Failed to boot the application</h2>
-        <pre>${err instanceof Error ? err.stack : String(err)}</pre>
-      </div>
-    `;
-  }
-}
-
-bootstrap();
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
+);
