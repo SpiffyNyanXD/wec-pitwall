@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,9 +10,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { races2024, races2025, races2026 } from '@/data/wecData';
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AuthGate } from "@/components/AuthGate";
+import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
+import { RaceCardSkeleton } from '@/components/PageSkeleton';
 
 const Schedule = () => {
-  const allRaces = [...races2026, ...races2025, ...races2024];
+  const { seasonId, loading: seasonLoading } = useActiveSeasonId();
+  const { data: dbRaces2026, loading: racesLoading, error: racesError } = useRaces(seasonId);
+  const isRacesLoading = seasonLoading || racesLoading;
+
+  const mappedRaces2026 = useMemo(() => {
+    const list = dbRaces2026 && dbRaces2026.length > 0 ? dbRaces2026 : races2026;
+    return list.slice().sort((a, b) => {
+      if (a.round === null) return 1;
+      if (b.round === null) return -1;
+      return (a.round ?? 0) - (b.round ?? 0);
+    });
+  }, [dbRaces2026]);
+
+  const allRaces = useMemo(() => [...mappedRaces2026, ...races2025, ...races2024], [mappedRaces2026]);
   const raceStatuses = React.useMemo(() => computeAllRaceStatuses(
     allRaces.map(r => ({
       id: r.id,
@@ -48,7 +63,7 @@ const Schedule = () => {
           {/* Round & Flag */}
           <div className="flex items-center gap-3 md:w-32">
             <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-muted/50 flex items-center justify-center shrink-0">
-              <span className="text-2xl">{race.flag}</span>
+              <span className="text-2xl">{(race.flag as string) ?? '🏁'}</span>
             </div>
             <div className="md:hidden flex-1 min-w-0">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -179,18 +194,23 @@ const Schedule = () => {
           </TabsList>
 
           <TabsContent value="2026">
-            <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
-              {races2026
-                .slice()
-                .sort((a, b) => {
-                  if (a.round === null) return 1;
-                  if (b.round === null) return -1;
-                  return a.round - b.round;
-                })
-                .map((race, index) => (
-                  <RaceCard key={race.id} race={race} index={index} />
+            {isRacesLoading ? (
+              <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <RaceCardSkeleton key={i} />
                 ))}
-            </div>
+              </div>
+            ) : racesError || mappedRaces2026.length === 0 ? (
+              <div className="glass-card p-8 text-center text-muted-foreground border-dashed border-2 border-border/50">
+                {racesError ? `Error loading races: ${racesError}` : 'No 2026 races available at this time.'}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 3xl:grid-cols-2 4xl:grid-cols-3 gap-3 md:gap-4">
+                {mappedRaces2026.map((race, index) => (
+                  <RaceCard key={race.id} race={race as unknown as Record<string, unknown>} index={index} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="2025">

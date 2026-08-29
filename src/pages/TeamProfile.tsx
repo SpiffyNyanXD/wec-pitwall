@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
@@ -16,16 +17,22 @@ import { getTeamById, getDriverById, Team } from '@/data/wecData';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { getFlagEmoji } from '@/lib/flagUtils';
 
 
-const TeamDetails = ({ teamDrivers, dbDrivers, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
+const TeamDetails = ({ teamDrivers, dbDrivers, dbDriversError, isDriversLoading, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; dbDriversError: Error | null; isDriversLoading: boolean; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
   <div className="glass-card p-6">
     <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
       <Wrench className="w-5 h-5 text-primary" />
       Team Details
     </h2>
     <div className="space-y-4">
-      {dbDrivers && dbDrivers.length > 0 ? (
+      {dbDriversError && !isDriversLoading ? (
+        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+          <p className="text-xs text-red-400 mb-1">2026 Driver Lookup Failed</p>
+          <p className="text-xs text-muted-foreground">{dbDriversError.message}</p>
+        </div>
+      ) : dbDrivers && dbDrivers.length > 0 ? (
         <div className="p-3 rounded-lg bg-muted/30">
           <p className="text-xs text-muted-foreground mb-2">2026 Drivers</p>
           <div className="space-y-1">
@@ -223,8 +230,7 @@ const TeamProfile = () => {
   const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
 
   // Use DB drivers instead of static data for current drivers list
-  // Use DB drivers instead of static data for current drivers list
-  const { data: dbDrivers } = useQuery({
+  const { data: dbDrivers, error: dbDriversError, isLoading: isDriversLoading } = useQuery({
     queryKey: ['team-drivers', team?.name],
     queryFn: async () => {
       if (!supabase || !team?.name) return [];
@@ -232,15 +238,38 @@ const TeamProfile = () => {
         .from('drivers')
         .select(`
           full_name,
-          cars!inner(team_name)
+          nationality,
+          nationality_code,
+          cars!inner(team_name, car_number)
         `)
         .eq('cars.team_name', team.name);
 
-      if (error) return [];
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.log('No drivers found for team (PGRST116)');
+          return [];
+        }
+        throw error;
+      }
       return data || [];
     },
-    enabled: !!team?.name && !!supabase
+    enabled: !!team?.name && !!supabase,
+    staleTime: 5 * 60 * 1000
   });
+
+  // Map dbDrivers to match the grid's expected format
+  const mappedDbDrivers = useMemo(() => {
+    if (!dbDrivers || dbDrivers.length === 0) return [];
+
+    return dbDrivers.map((d: Record<string, unknown>, index: number) => ({
+      id: `db-driver-${index}`,
+      name: d.full_name,
+      nationality: d.nationality || 'Unknown',
+      countryFlag: d.nationality_code ? getFlagEmoji(d.nationality_code) : '🏁',
+      championships: 0, // Not available in DB yet
+      leMansWins: 0, // Not available in DB yet
+    }));
+  }, [dbDrivers]);
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
@@ -268,7 +297,7 @@ const TeamProfile = () => {
   };
 
   const toggleFavorite = async () => {
-    if (!user) {
+    if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to add favorites');
       return;
     }
@@ -317,19 +346,7 @@ const TeamProfile = () => {
   };
 
   if (!team) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Team not found</h1>
-            <Button asChild className="tap-highlight">
-              <Link to="/teams">Back to Teams</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const getClassBadge = (carClass: string) => {
@@ -395,9 +412,9 @@ const TeamProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={team ? team.name : 'Team'}
-        description={team ? `${team.name} — FIA WEC team profile, car entries and driver lineup.` : ''}
-        url={team ? `/teams/${team.id}` : '/teams'}
+        title={team.name}
+        description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
+        url={`/teams/${team.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -420,7 +437,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team as unknown as Record<string, unknown>} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}
@@ -430,7 +447,7 @@ const TeamProfile = () => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-1 space-y-6"
           >
-            <TeamDetails teamDrivers={teamDrivers} dbDrivers={dbDrivers} teamData={teamData} profile={profile} />
+            <TeamDetails teamDrivers={teamDrivers} dbDrivers={dbDrivers} dbDriversError={dbDriversError} isDriversLoading={isDriversLoading} teamData={teamData} profile={profile} />
             <TeamAchievements teamData={teamData} profile={profile} teamClass={team.class} teamPosition={team.position} />
           </motion.div>
 
@@ -476,7 +493,7 @@ const TeamProfile = () => {
                 Current Drivers
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {teamDrivers.map((driver, index) => (
+                {(mappedDbDrivers.length > 0 ? mappedDbDrivers : teamDrivers).map((driver, index) => (
                   <motion.div
                     key={driver?.id}
                     initial={{ opacity: 0, y: 10 }}

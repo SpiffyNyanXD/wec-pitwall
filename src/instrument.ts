@@ -1,18 +1,25 @@
-import { init, browserTracingIntegration, replayIntegration } from "@sentry/react";
+import * as Sentry from "@sentry/react";
 
-const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  environment: import.meta.env.MODE,
 
-if (sentryDsn) {
-  init({
-    dsn: sentryDsn,
-    integrations: [
-      browserTracingIntegration(),
-      replayIntegration(),
-    ],
-    tracesSampleRate: 0.1,
-    replaysSessionSampleRate: 0.05,
-    replaysOnErrorSampleRate: 1.0,
-    environment: import.meta.env.MODE,
-    sendDefaultPii: false,
-  });
-}
+  sendDefaultPii: false,
+  enableLogs: true,
+
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: true,
+      blockAllMedia: true,
+    }),
+  ],
+
+  // Tracing
+  tracesSampleRate: 1.0,
+  tracePropagationTargets: ["localhost", /^https:\/\/wec-pitwall\.vercel\.app/],
+
+  // Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});

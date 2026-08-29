@@ -14,6 +14,7 @@ export const supabase = SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY
         storage: localStorage,
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
       }
     })
   : null;

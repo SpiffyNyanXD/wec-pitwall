@@ -5,6 +5,19 @@ working on the WEC Pitwall codebase.
 
 ---
 
+## Environment Setup
+
+When starting a new session, Jules must run the setup script to ensure dependencies are installed and the environment is cached:
+- Run: `./setup.sh`
+
+---
+
+## Design & UI Rules
+
+**CRITICAL: Before making any UI, CSS, or layout changes, you MUST read `DESIGN.md`.**
+- Never break the dark-mode-only constraint.
+- Never deviate from the defined color palette or typography rules.
+
 ## Project Overview
 
 **WEC Pitwall** is a professional-grade web application for FIA World Endurance Championship fans.

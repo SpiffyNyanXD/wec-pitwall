@@ -8,9 +8,10 @@ import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
+import { getFlagEmoji } from '@/lib/flagUtils';
 
 
-const DriverHero = ({ driver, profile, age, team, getFlagEmoji }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined; getFlagEmoji: (code: string) => string }) => (
+const DriverHero = ({ driver, profile, age, team, }: { driver: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; age: number | null; team: Record<string, unknown> | null | undefined }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -165,20 +166,15 @@ const DriverProfile = () => {
   const driver = getDriverById(id || '');
   const team = driver ? getTeamById(driver.teamId) : undefined;
 
+  const { data: profile, isLoading: isProfileLoading } = useDriverProfile(driver?.name ?? '');
+
+  // Calculate age from date_of_birth
+  const age = profile?.date_of_birth
+    ? new Date().getFullYear() - new Date(profile.date_of_birth as string).getFullYear()
+    : null;
+
   if (!driver) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl mb-4">Driver not found</h1>
-            <Button asChild className="tap-highlight">
-              <Link to="/drivers">Back to Drivers</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const getClassBadge = (carClass: string) => {
@@ -191,13 +187,6 @@ const DriverProfile = () => {
   };
 
 
-  const getFlagEmoji = (code: string): string => {
-    return code
-      .toUpperCase()
-      .split('')
-      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
-      .join('');
-  };
 
   const formatDate = (dateString?: string) => {
     const date = new Date(dateString);
@@ -216,9 +205,9 @@ const DriverProfile = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={driver ? `${driver.name} — WEC Pitwall` : 'Driver'}
-        description={driver ? `WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}` : ''}
-        url={driver ? `/drivers/${driver.id}` : '/drivers'}
+        title={`${driver.name} — WEC Pitwall`}
+        description={`WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
+        url={`/drivers/${driver.id}`}
       />
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -241,7 +230,7 @@ const DriverProfile = () => {
           <BackButton to="/drivers" label="Back to Drivers" />
         </motion.div>
 
-        <DriverHero driver={driver} profile={profile} age={age} team={team} getFlagEmoji={getFlagEmoji} />
+        <DriverHero driver={driver} profile={profile} age={age} team={team} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Stats Cards */}
@@ -277,7 +266,7 @@ const DriverProfile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver as unknown as Record<string, unknown>} />
+            <DriverDetails profile={profile} isProfileLoading={isProfileLoading} driver={driver} />
           </motion.div>
         </div>
       </AuthGate>

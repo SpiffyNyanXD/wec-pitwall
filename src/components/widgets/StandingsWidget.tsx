@@ -1,3 +1,4 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, ChevronDown, Lock } from 'lucide-react';
@@ -13,7 +14,7 @@ const StandingsWidget = () => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-  
+
   const teams = selectedSeason === 2026 ? hypercars2026 : (selectedSeason === 2025 ? teams2025 : teams2024);
   const drivers = selectedSeason === 2026 ? standings2026.hypercars.drivers : (selectedSeason === 2025 ? standings2025.hypercars.drivers : drivers2024);
 
@@ -76,12 +77,12 @@ const StandingsWidget = () => {
             </span>
           )}
         </div>
-        
-        <div 
+
+        <div
           className="w-1 h-6 rounded-full"
           style={{ backgroundColor: team.color }}
         />
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="font-racing text-xs font-bold text-primary">{team.carNumber}</span>
@@ -93,14 +94,14 @@ const StandingsWidget = () => {
             {team.manufacturer}
           </p>
         </div>
-        
+
         <div className="text-right">
           <span className="font-racing text-sm font-bold text-foreground">
             {team.points}
           </span>
           <span className="text-xs text-muted-foreground ml-0.5">pts</span>
         </div>
-        {showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
+        {AUTH_ENABLED && showAuthModal && <AuthModal featureName="Driver Profiles" onClose={() => setShowAuthModal(false)} />}
     </motion.div>
     </Link>
   );
@@ -108,17 +109,17 @@ const StandingsWidget = () => {
   const DriverRow = ({ driver, index }: { driver: ReturnType<typeof getDriversStandings>[0]; index: number }) => {
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
-      if (!user) {
-        setShowAuthModal(true);
-      } else {
+      if (!AUTH_ENABLED || user) {
         navigate(`/drivers/${driver.id.replace('-2025', '')}`);
+      } else {
+        setShowAuthModal(true);
       }
     };
 
     return (
       <div onClick={handleClick} className="cursor-pointer relative">
         <motion.div
-          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${!user ? 'opacity-80' : ''}`}
+          className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors tap-highlight ${AUTH_ENABLED && !user ? 'opacity-80' : ''}`}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.1 }}
@@ -134,7 +135,7 @@ const StandingsWidget = () => {
           <span className="flex-1 text-foreground text-sm truncate">{driver.displayName}</span>
           <span className="font-racing text-sm font-bold">{driver.points} <span className="text-xs text-muted-foreground">pts</span></span>
         </motion.div>
-        {!user && (
+        {AUTH_ENABLED && !user && (
           <div className="absolute top-2 right-2">
             <Lock className="w-3 h-3 text-zinc-400" />
           </div>
@@ -144,7 +145,7 @@ const StandingsWidget = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="glass-card p-5 col-span-full md:col-span-1"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -162,7 +163,7 @@ const StandingsWidget = () => {
                 onClick={() => setSelectedSeason(2025)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
                   selectedSeason === 2025
-                    ? 'bg-primary text-primary-foreground' 
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -172,7 +173,7 @@ const StandingsWidget = () => {
                 onClick={() => setSelectedSeason(2026)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
                   selectedSeason === 2026
-                    ? 'bg-primary text-primary-foreground' 
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -181,14 +182,14 @@ const StandingsWidget = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between mb-3">
           <Badge variant="outline" className={`text-xs ${selectedSeason === 2026 ? 'bg-primary/20 text-primary border-primary/30' : 'bg-green-500/10 text-green-400 border-green-500/30'}`}>
             {selectedSeason === 2026 ? 'Round 2 / 8' : `${selectedSeason} Season Complete`}
           </Badge>
           <Link to="/standings" className="text-xs text-primary hover:underline">All Championships</Link>
         </div>
-          
+
         <TabsList className="bg-muted/50 mb-4">
           <TabsTrigger value="entries" className="text-xs min-h-[44px] md:min-h-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Users className="w-3 h-3 mr-1" />
@@ -199,20 +200,20 @@ const StandingsWidget = () => {
             Drivers
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="entries" className="mt-0 space-y-1">
           {hypercarTeams.slice(0, 6).map((team, index) => (
             <EntryRow key={team.id} team={team} index={index} />
           ))}
         </TabsContent>
-        
+
         <TabsContent value="drivers" className="mt-0 space-y-1">
           {driversStandings.slice(0, 6).map((driver, index) => (
             <DriverRow key={driver.id} driver={driver} index={index} />
           ))}
         </TabsContent>
       </Tabs>
-      
+
 
     </motion.div>
   );
