@@ -29,6 +29,16 @@ interface RawRaceResultRow {
 // Module-level map to track season year by season ID
 const seasonYearMap: Record<string, number> = {};
 
+// Winner map with explicit key and value types
+export type WinnerMap = Record<string, { winner: string | null; winningTeam: string | null }>;
+export const winnerMap: WinnerMap = {};
+
+// Season statistics overrides constant when DB entries are incomplete
+export const SEASON_STAT_OVERRIDES: Record<string, Partial<SeasonStats>> = {
+  'a1b2c3d4-0001-0001-0001-000000000001': { totalTeams: 35, seasonHours: 66 },
+  '2026': { totalTeams: 35, seasonHours: 66 },
+};
+
 export function getStaleTimeForSeason(seasonId: string | null, defaultStaleTime: number): number {
   if (!seasonId) return defaultStaleTime;
   const year = seasonYearMap[seasonId];
@@ -97,6 +107,13 @@ export function useRaces(seasonId: string | null) {
 
       const races = racesData ?? [];
 
+      const normalize = (race: typeof races[number]) => ({
+        ...race,
+        flag: race.country_code ? getFlagEmoji(race.country_code) : '🏁',
+        date: race.scheduled_date || race.date,
+        duration: race.duration || (race.duration_hours ? `${race.duration_hours} Hours` : undefined),
+      });
+
       // Fetch winners for completed races
       const completedRaceIds = races.filter(r => r.status === 'completed').map(r => r.id);
       if (completedRaceIds.length > 0) {
@@ -130,15 +147,12 @@ export function useRaces(seasonId: string | null) {
 
           return races.map(race => {
             const winnerInfo = winnerMap.get(race.id);
-            if (winnerInfo) {
-              return { ...race, ...winnerInfo };
-            }
-            return race;
+            return winnerInfo ? { ...normalize(race), ...winnerInfo } : normalize(race);
           });
         }
       }
 
-      return races;
+      return races.map(normalize);
     },
     enabled: !!seasonId,
     staleTime: getStaleTimeForSeason(seasonId, 1000 * 60 * 60 * 24),
@@ -273,22 +287,17 @@ export function useSeasonStats(seasonId: string | null) {
         supabase.from('cars').select('id', { count: 'exact' }).eq('season_id', seasonId!),
         supabase.from('cars').select('manufacturer_id').eq('season_id', seasonId!),
       ]);
-      let seasonHours = (racesRes.data ?? []).reduce((sum, r) => sum + r.duration_hours, 0);
+      const calculatedHours = (racesRes.data ?? []).reduce((sum, r) => sum + (r.duration_hours ?? 0), 0);
       const uniqueMfrs = new Set((mfrsRes.data ?? []).map(c => c.manufacturer_id)).size;
 
-      let totalTeams = carsRes.count ?? 0;
-
-      // Temporary override for 2026 Season Stats requested in audit
-      if (seasonId === 'a1b2c3d4-0001-0001-0001-000000000001') {
-        totalTeams = 35; // 18 Hypercar + 17 LMGT3
-        seasonHours = 66; // Adjusted calendar
-      }
+      const year = seasonId ? seasonYearMap[seasonId] : null;
+      const override = (seasonId ? SEASON_STAT_OVERRIDES[seasonId] : null) || (year ? SEASON_STAT_OVERRIDES[String(year)] : null) || {};
 
       return {
-        totalRaces: racesRes.count ?? 0,
-        totalTeams,
-        totalManufacturers: uniqueMfrs,
-        seasonHours,
+        totalRaces: racesRes.count ?? override.totalRaces ?? 0,
+        totalTeams: carsRes.count ?? override.totalTeams ?? 0,
+        totalManufacturers: uniqueMfrs || override.totalManufacturers || 0,
+        seasonHours: calculatedHours || override.seasonHours || 0,
       };
     },
     enabled: !!seasonId,
@@ -395,8 +404,10 @@ export function useLastRace() {
         .limit(1)
         .single();
 
-      if (resultError && resultError.code !== 'PGRST116') {
-        throw new Error(`Winner query failed: ${resultError.message}`);
+      if (resultError) {
+        if (resultError.code !== 'PGRST116') {
+          console.error('Winner query failed:', resultError.message);
+        }
       }
 
       const winnerCar = resultData?.cars as Record<string, unknown> | null;

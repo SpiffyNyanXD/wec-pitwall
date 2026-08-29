@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
@@ -10,7 +10,7 @@ import { drivers2024, drivers2025, teams2024, races2024, teams2025, races2025, r
 import { Link } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AuthGate } from '@/components/AuthGate';
-import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useActiveSeasonId } from '@/hooks/useWecData';
+import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings } from '@/hooks/useWecData';
 import { CHAMPIONSHIPS, SEASON_STATUS, CLASS_BADGES, POINTS_INFO, EMPTY_STATES } from '@/lib/constants';
 import { SeasonYear } from '@/contexts/SeasonContext';
 
@@ -128,7 +128,7 @@ const Standings = () => {
   const getDriversStandings = useCallback((carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3') => {
     // Group drivers by their crew (shared points)
     const driverGroups: Record<string, typeof drivers> = {};
-    
+
     drivers.filter(d => d.class === carClass).forEach(driver => {
       const key = `${driver.teamId}-${driver.points}`;
       if (!driverGroups[key]) {
@@ -146,9 +146,6 @@ const Standings = () => {
 
     return uniqueDriverEntries.sort((a, b) => b.points - a.points);
   }, [drivers]);
-
-
-
 
   const DriverRow = ({ driver, position }: { driver: ReturnType<typeof getDriversStandings>[0]; position: number }) => (
     <motion.div
@@ -282,52 +279,54 @@ const Standings = () => {
     </motion.div>
   );
 
-
-
   const hypercarDrivers = useMemo(() => {
     if (is2026) {
       return (dbHypercarDrivers || []).map(d => ({
-        id: d.id,
-        name: d.driver_names,
-        displayName: d.driver_names,
+        id: d.car_number,
+        name: d.team_name,
+        displayName: d.team_name,
         points: d.total_points,
         position: d.position,
-        teamId: d.car_id,
-        countryFlag: d.flag || '🏁'
+        teamId: d.car_number,
+        team: d.team_name,
+        carNumber: d.car_number,
+        countryFlag: '🏁'
       }));
     }
     return getDriversStandings('HYPERCAR');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drivers, is2026, dbHypercarDrivers]);
+  }, [drivers, is2026, dbHypercarDrivers, getDriversStandings]);
 
   const manufacturersStandings = useMemo(() => {
     if (is2026) {
       return (dbHypercarMfg || []).map(m => ({
-        name: m.manufacturer_name,
+        name: m.manufacturer,
         points: m.total_points,
         position: m.position,
-        color: m.color || '#E8002D',
-        countryFlag: m.flag || '🏁'
+        color: '#E8002D',
+        country: '',
+        countryFlag: '🏁',
+        wins: 0,
+        entries: 0
       }));
     }
     return getManufacturersStandings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teams, is2026, dbHypercarMfg]);
+  }, [teams, is2026, dbHypercarMfg, getManufacturersStandings]);
 
   const hypercarEntries = useMemo(() => {
     if (is2026) {
       return (dbHypercarDrivers || [])
         .map(d => ({
-          id: d.car_id,
+          id: d.car_number,
           name: d.team_name,
           carNumber: d.car_number,
-          manufacturer: d.manufacturer_name,
+          manufacturer: d.manufacturer,
           points: d.total_points,
           position: d.position,
-          color: d.color || '#E8002D',
+          color: '#E8002D',
           class: 'HYPERCAR' as const,
         }))
-        .filter(team => team.class === 'HYPERCAR')
         .sort((a, b) => b.points - a.points);
     }
     return getHypercarEntries();
@@ -336,34 +335,36 @@ const Standings = () => {
   const lmgt3Drivers = useMemo(() => {
     if (is2026) {
       return (dbLmgt3Drivers || []).map(d => ({
-        id: d.id,
-        name: d.driver_names,
-        displayName: d.driver_names,
+        id: d.car_number,
+        name: d.team_name,
+        displayName: d.team_name,
         points: d.total_points,
         position: d.position,
-        teamId: d.car_id,
-        countryFlag: d.flag || '🏁'
+        teamId: d.car_number,
+        team: d.team_name,
+        carNumber: d.car_number,
+        countryFlag: '🏁'
       }));
     }
     return getDriversStandings('LMGT3');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drivers, is2026, dbLmgt3Drivers]);
+  }, [drivers, is2026, dbLmgt3Drivers, getDriversStandings]);
 
   const lmgt3Teams = useMemo(() => {
     if (is2026) {
       return (dbLmgt3Teams || []).map(t => ({
-        id: t.id,
+        id: t.car_number,
         name: t.team_name,
         carNumber: t.car_number,
-        manufacturer: t.manufacturer_name,
+        manufacturer: '',
         points: t.total_points,
         position: t.position,
-        color: t.color || '#E8002D'
+        color: '#E8002D',
+        class: 'LMGT3' as const
       }));
     }
     return teams.filter(t => t.class === 'LMGT3').sort((a, b) => b.points - a.points);
   }, [teams, is2026, dbLmgt3Teams]);
-
   const lmp2Drivers = useMemo(
     () => getDriversStandings('LMP2'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -736,8 +737,6 @@ const Standings = () => {
             {getSeasonStatusBadge()}
           </div>
         </motion.div>
-
-
 
         {isHistoric ? (
           <AuthGate featureName="Historical Data">
