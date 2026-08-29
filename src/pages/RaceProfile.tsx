@@ -73,19 +73,28 @@ const RaceProfile = () => {
       if (queryName === 'fuji') queryName = 'Fuji';
       if (queryName === 'bahrain') queryName = 'Bahrain';
 
-      const { data, error } = await supabase
+      const { data: seasonData, error: seasonError } = await supabase
+        .from('seasons')
+        .select('id')
+        .eq('year', season)
+        .maybeSingle();
+
+      if (seasonError) throw seasonError;
+      if (!seasonData) return null;
+
+      const { data, error: fetchError } = await supabase
         .from('races')
         .select('*')
         .ilike('name', `%${queryName}%`)
-        .eq('season_id', season.toString())
+        .eq('season_id', seasonData.id)
         .maybeSingle();
-      if (error) return null;
+      if (fetchError) throw fetchError;
       return data;
     },
     enabled: !!id && !!supabase,
   });
 
-  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, flag: '🏁' } as unknown as typeof race : null), [race, dbRace]);
+  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, round: dbRace.round_number, date: dbRace.scheduled_date, duration: dbRace.duration_hours, status: dbRace.status === 'scheduled' ? 'upcoming' : dbRace.status, flag: '🏁' } : null), [race, dbRace]);
 
   useEffect(() => {
     if (finalRace) {
@@ -159,7 +168,7 @@ const RaceProfile = () => {
     'spa': { 
       lapLength: '7.004 km', 
       corners: 19, 
-      description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single finalRace.',
+      description: 'Circuit de Spa-Francorchamps is one of the most celebrated tracks in motorsport, featuring the iconic Eau Rouge/Raidillon sequence. Located in the Ardennes forest, it often experiences multiple weather conditions during a single race.',
       opened: 1921,
       designer: 'Jules de Thier & Henri Langlois Van Ophem',
       elevation: '104m change',
@@ -174,7 +183,7 @@ const RaceProfile = () => {
     'le-mans': { 
       lapLength: '13.626 km', 
       corners: 38, 
-      description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance finalRace. The circuit combines permanent sections with public roads closed for the event.',
+      description: 'Circuit de la Sarthe is the legendary venue of the 24 Hours of Le Mans, the world\'s oldest active sports car endurance race. The circuit combines permanent sections with public roads closed for the event.',
       opened: 1923,
       designer: 'ACO (evolved over 100 years)',
       elevation: '30m change',

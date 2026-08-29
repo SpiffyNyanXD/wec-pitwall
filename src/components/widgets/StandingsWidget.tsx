@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Crown, Medal, Award, Lock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useSeason, SEASONS } from '@/contexts/SeasonContext';
 import { AuthModal } from '@/components/AuthModal';
 import { teams2024, drivers2024, teams2025, standings2025, standings2026, hypercars2026, races2026 } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,7 +11,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
 const StandingsWidget = () => {
-  const [selectedSeason, setSelectedSeason] = useState<2025 | 2026>(2026);
+  const { availableSeasons, currentSeason } = useSeason();
+  const [selectedSeason, setSelectedSeason] = useState<number>(currentSeason);
+
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
