@@ -1,11 +1,11 @@
-export type RaceBadgeStatus = 'done' | 'live' | 'next' | 'upcoming' | 'postponed'
+export type RaceBadgeStatus = 'done' | 'live' | 'next' | 'upcoming' | 'postponed' | 'cancelled'
 
 interface RaceForStatus {
   id: string
   scheduled_date: string       // "YYYY-MM-DD"
   start_time_utc?: string      // "HH:MM:SS" — may not exist yet, default to "11:00:00"
   duration_hours: number
-  status: 'scheduled' | 'completed' | 'cancelled'
+  status: 'scheduled' | 'completed' | 'cancelled' | 'postponed' | string
 }
 
 function getRaceWindowStatus(race: RaceForStatus, now: Date): 'done' | 'live' | 'upcoming' {
@@ -30,6 +30,8 @@ export function computeAllRaceStatuses(
   const computed = races.map(r => ({
     id: r.id,
     status: r.status === 'cancelled'
+      ? 'cancelled' as const
+      : r.status === 'postponed'
       ? 'postponed' as const
       : getRaceWindowStatus(r, now),
     date: r.scheduled_date,
