@@ -1,12 +1,11 @@
 import SEOHead from "@/components/SEOHead";
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
+import { Trophy, Medal, Calendar, MapPin, Users, Star } from 'lucide-react';
 import Header from '@/components/Header';
 import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
 
@@ -177,30 +176,7 @@ const DriverProfile = () => {
     return <NotFound />;
   }
 
-  const getClassBadge = (carClass: string) => {
-    switch (carClass) {
-      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
-      case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      default: return 'bg-muted text-muted-foreground';
-    }
-  };
 
-
-
-  const formatDate = (dateString?: string) => {
-    const date = new Date(dateString);
-
-    if (!dateString || Number.isNaN(date.getTime())) {
-      return 'Unknown';
-    }
-
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">

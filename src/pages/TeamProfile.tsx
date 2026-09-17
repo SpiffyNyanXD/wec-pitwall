@@ -3,17 +3,16 @@ import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
 import { useTeamProfile } from '@/hooks/useTeamProfile';
-import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
-import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
+import { Trophy, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getTeamById, getDriverById, Team } from '@/data/wecData';
+import { getTeamById, getDriverById } from '@/data/wecData';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -227,7 +226,7 @@ const TeamProfile = () => {
   );
   const { user } = useAuth();
 
-  const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
+  const { data: profile } = useTeamProfile(team?.name || '');
 
   // Use DB drivers instead of static data for current drivers list
   const { data: dbDrivers, error: dbDriversError, isLoading: isDriversLoading } = useQuery({
@@ -283,7 +282,7 @@ const TeamProfile = () => {
   const checkFavorite = async () => {
     if (!user || !supabase) return;
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('favorite_teams')
       .select('id')
       .eq('user_id', user.id)
@@ -382,10 +381,7 @@ const TeamProfile = () => {
     return `${team.manufacturer} Hybrid Power Unit`;
   };
 
-  const getClassLabel = () => {
-    if (team.class === 'LMP2') return 'Le Mans 24h Only';
-    return team.class;
-  };
+
 
   // Default values for extended data
   const teamData = {
