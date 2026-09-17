@@ -89,13 +89,13 @@ const RaceProfile = () => {
         .eq('season_id', seasonData.id)
         .maybeSingle();
       if (fetchError) throw fetchError;
-      return data;
+      return data ? { ...data, season } : null;
     },
     enabled: !!id && !!supabase,
     staleTime: 5 * 60 * 1000,
   });
 
-  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, round: dbRace.round_number, date: dbRace.scheduled_date, duration: dbRace.duration_hours, status: dbRace.status === 'scheduled' ? 'upcoming' : dbRace.status, flag: '🏁', season: parseInt(dbRace.season_id) || 2026 } : null), [race, dbRace]);
+  const finalRace = useMemo(() => race || (dbRace ? { ...dbRace, round: dbRace.round_number, date: dbRace.scheduled_date, duration: dbRace.duration_hours, status: dbRace.status === 'scheduled' ? 'upcoming' : dbRace.status, flag: '🏁', season: dbRace.season } : null), [race, dbRace]);
 
   useEffect(() => {
     if (finalRace) {
