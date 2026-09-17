@@ -70,7 +70,7 @@ const SettingsPage = () => {
   const handleMarketingConsentChange = async (checked: boolean) => {
     setMarketingConsent(checked);
     if (!user) return;
-    const { error } = await supabase
+    const { error: profileError } = await supabase
       .from('profiles')
       .update({ marketing_emails: checked })
       .eq('user_id', user?.id);
@@ -121,7 +121,7 @@ const SettingsPage = () => {
     }
 
     setSavingProfile(true);
-    const { error } = await supabase
+    const { error: profileError } = await supabase
       .from('profiles')
       .update({
         username: editUsername || null,
@@ -129,7 +129,7 @@ const SettingsPage = () => {
       })
       .eq('user_id', user?.id);
 
-    if (error) {
+    if (profileError) {
       toast.error('Failed to save profile');
     } else {
       toast.success('Profile updated');
@@ -145,7 +145,7 @@ const SettingsPage = () => {
       return;
     }
     
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('notification_subscriptions')
       .select('*')
       .eq('user_id', user?.id)

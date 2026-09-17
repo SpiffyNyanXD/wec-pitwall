@@ -1,6 +1,6 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import WecLogo from '@/components/WecLogo';
 import { Users, Menu, Bell, Settings, LogIn, LogOut, Home, Trophy, Calendar, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';

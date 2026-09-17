@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Trophy, Flag, Calendar, ChevronRight } from 'lucide-react';
+import { Trophy, Calendar, ChevronRight } from 'lucide-react';
 import { useLastRace } from '@/hooks/useWecData';
 
 const LastRaceWidget = () => {

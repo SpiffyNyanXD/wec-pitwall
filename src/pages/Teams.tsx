@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTeamProfile } from '@/hooks/useTeamProfile';
 
-import { teams2025, hypercars2026, lmgt3Teams2026 } from '@/data/wecData';
+import { teams2025 } from '@/data/wecData';
 
 const getClassBadge = (carClass: string) => {
   switch (carClass) {
