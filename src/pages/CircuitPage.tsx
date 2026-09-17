@@ -187,7 +187,7 @@ export function CircuitPage() {
   if (!circuitExtended) {
     return (
       <div className="min-h-screen bg-background">
-        <SEOHead title="Circuit Not Found | WEC Pitwall" description="Circuit could not be found." noIndex={true} />
+        <SEOHead title="Circuit Not Found | WEC Pitwall" description="Circuit could not be found." url="/circuits" noIndex={true} />
         <Header />
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <div className="text-center py-20">

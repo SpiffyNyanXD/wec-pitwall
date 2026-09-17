@@ -298,8 +298,8 @@ const Standings = () => {
 
 
             <SEOHead
-        title="Championship Standings 2026 | WEC Pitwall"
-        description="2026 FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round."
+        title={`Championship Standings ${selectedSeason} | WEC Pitwall`}
+        description={`FIA WEC Championship standings — Hypercar drivers, manufacturers and LMGT3 after each round for the ${selectedSeason} season.`}
         url="/standings"
       />
       {/* Background effects */}
