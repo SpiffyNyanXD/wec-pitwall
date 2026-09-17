@@ -14,6 +14,7 @@ export function RaceBadge({ status, className }: RaceBadgeProps) {
     next:      'bg-white text-black font-semibold',
     upcoming:  'bg-zinc-800 text-zinc-400',
     postponed: 'bg-amber-600 text-white',
+    cancelled: 'bg-zinc-800 text-zinc-500',
   }
 
   const badgeLabels: Record<RaceBadgeStatus, string> = {
@@ -22,6 +23,7 @@ export function RaceBadge({ status, className }: RaceBadgeProps) {
     next:      'Next',
     upcoming:  'Upcoming',
     postponed: 'Postponed',
+    cancelled: 'Cancelled',
   }
 
   return (
