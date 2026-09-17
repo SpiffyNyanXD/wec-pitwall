@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Flag, Calendar, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { races } from '@/data/wecData';
+import { races, getNextRace } from '@/data/wecData';
 import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
-import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
-import { useMemo } from 'react';
 
 interface TimeLeft {
   days: number;
@@ -17,31 +15,10 @@ interface TimeLeft {
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
-  const { convertTime } = useTimezone();
+  const { convertTime, timezone } = useTimezone();
 
-  const { seasonId } = useActiveSeasonId();
-  const { data: dbRaces } = useRaces(seasonId);
-
-  const nextRace = useMemo(() => {
-    const raceList = dbRaces && dbRaces.length > 0 ? dbRaces : races;
-    const now = new Date();
-    const upcoming = raceList.find(r => {
-      const d = r.date || (r as Record<string, unknown>).scheduled_date as string;
-      return d && new Date(d) > now && r.status !== 'completed';
-    });
-    if (!upcoming) return undefined;
-
-    return {
-      ...upcoming,
-      id: upcoming.id,
-      name: upcoming.name,
-      flag: upcoming.flag ?? '🏁',
-      circuit: upcoming.circuit,
-      date: upcoming.date || (upcoming as Record<string, unknown>).scheduled_date as string,
-      duration: upcoming.duration || `${(upcoming as Record<string, unknown>).duration_hours || 6} Hours`,
-      sessions: upcoming.sessions,
-    };
-  }, [dbRaces]);
+  // Find next upcoming race
+  const nextRace = getNextRace();
   
   useEffect(() => {
     if (!nextRace) {

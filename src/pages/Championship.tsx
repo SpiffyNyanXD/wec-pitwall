@@ -148,6 +148,84 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: { lmgt3Drivers: R
   </motion.div>
 );
 
+const ChartsSection = ({ season, mfgData, driverData }: { season: string, mfgData: Record<string, unknown>[], driverData: Record<string, unknown>[] }) => (
+  <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card p-4 sm:p-6 rounded-xl"
+    >
+      <h2 className="text-xl sm:text-2xl font-bold mb-6">Manufacturers Championship — {season}</h2>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={mfgData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
+            <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} />
+            {season === '2025' ? (
+              <>
+                <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Cadillac" stroke="#1E3A5F" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            ) : (
+              <>
+                <Line type="monotone" dataKey="Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="Alpine" stroke="#00529F" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="BMW" stroke="#1C69D4" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card p-4 sm:p-6 rounded-xl"
+    >
+      <h2 className="text-xl sm:text-2xl font-bold mb-6">Drivers Championship — {season}</h2>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={driverData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--glass-border))" />
+            <XAxis dataKey="round" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <YAxis domain={[0, 350]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--glass-border))' }} />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} />
+            {season === '2025' ? (
+              <>
+                <Line type="monotone" dataKey="#51 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#83 AF Corse" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#50 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            ) : (
+              <>
+                <Line type="monotone" dataKey="#6 Porsche" stroke="#C4A747" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#50 Ferrari" stroke="#DC0000" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#7 Toyota" stroke="#E60012" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#51 Ferrari" stroke="#B22222" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#5 Porsche" stroke="#FFD700" strokeWidth={2} dot={{ r: 5 }} />
+                <Line type="monotone" dataKey="#8 Toyota" stroke="#808080" strokeWidth={2} dot={{ r: 5 }} />
+              </>
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
+  </>
+);
+
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 

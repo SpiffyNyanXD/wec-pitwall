@@ -1,4 +1,3 @@
-import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -32,7 +31,7 @@ const FavoritesPage = () => {
   const teamsList: Record<string, unknown>[] = [];
 
   const loadFavorites = async () => {
-    if ((AUTH_ENABLED && !user) || !supabase) {
+    if (!user || !supabase) {
       setLoading(false);
       return;
     }
@@ -40,7 +39,7 @@ const FavoritesPage = () => {
     const { data, error } = await supabase
       .from('favorite_teams')
       .select('*')
-      .eq('user_id', user?.id);
+      .eq('user_id', user.id);
 
     if (data) {
       setFavoriteTeams(data);
@@ -57,7 +56,7 @@ const FavoritesPage = () => {
   }, [user]);
 
   const addFavorite = async (team: Record<string, unknown>) => {
-    if (AUTH_ENABLED && !user) {
+    if (!user) {
       toast.error('Please sign in to add favorites');
       return;
     }
@@ -69,7 +68,7 @@ const FavoritesPage = () => {
     const { error } = await supabase
       .from('favorite_teams')
       .insert({
-        user_id: user?.id,
+        user_id: user.id,
         team_id: team.id,
         team_name: team.name,
         car_class: team.class,
@@ -84,13 +83,13 @@ const FavoritesPage = () => {
   };
 
   const removeFavorite = async (favoriteId: string) => {
-    if ((AUTH_ENABLED && !user) || !supabase) return;
+    if (!user || !supabase) return;
 
     const { error } = await supabase
       .from('favorite_teams')
       .delete()
       .eq('id', favoriteId)
-      .eq('user_id', user?.id);
+      .eq('user_id', user.id);
 
     if (error) {
       toast.error('Failed to remove favorite');
@@ -113,7 +112,7 @@ const FavoritesPage = () => {
     }
   };
 
-  if (AUTH_ENABLED && !user) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />

@@ -1,5 +1,16 @@
 import { motion } from 'framer-motion';
 
+const shimmer = {
+  animate: {
+    backgroundPosition: ['200% 0', '-200% 0'],
+  },
+  transition: {
+    duration: 1.5,
+    repeat: Infinity,
+    ease: 'linear',
+  },
+};
+
 export const SkeletonBox = ({ className = '' }: { className?: string }) => (
   <motion.div
     className={`rounded-lg bg-muted/50 ${className}`}

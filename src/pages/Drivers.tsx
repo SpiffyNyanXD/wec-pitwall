@@ -1,14 +1,13 @@
 import SEOHead from "@/components/SEOHead";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Trophy, Flag, Medal, ChevronRight, Search, X } from 'lucide-react';
+import { Trophy, Flag, Medal, ChevronRight, Search, X, Users } from 'lucide-react';
 import Header from '@/components/Header';
 import { Badge } from '@/components/ui/badge';
 import { drivers2024, drivers2026, getDriversByClass } from '@/data/wecData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDriverProfile } from '@/hooks/useDriverProfile';
-import { getFlagEmoji } from '@/lib/flagUtils';
 
 
 const Drivers = () => {
@@ -24,6 +23,13 @@ const Drivers = () => {
   };
 
 
+  const getFlagEmoji = (code: string): string => {
+    return code
+      .toUpperCase()
+      .split('')
+      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
+      .join('');
+  };
 
   const DriverCard = ({ driver, index }: { driver: typeof drivers2024[0]; index: number }) => {
     const { data: profile } = useDriverProfile(driver.name);

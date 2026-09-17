@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { supabase } from '@/integrations/supabase/client';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Flag, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
