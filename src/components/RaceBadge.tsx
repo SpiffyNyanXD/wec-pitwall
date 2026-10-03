@@ -7,6 +7,10 @@ interface RaceBadgeProps {
   className?: string;
 }
 
+/**
+ * Renders the label and styling for a computed race status, with a pulsing live
+ * indicator and optional additional CSS classes.
+ */
 export function RaceBadge({ status, className }: RaceBadgeProps) {
   const badgeStyles: Record<RaceBadgeStatus, string> = {
     done:      'bg-zinc-700 text-zinc-300',

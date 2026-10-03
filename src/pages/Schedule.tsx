@@ -13,6 +13,10 @@ import { AuthGate } from "@/components/AuthGate";
 import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
 import { RaceCardSkeleton } from '@/components/PageSkeleton';
 
+/**
+ * Displays season schedules with computed race statuses, combining the active
+ * season's database races (or static fallback) with historical calendars.
+ */
 const Schedule = () => {
   const { seasonId, loading: seasonLoading } = useActiveSeasonId();
   const { data: dbRaces2026, loading: racesLoading, error: racesError } = useRaces(seasonId);
@@ -51,6 +55,10 @@ const Schedule = () => {
 
 
 
+  /**
+   * Renders a linked race summary, using its list index to stagger animation and
+   * dimming and striking through the name when the race is cancelled.
+   */
   const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => {
     const isCancelled = race.status === "cancelled" || raceStatuses.get(race.id as string) === "cancelled";
     return (

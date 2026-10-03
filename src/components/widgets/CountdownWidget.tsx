@@ -14,6 +14,10 @@ interface TimeLeft {
   seconds: number;
 }
 
+/**
+ * Displays a countdown to the first future race in the available calendar,
+ * excluding completed, cancelled, and postponed races.
+ */
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);

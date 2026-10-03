@@ -8,6 +8,10 @@ interface RaceForStatus {
   status: 'scheduled' | 'completed' | 'cancelled' | 'postponed' | string
 }
 
+/**
+ * Classifies a race against its UTC start and duration, defaulting to 11:00 UTC.
+ * Completed races are always done; both endpoints of the race window are live.
+ */
 function getRaceWindowStatus(race: RaceForStatus, now: Date): 'done' | 'live' | 'upcoming' {
   if (race.status === 'completed') return 'done'
 
@@ -20,6 +24,13 @@ function getRaceWindowStatus(race: RaceForStatus, now: Date): 'done' | 'live' | 
   return 'upcoming'
 }
 
+/**
+ * Maps race IDs to badge statuses at the current time, preserving cancellations
+ * and postponements and marking only the earliest upcoming race as next.
+ *
+ * @param races - Races with scheduled dates, durations, and stored statuses.
+ * @returns A status for each race ID, or an empty map when no races are supplied.
+ */
 export function computeAllRaceStatuses(
   races: RaceForStatus[]
 ): Map<string, RaceBadgeStatus> {
