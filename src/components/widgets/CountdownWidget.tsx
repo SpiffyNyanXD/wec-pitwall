@@ -120,7 +120,7 @@ const CountdownWidget = () => {
             2026 Season Coming Soon
           </h2>
           <p className="text-muted-foreground mb-4">
-            The 2026 FIA WEC season is underway
+            No upcoming race is currently scheduled.
           </p>
           
           {lastCompletedRace && (
