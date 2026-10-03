@@ -14,6 +14,10 @@ interface TimeLeft {
   seconds: number;
 }
 
+/**
+ * Displays a countdown to the first future race in the available calendar,
+ * excluding completed, cancelled, and postponed races.
+ */
 const CountdownWidget = () => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [hasUpcomingRace, setHasUpcomingRace] = useState(true);
@@ -27,7 +31,7 @@ const CountdownWidget = () => {
     const now = new Date();
     const upcoming = raceList.find(r => {
       const d = r.date || (r as Record<string, unknown>).scheduled_date as string;
-      return d && new Date(d) > now && r.status !== 'completed';
+      return d && new Date(d) > now && r.status !== 'completed' && r.status !== 'cancelled' && r.status !== 'postponed';
     });
     if (!upcoming) return undefined;
 
@@ -116,7 +120,7 @@ const CountdownWidget = () => {
             2026 Season Coming Soon
           </h2>
           <p className="text-muted-foreground mb-4">
-            The 2026 FIA WEC season starts March 28 at Qatar
+            No upcoming race is currently scheduled.
           </p>
           
           {lastCompletedRace && (

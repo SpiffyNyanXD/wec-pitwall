@@ -13,6 +13,10 @@ import { AuthGate } from "@/components/AuthGate";
 import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
 import { RaceCardSkeleton } from '@/components/PageSkeleton';
 
+/**
+ * Displays season schedules with computed race statuses, combining the active
+ * season's database races (or static fallback) with historical calendars.
+ */
 const Schedule = () => {
   const { seasonId, loading: seasonLoading } = useActiveSeasonId();
   const { data: dbRaces2026, loading: racesLoading, error: racesError } = useRaces(seasonId);
@@ -33,7 +37,7 @@ const Schedule = () => {
       id: r.id,
       scheduled_date: r.date,
       duration_hours: r.duration_hours || 6,
-      status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
+      status: (r.status as string) || 'scheduled'
     }))
   ), [allRaces]);
 
@@ -51,13 +55,19 @@ const Schedule = () => {
 
 
 
-  const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => (
+  /**
+   * Renders a linked race summary, using its list index to stagger animation and
+   * dimming and striking through the name when the race is cancelled.
+   */
+  const RaceCard = ({ race, index }: { race: Record<string, unknown>; index: number }) => {
+    const isCancelled = race.status === "cancelled" || raceStatuses.get(race.id as string) === "cancelled";
+    return (
     <Link to={`/race/${race.id}`}>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.05 }}
-        className="glass-card p-4 md:p-5 hover:border-primary/50 transition-all duration-300 group cursor-pointer tap-highlight"
+        className={`glass-card p-4 md:p-5 hover:border-primary/50 transition-all duration-300 group cursor-pointer tap-highlight ${isCancelled ? "opacity-60 grayscale-[30%]" : ""}`}
       >
         <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
           {/* Round & Flag */}
@@ -69,7 +79,7 @@ const Schedule = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 {race.round !== null ? `Round ${race.round}` : 'Postponed'}
               </p>
-              <p className="text-base font-bold truncate">{race.name}</p>
+              <p className={`text-base font-bold truncate ${isCancelled ? "line-through text-muted-foreground" : ""}`}>{race.name}</p>
             </div>
             <div className="md:hidden">
               {raceStatuses.has(race.id as string) && <RaceBadge status={raceStatuses.get(race.id as string)!} />}
@@ -82,7 +92,7 @@ const Schedule = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
                 {race.round !== null ? `Round ${race.round}` : 'Postponed — TBC'}
               </p>
-              <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
+              <h3 className={`text-xl font-bold transition-colors truncate ${isCancelled ? "line-through text-muted-foreground" : "text-foreground group-hover:text-primary"}`}>
                 {race.name}
               </h3>
             </div>
@@ -128,7 +138,8 @@ const Schedule = () => {
         </div>
       </motion.div>
     </Link>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">

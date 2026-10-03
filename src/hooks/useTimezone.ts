@@ -37,7 +37,9 @@ export const CIRCUIT_TIMEZONES: Record<string, string> = {
   'Interlagos': 'America/Sao_Paulo',
   'Circuit of the Americas': 'America/Chicago',
   'Fuji Speedway': 'Asia/Tokyo',
-  'Bahrain International Circuit': 'Asia/Bahrain'
+  'Bahrain International Circuit': 'Asia/Bahrain',
+  'Circuit de Barcelona-Catalunya': 'Europe/Madrid',
+  'Autodromo Nazionale Monza': 'Europe/Rome'
 };
 
 export const useTimezone = () => {

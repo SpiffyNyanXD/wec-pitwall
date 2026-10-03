@@ -25,6 +25,8 @@ const circuitSlugToDbName: Record<string, string> = {
   'fuji': 'Fuji',
   'lusail': 'Lusail',
   'bahrain': 'Bahrain',
+  'barcelona': 'Barcelona',
+  'monza': 'Monza',
 }
 
 

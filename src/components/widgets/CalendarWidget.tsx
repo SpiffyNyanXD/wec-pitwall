@@ -8,6 +8,10 @@ import { Link } from 'react-router-dom';
 import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
 import { Skeleton } from '@/components/ui/skeleton';
 
+/**
+ * Displays the active season calendar with computed race badges, falling back
+ * to the static 2025 calendar when no database races are available.
+ */
 const CalendarWidget = () => {
   const { seasonId, loading: seasonLoading } = useActiveSeasonId();
   const { data: dbRaces, loading: racesLoading } = useRaces(seasonId);
@@ -68,7 +72,7 @@ const CalendarWidget = () => {
       id: r.id,
       scheduled_date: r.date,
       duration_hours: r.duration_hours || 6,
-      status: r.status === 'postponed' ? 'cancelled' : (r.status === 'completed' ? 'completed' : 'scheduled')
+      status: (r.status as string) || 'scheduled'
     }))
   );
 
