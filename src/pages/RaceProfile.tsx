@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { RaceBadge } from '@/components/RaceBadge';
+import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
 import { useTimezone } from '@/hooks/useTimezone';
@@ -46,6 +47,13 @@ const RaceProfile = () => {
   if (!race) {
     return <NotFound />;
   }
+
+  const raceStatus = computeAllRaceStatuses(allRaces.map(r => ({
+    id: r.id,
+    scheduled_date: r.date,
+    duration_hours: r.duration_hours || 6,
+    status: r.status === 'postponed' ? 'cancelled' : r.status === 'completed' ? 'completed' : 'scheduled',
+  }))).get(race.id);
 
   const formatDate = (dateString: string, endDate?: string) => {
     const start = new Date(dateString);

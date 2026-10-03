@@ -1,6 +1,7 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Heart, Star, LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -24,37 +25,22 @@ const FavoritesPage = () => {
   }, []);
 
   const { user } = useAuth();
-  const [favoriteTeams, setFavoriteTeams] = useState<FavoriteTeam[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const { data: favoriteTeams = [], isLoading: loading, error: favoritesError, refetch: loadFavorites } = useQuery({
+    queryKey: ['favorite-teams', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('favorite_teams')
+        .select('*')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      return data as FavoriteTeam[];
+    },
+    enabled: !!user && !!supabase,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  // We don't have a good mock for all teams right now since we deprecated the static array
-  // So I'm providing an empty state placeholder
   const teamsList: Record<string, unknown>[] = [];
-
-  const loadFavorites = async () => {
-    if ((AUTH_ENABLED && !user) || !supabase) {
-      setLoading(false);
-      return;
-    }
-    
-    const { data } = await supabase
-      .from('favorite_teams')
-      .select('*')
-      .eq('user_id', user?.id);
-
-    if (data) {
-      setFavoriteTeams(data);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    if (user) {
-      loadFavorites();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
 
   const addFavorite = async (team: Record<string, unknown>) => {
     if (AUTH_ENABLED && !user) {
@@ -79,7 +65,8 @@ const FavoritesPage = () => {
       toast.error('Failed to add favorite');
     } else {
       toast.success(`Added ${team.name} to favorites`);
-      loadFavorites();
+      await queryClient.invalidateQueries({ queryKey: ['team-favorite', user?.id, team.id] });
+      await loadFavorites();
     }
   };
 
@@ -96,7 +83,8 @@ const FavoritesPage = () => {
       toast.error('Failed to remove favorite');
     } else {
       toast.success('Removed from favorites');
-      setFavoriteTeams(prev => prev.filter(f => f.id !== favoriteId));
+      await queryClient.invalidateQueries({ queryKey: ['team-favorite', user?.id] });
+      await loadFavorites();
     }
   };
 
@@ -152,6 +140,14 @@ const FavoritesPage = () => {
         >
           <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
           <p className="text-muted-foreground mb-8">Select your favorite teams to follow</p>
+
+          {loading && <p role="status">Loading favorites…</p>}
+          {favoritesError && (
+            <div role="alert" className="glass-card p-4 mb-8">
+              <p>Failed to load favorites.</p>
+              <Button variant="outline" onClick={() => void loadFavorites()}>Retry</Button>
+            </div>
+          )}
 
           {/* Current Favorites */}
           {favoriteTeams.length > 0 && (

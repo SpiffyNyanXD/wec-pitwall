@@ -25,7 +25,10 @@ const Auth = () => {
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
   const usernameCheckTimer = useRef<NodeJS.Timeout | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn, signUp, session, user, loading } = useAuth();
+  const { signIn, signUp, user, loading } = useAuth();
+  const [profileSaveFailed, setProfileSaveFailed] = useState(false);
+  const [profileRetry, setProfileRetry] = useState(0);
+  const accountCreated = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -55,11 +58,49 @@ const Auth = () => {
     }, 500);
   };
 
+  const from = (location.state as { from?: string })?.from || '/';
+
   useEffect(() => {
-    if (!loading && user) {
-      navigate('/');
-    }
-  }, [user, loading, navigate]);
+    if (loading || !user || isSubmitting) return;
+    let cancelled = false;
+
+    const finishProfile = async () => {
+      try {
+        const signupUsername = user.user_metadata?.username;
+        if (typeof signupUsername === 'string' && signupUsername) {
+          const { data: profile, error: lookupError } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('user_id', user.id)
+            .single();
+          if (lookupError) throw lookupError;
+          if (cancelled) return;
+
+          // Complete signup only; do not overwrite later profile edits.
+          if (!profile.username) {
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .update({ username: signupUsername })
+              .eq('user_id', user.id)
+              .select('id')
+              .single();
+            if (profileError) throw profileError;
+          }
+        }
+        if (cancelled) return;
+        if (accountCreated.current) toast.success('Account created!');
+        navigate(from, { replace: true });
+      } catch (error) {
+        if (cancelled) return;
+        console.error('Failed to save signup profile:', error);
+        toast.error('Failed to save your profile. Please retry.');
+        setProfileSaveFailed(true);
+      }
+    };
+
+    void finishProfile();
+    return () => { cancelled = true; };
+  }, [user, loading, isSubmitting, profileRetry, navigate, from]);
 
   const validateForm = () => {
     const emailResult = emailSchema.safeParse(email);
@@ -100,8 +141,6 @@ const Auth = () => {
       } else {
         localStorage.removeItem('wec_remembered_email');
       }
-      const from = (location.state as { from?: string })?.from || '/';
-      navigate(from, { replace: true });
     }
   };
 
@@ -123,7 +162,7 @@ const Auth = () => {
       return;
     }
 
-    const { error } = await signUp(email, password, displayName);
+    const { error, session: newSession } = await signUp(email, password, displayName, username);
     if (error) {
       if (error.message.includes('already registered')) {
         toast.error('This email is already registered. Try logging in instead.');
@@ -131,13 +170,11 @@ const Auth = () => {
         toast.error(error.message);
       }
     } else {
-      await supabase
-        .from('profiles')
-        .update({ username, display_name: displayName || null })
-        .eq('user_id', session?.user?.id || '');
-      toast.success('Account created! Please check your email to verify.');
-      const from = (location.state as { from?: string })?.from || '/';
-      navigate(from, { replace: true });
+      accountCreated.current = true;
+      if (!newSession) {
+        toast.success('Please check your email to verify and finish your profile.');
+        navigate(from, { replace: true });
+      }
     }
   };
 
@@ -174,7 +211,19 @@ const Auth = () => {
     }
   };
 
-  if (loading) {
+  if (user && profileSaveFailed) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-4">
+        <p role="alert">Your account is signed in, but your profile could not be saved.</p>
+        <Button onClick={() => {
+          setProfileSaveFailed(false);
+          setProfileRetry(value => value + 1);
+        }}>Retry saving profile</Button>
+      </div>
+    );
+  }
+
+  if (loading || user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

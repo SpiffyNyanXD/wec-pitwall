@@ -1,12 +1,11 @@
-import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
 import { useTeamProfile } from '@/hooks/useTeamProfile';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Trophy, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
@@ -127,7 +126,7 @@ const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { team
 );
 
 
-const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
+const TeamHero = ({ team, teamData, profile, isFavorite, favoriteDisabled, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; favoriteDisabled: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -175,6 +174,7 @@ const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClas
               variant={isFavorite ? "default" : "outline"}
               size="sm"
               onClick={toggleFavorite}
+              disabled={favoriteDisabled}
               className={isFavorite ? "bg-transparent hover:bg-transparent border-wec-gold text-wec-gold" : ""}
             >
               <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite ? "fill-wec-gold text-wec-gold" : ""}`} />
@@ -225,6 +225,7 @@ const TeamProfile = () => {
     [team]
   );
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: profile } = useTeamProfile(team?.name || '');
 
@@ -270,38 +271,32 @@ const TeamProfile = () => {
     }));
   }, [dbDrivers]);
 
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteId, setFavoriteId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (user && team) {
-      checkFavorite();
-    }
-  }, [user, team]);
-
-  const checkFavorite = async () => {
-    if (!user || !supabase) return;
-
-    const { data } = await supabase
-      .from('favorite_teams')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('team_id', team.id)
-      .single();
-
-    if (data) {
-      setIsFavorite(true);
-      setFavoriteId(data.id);
-    }
-  };
+  const { data: favorite, isLoading: favoriteLoading, error: favoriteError, refetch: checkFavorite } = useQuery({
+    queryKey: ['team-favorite', user?.id, team?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('favorite_teams')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('team_id', team.id)
+        .single();
+      if (error?.code === 'PGRST116') return null;
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !!team && !!supabase,
+    staleTime: 5 * 60 * 1000,
+  });
+  const favoriteId = favorite?.id;
+  const isFavorite = !!favoriteId;
 
   const toggleFavorite = async () => {
-    if (AUTH_ENABLED && !user) {
+    if (!user) {
       toast.error('Please sign in to add favorites');
       return;
     }
 
-    if (!team) return;
+    if (!team || favoriteLoading || favoriteError) return;
 
     if (!supabase) {
       toast.error('Supabase is not configured');
@@ -319,8 +314,8 @@ const TeamProfile = () => {
         toast.error('Failed to remove favorite');
       } else {
         toast.success('Removed from favorites');
-        setIsFavorite(false);
-        setFavoriteId(null);
+        await queryClient.invalidateQueries({ queryKey: ['favorite-teams', user.id] });
+        await checkFavorite();
       }
     } else {
       const { data, error } = await supabase
@@ -338,8 +333,8 @@ const TeamProfile = () => {
         toast.error('Failed to add favorite');
       } else {
         toast.success(`Added ${team.name} to favorites`);
-        setIsFavorite(true);
-        if (data) setFavoriteId(data.id);
+        await queryClient.invalidateQueries({ queryKey: ['favorite-teams', user.id] });
+        await checkFavorite();
       }
     }
   };
@@ -433,7 +428,13 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        {favoriteError && (
+          <div role="alert" className="glass-card p-4 mb-4">
+            <p>Failed to check favorite status.</p>
+            <Button variant="outline" onClick={() => void checkFavorite()}>Retry</Button>
+          </div>
+        )}
+        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} favoriteDisabled={favoriteLoading || !!favoriteError} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}

@@ -17,7 +17,7 @@ interface AuthContextType {
   loading: boolean;
   profile: Profile | null;
   profileLoading: boolean;
-  signUp: (email: string, password: string, displayName?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, displayName?: string, username?: string) => Promise<{ error: Error | null; session?: Session | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -82,23 +82,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
+  const signUp = async (email: string, password: string, displayName?: string, username?: string) => {
     if (!supabase) return { error: new Error("Supabase is not initialized") };
 
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${window.location.origin}/auth`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
           display_name: displayName,
+          username,
         },
       },
     });
     
-    return { error: error as Error | null };
+    return { error: error as Error | null, session: data.session };
   };
 
   const signIn = async (email: string, password: string) => {
