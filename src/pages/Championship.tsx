@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuthGate } from "@/components/AuthGate";
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import ManufacturerProgressionChart from '@/components/charts/ManufacturerProgressionChart';
 import { standings2025, standings2024 } from '@/data/wecData';
 import { useHypercarDriversStandings, useHypercarManufacturersStandings, useLmgt3DriversStandings, useLmgt3TeamsStandings, useSeasonDrivers, useRaces, useSeasonStats, useCarSeasonStats } from '@/hooks/useWecData';
@@ -167,14 +167,13 @@ export default function Championship() {
   const standings = season === '2025' ? standings2025 : standings2024;
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
             <SEOHead
         title="Championship Battle | WEC Pitwall"
         description="WEC Championship progression charts — see how the title fights evolved round by round across 2024, 2025 and 2026."
         url="/championship"
       />
-      <Header />
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
         <AuthGate featureName="Championship Battle">
         <motion.div
@@ -239,6 +238,6 @@ export default function Championship() {
         </motion.div>
       </AuthGate>
       </main>
-    </div>
+    </Layout>
   );
 }

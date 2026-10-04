@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { AuthGate } from "@/components/AuthGate";
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import SEOHead from '@/components/SEOHead';
 import { drivers2025 } from '@/data/wecData';
 
@@ -31,14 +31,13 @@ const DriverComparison = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
             <SEOHead
         title="Driver Comparison | WEC Pitwall"
         description="Head-to-head WEC driver comparison — points, wins, podiums, pole positions and fastest laps side by side."
         url="/compare"
       />
-      <Header />
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
         <AuthGate featureName="Driver Comparison">
         <div className="mb-8 pt-2">
@@ -170,7 +169,7 @@ const DriverComparison = () => {
         )}
       </AuthGate>
       </main>
-    </div>
+    </Layout>
   );
 };
 

@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
 import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -410,7 +410,7 @@ const TeamProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead
         title={team.name}
         description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
@@ -424,8 +424,6 @@ const TeamProfile = () => {
         />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         {/* Back Button */}
@@ -529,7 +527,7 @@ const TeamProfile = () => {
           </motion.div>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import SEOHead from '@/components/SEOHead';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -52,8 +52,7 @@ export default function ResetPassword() {
         description="Set a new password for your WEC Pitwall account."
         noIndex={true}
       />
-      <Header />
-      <div className="min-h-screen bg-background flex items-center justify-center px-4 pt-20">
+      <Layout>
         <div className="glass-card p-8 w-full max-w-md space-y-6">
           <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
 
@@ -82,7 +81,7 @@ export default function ResetPassword() {
             </Button>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, Trophy, MapPin, Flag, ChevronRight } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 import BackButton from '@/components/BackButton';
 import { races } from '@/data/wecData';
@@ -112,7 +112,7 @@ const LeMans = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <Layout>
       <SEOHead
         title="24 Hours of Le Mans"
         description="Everything about the 24 Hours of Le Mans — the most iconic endurance race in the world."
@@ -123,8 +123,6 @@ const LeMans = () => {
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-wec-gold/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-wec-gold/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4 relative z-10 max-w-6xl mx-auto space-y-8">
 
@@ -385,7 +383,7 @@ const LeMans = () => {
       </main>
 
       <Footer />
-    </div>
+    </Layout>
   );
 };
 

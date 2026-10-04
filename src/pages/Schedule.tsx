@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, Trophy, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -142,7 +142,7 @@ const Schedule = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
 
 
@@ -182,8 +182,6 @@ const Schedule = () => {
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 md:py-8 relative z-10">
         <motion.div
@@ -245,7 +243,7 @@ const Schedule = () => {
           </TabsContent>
         </Tabs>
       </main>
-    </div>
+    </Layout>
   );
 };
 

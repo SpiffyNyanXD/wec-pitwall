@@ -2,7 +2,7 @@ import SEOHead from "@/components/SEOHead";
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, BellOff } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { AuthGate } from '@/components/AuthGate';
 import { Button } from '@/components/ui/button';
 
@@ -12,9 +12,8 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead title="Notifications" url="/notifications" noIndex={true} />
-      <Header />
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10">
         <AuthGate featureName="Notifications">
         <motion.div
@@ -38,7 +37,7 @@ const Notifications = () => {
         </motion.div>
       </AuthGate>
       </main>
-    </div>
+    </Layout>
   );
 };
 
