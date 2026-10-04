@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Bell, BellOff } from 'lucide-react';
 import Header from '@/components/Header';
 import { AuthGate } from '@/components/AuthGate';
-import { Button } from '@/components/ui/button';
 
 const Notifications = () => {
   useEffect(() => {

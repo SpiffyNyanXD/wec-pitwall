@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import NotFound from './NotFound';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
@@ -6,11 +6,10 @@ import { MapPin, Calendar, Clock, Trophy, Flag, Route, Timer, History } from 'lu
 import Header from '@/components/Header';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
-import { computeAllRaceStatuses } from '@/utils/raceStatus';
 import { RaceBadge } from '@/components/RaceBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { races2024, races2025, races2026, raceResults } from '@/data/wecData';
-import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { useTimezone } from '@/hooks/useTimezone';
 import { parseMarginToSeconds } from '@/lib/raceUtils';
 
 interface CircuitFacts {
@@ -31,7 +30,7 @@ interface CircuitFacts {
 
 const RaceProfile = () => {
   const { id } = useParams();
-  const { convertTime, timezone } = useTimezone();
+  const { convertTime } = useTimezone();
   
   // Find race across all seasons
   const allRaces = [...races2026, ...races2025, ...races2024];

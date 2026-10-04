@@ -1,7 +1,6 @@
 import SEOHead from "@/components/SEOHead";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuthGate } from "@/components/AuthGate";
 import Header from '@/components/Header';
@@ -162,8 +161,6 @@ export default function Championship() {
   useSeasonStats(SEASON_2026_ID);
   useCarSeasonStats(SEASON_2026_ID);
 
-  const mfgData = season === '2025' ? manufacturerData2025 : manufacturerData2024;
-  const driverData = season === '2025' ? driversData2025 : driversData2024;
   const standings = season === '2025' ? standings2025 : standings2024;
 
   return (

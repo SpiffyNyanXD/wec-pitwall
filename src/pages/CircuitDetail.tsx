@@ -1,11 +1,9 @@
-import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 import NotFound from './NotFound';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { MapPin, Route, Timer, Calendar, Info, History } from 'lucide-react';
 import Header from '@/components/Header';
-import BackButton from '@/components/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';

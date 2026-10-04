@@ -36,8 +36,8 @@ const FavoritesPage = () => {
       setLoading(false);
       return;
     }
-    
-    const { data, error } = await supabase
+
+    const { data } = await supabase
       .from('favorite_teams')
       .select('*')
       .eq('user_id', user?.id);
