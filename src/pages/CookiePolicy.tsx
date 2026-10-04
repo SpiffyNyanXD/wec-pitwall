@@ -87,6 +87,10 @@ const cookiePolicyHTML = `
 </div>
 `;
 
+/**
+ * Renders the static cookie policy HTML with page metadata and shared navigation.
+ * @returns The cookie policy page.
+ */
 export default function CookiePolicy() {
   return (
     <>

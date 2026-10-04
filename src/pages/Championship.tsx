@@ -148,6 +148,11 @@ const Lmgt3StandingsTable = ({ lmgt3Drivers, driverNamesMap }: { lmgt3Drivers: R
   </motion.div>
 );
 
+/**
+ * Renders championship standings and progression charts for the selected season.
+ * Uses live 2026 data and static 2024/2025 data within the shared page layout.
+ * @returns The championship page with season selection and gated analytics.
+ */
 export default function Championship() {
   const [season, setSeason] = useState<'2026' | '2025' | '2024'>('2026');
 

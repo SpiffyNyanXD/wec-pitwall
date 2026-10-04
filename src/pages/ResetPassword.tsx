@@ -6,6 +6,11 @@ import Layout from '@/components/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+/**
+ * Renders the password recovery form for updating the current Supabase user's password.
+ * Validates confirmation and minimum length, then redirects home after success.
+ * @returns The password reset page with validation and submission feedback.
+ */
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

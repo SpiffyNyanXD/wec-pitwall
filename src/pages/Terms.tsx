@@ -126,6 +126,10 @@ const termsHTML = `
 </div>
 `;
 
+/**
+ * Renders the static terms of use HTML with page metadata and shared navigation.
+ * @returns The terms of use page.
+ */
 export default function Terms() {
   return (
     <>

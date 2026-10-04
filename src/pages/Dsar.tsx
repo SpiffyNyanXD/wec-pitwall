@@ -1,6 +1,10 @@
 import Layout from '@/components/Layout';
 import SEOHead from '@/components/SEOHead';
 
+/**
+ * Renders privacy rights information and the embedded Termly data request form.
+ * @returns The data subject access request page within the shared layout.
+ */
 export default function Dsar() {
   return (
     <>
