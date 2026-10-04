@@ -1,7 +1,6 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
 import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Settings, Bell, Heart, User, ChevronRight, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -41,26 +40,22 @@ const SettingsPage = () => {
   const usernameCheckTimer = useRef<NodeJS.Timeout | null>(null);
   const { timeFormat, setTimeFormat } = useTimeFormat();
   const { theme, setTheme } = useTheme();
-  const { data: notifications, isLoading: loading, error: notificationsError, refetch: loadNotificationSettings } = useQuery({
-    queryKey: ['notification-settings', user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('notification_subscriptions')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      if (error && error.code !== 'PGRST116') throw error;
-      return {
-        raceStartAlerts: data?.race_start_alerts ?? true,
-        favoriteTeamAlerts: data?.favorite_team_alerts ?? true,
-        pushNotifications: data?.push_notifications ?? false,
-      };
-    },
-    enabled: !!user && !!supabase,
-    staleTime: 5 * 60 * 1000,
+  const [notifications, setNotifications] = useState({
+    raceStartAlerts: true,
+    favoriteTeamAlerts: true,
+    pushNotifications: false,
   });
   const [marketingConsent, setMarketingConsent] = useState<boolean>(profile?.marketing_emails ?? true);
+  const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadNotificationSettings();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (profile) {
@@ -79,8 +74,8 @@ const SettingsPage = () => {
       .from('profiles')
       .update({ marketing_emails: checked })
       .eq('user_id', user?.id);
-    if (profileError) {
-      console.error('Failed to update marketing consent:', profileError);
+    if (error) {
+      console.error('Failed to update marketing consent:', error);
       setMarketingConsent(!checked); // revert on error
       toast.error('Failed to update privacy preferences');
     } else {
@@ -144,6 +139,28 @@ const SettingsPage = () => {
     setSavingProfile(false);
   };
 
+  const loadNotificationSettings = async () => {
+    if (!user || !supabase) {
+      setLoading(false);
+      return;
+    }
+
+    const { data } = await supabase
+      .from('notification_subscriptions')
+      .select('*')
+      .eq('user_id', user?.id)
+      .single();
+
+    if (data) {
+      setNotifications({
+        raceStartAlerts: data.race_start_alerts,
+        favoriteTeamAlerts: data.favorite_team_alerts,
+        pushNotifications: data.push_notifications,
+      });
+    }
+    setLoading(false);
+  };
+
   const updateNotificationSetting = async (key: string, value: boolean) => {
     if (AUTH_ENABLED && !user) {
       toast.error('Please sign in to update settings');
@@ -166,7 +183,7 @@ const SettingsPage = () => {
     if (error) {
       toast.error('Failed to update setting');
     } else {
-      await loadNotificationSettings();
+      setNotifications(prev => ({ ...prev, [key]: value }));
       toast.success('Setting updated');
     }
   };
@@ -391,12 +408,7 @@ const SettingsPage = () => {
               <h2 className="text-lg">Notifications</h2>
             </div>
             
-            {loading ? <p role="status">Loading notification settings…</p> : notificationsError ? (
-              <div role="alert">
-                <p>Failed to load notification settings.</p>
-                <Button variant="outline" onClick={() => void loadNotificationSettings()}>Retry</Button>
-              </div>
-            ) : notifications ? <div className="space-y-4">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Race Start Alerts</p>
@@ -429,7 +441,7 @@ const SettingsPage = () => {
                   onCheckedChange={(v) => updateNotificationSetting('pushNotifications', v)}
                 />
               </div>
-            </div> : null}
+            </div>
           </div>
 
           {/* Favorites Link */}
