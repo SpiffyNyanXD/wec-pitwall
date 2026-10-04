@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Flag, Calendar, Clock, CheckCircle, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { races } from '@/data/wecData';
-import { useTimezone, TIMEZONE_OPTIONS, CIRCUIT_TIMEZONES } from '@/hooks/useTimezone';
+import { useTimezone } from '@/hooks/useTimezone';
 import { useActiveSeasonId, useRaces } from '@/hooks/useWecData';
 import { useMemo } from 'react';
 
