@@ -99,11 +99,13 @@ export default function CookiePolicy() {
         description="Cookie policy for WEC Pitwall analytics platform."
       />
       <Layout>
-        <div className="max-w-3xl mx-auto">
-          <div
-            className="glass-card p-8 legal-content"
-            dangerouslySetInnerHTML={{ __html: cookiePolicyHTML }}
-          />
+        <div className="px-4 py-8 md:p-8">
+          <div className="max-w-3xl mx-auto">
+            <div
+              className="glass-card p-8 legal-content"
+              dangerouslySetInnerHTML={{ __html: cookiePolicyHTML }}
+            />
+          </div>
         </div>
       </Layout>
     </>

@@ -2251,7 +2251,8 @@ const getTeamMap = (): Map<string, Team> => {
 
 export const getDriverById = (id: string): Driver | undefined => getDriverMap().get(id);
 
-export const getTeamById = (id: string): Team | undefined => {
+// Numeric car-number lookups default to 2026; exact team IDs retain their existing lookup behavior.
+export const getTeamById = (id: string, season: number = 2026): Team | undefined => {
   if (!id) return undefined;
   const map = getTeamMap();
   if (map.has(id)) return map.get(id);
@@ -2259,7 +2260,11 @@ export const getTeamById = (id: string): Team | undefined => {
   // If numeric ID/car number provided (e.g. "7", "50", "#7", "#50")
   const cleanId = id.replace('#', '').trim();
   if (/^\d+$/.test(cleanId) || /^\d+$/.test(id)) {
-    for (const team of map.values()) {
+    const seasonTeams = season === 2024 ? teams2024
+      : season === 2025 ? teams2025
+      : season === 2026 ? [...hypercars2026, ...lmgt3Teams2026]
+      : [];
+    for (const team of seasonTeams) {
       const cleanCarNum = team.carNumber ? team.carNumber.replace('#', '').trim() : '';
       if (cleanCarNum === cleanId) {
         return team;

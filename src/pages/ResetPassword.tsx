@@ -58,32 +58,34 @@ export default function ResetPassword() {
         noIndex={true}
       />
       <Layout>
-        <div className="glass-card p-8 w-full max-w-md space-y-6">
-          <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
+        <div className="px-4 py-8 md:p-8">
+          <div className="glass-card p-8 w-full max-w-md mx-auto space-y-6">
+            <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          {success && <p className="text-sm text-primary">{success}</p>}
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            {success && <p className="text-sm text-primary">{success}</p>}
 
-          <div className="space-y-4">
-            <Input
-              type="password"
-              placeholder="New password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button
-              onClick={handleReset}
-              disabled={isLoading}
-              className="w-full racing-gradient text-white"
-            >
-              {isLoading ? 'Updating...' : 'Update Password'}
-            </Button>
+            <div className="space-y-4">
+              <Input
+                type="password"
+                placeholder="New password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Button
+                onClick={handleReset}
+                disabled={isLoading}
+                className="w-full racing-gradient text-white"
+              >
+                {isLoading ? 'Updating...' : 'Update Password'}
+              </Button>
+            </div>
           </div>
         </div>
       </Layout>

@@ -11,7 +11,7 @@ export default function Dsar() {
       <SEOHead title="Data Request — WEC Pitwall" description="Submit a data subject access request." />
 
       <Layout>
-        <div className="max-w-3xl mx-auto px-4 space-y-6">
+        <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
           {/* Hero section */}
           <div className="space-y-2">
