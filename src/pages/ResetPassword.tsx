@@ -6,11 +6,6 @@ import Layout from '@/components/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-/**
- * Renders the password recovery form for updating the current Supabase user's password.
- * Validates confirmation and minimum length, then redirects home after success.
- * @returns The password reset page with validation and submission feedback.
- */
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -58,34 +53,32 @@ export default function ResetPassword() {
         noIndex={true}
       />
       <Layout>
-        <div className="px-4 py-8 md:p-8">
-          <div className="glass-card p-8 w-full max-w-md mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
+        <div className="glass-card p-8 w-full max-w-md space-y-6">
+          <h1 className="text-2xl font-bold text-foreground">Set New Password</h1>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            {success && <p className="text-sm text-primary">{success}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          {success && <p className="text-sm text-primary">{success}</p>}
 
-            <div className="space-y-4">
-              <Input
-                type="password"
-                placeholder="New password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <Button
-                onClick={handleReset}
-                disabled={isLoading}
-                className="w-full racing-gradient text-white"
-              >
-                {isLoading ? 'Updating...' : 'Update Password'}
-              </Button>
-            </div>
+          <div className="space-y-4">
+            <Input
+              type="password"
+              placeholder="New password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <Button
+              onClick={handleReset}
+              disabled={isLoading}
+              className="w-full racing-gradient text-white"
+            >
+              {isLoading ? 'Updating...' : 'Update Password'}
+            </Button>
           </div>
         </div>
       </Layout>

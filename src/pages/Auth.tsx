@@ -131,10 +131,12 @@ const Auth = () => {
         toast.error(error.message);
       }
     } else {
-      await supabase
-        .from('profiles')
-        .update({ username, display_name: displayName || null })
-        .eq('user_id', session?.user?.id || '');
+      if (username) {
+        await supabase
+          .from('profiles')
+          .update({ username, display_name: displayName || null })
+          .eq('user_id', session?.user?.id || '');
+      }
       toast.success('Account created! Please check your email to verify.');
       const from = (location.state as { from?: string })?.from || '/';
       navigate(from, { replace: true });

@@ -126,10 +126,6 @@ const termsHTML = `
 </div>
 `;
 
-/**
- * Renders the static terms of use HTML with page metadata and shared navigation.
- * @returns The terms of use page.
- */
 export default function Terms() {
   return (
     <>
@@ -138,13 +134,11 @@ export default function Terms() {
         description="Terms of Use for WEC Pitwall analytics platform."
       />
       <Layout>
-        <div className="px-4 py-8 md:p-8">
-          <div className="max-w-3xl mx-auto">
-            <div
-              className="glass-card p-8 legal-content"
-              dangerouslySetInnerHTML={{ __html: termsHTML }}
-            />
-          </div>
+        <div className="max-w-3xl mx-auto">
+          <div
+            className="glass-card p-8 legal-content"
+            dangerouslySetInnerHTML={{ __html: termsHTML }}
+          />
         </div>
       </Layout>
     </>

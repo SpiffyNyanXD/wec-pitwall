@@ -1,17 +1,13 @@
 import Layout from '@/components/Layout';
 import SEOHead from '@/components/SEOHead';
 
-/**
- * Renders privacy rights information and the embedded Termly data request form.
- * @returns The data subject access request page within the shared layout.
- */
 export default function Dsar() {
   return (
     <>
       <SEOHead title="Data Request — WEC Pitwall" description="Submit a data subject access request." />
 
       <Layout>
-        <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        <div className="max-w-3xl mx-auto px-4 space-y-6">
 
           {/* Hero section */}
           <div className="space-y-2">
