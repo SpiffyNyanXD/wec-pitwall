@@ -1,13 +1,12 @@
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import SEOHead from '@/components/SEOHead';
 
 export default function Dsar() {
   return (
     <>
       <SEOHead title="Data Request — WEC Pitwall" description="Submit a data subject access request." />
-      <Header />
 
-      <div className="min-h-screen bg-background pt-20 pb-16">
+      <Layout>
         <div className="max-w-3xl mx-auto px-4 space-y-6">
 
           {/* Hero section */}
@@ -57,7 +56,7 @@ export default function Dsar() {
           </div>
 
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

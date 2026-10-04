@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import SEOHead from '@/components/SEOHead';
 import { Link } from 'react-router-dom';
 
@@ -12,14 +12,13 @@ const Section = ({ id, title, children }: { id: string; title: string; children:
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead
         title="Privacy Policy"
         description="WEC Pitwall Privacy Policy — how we collect, use and protect your data."
         url="/privacy"
         noIndex={false}
       />
-      <Header />
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
 
@@ -160,7 +159,7 @@ const PrivacyPolicy = () => {
 
         </motion.div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

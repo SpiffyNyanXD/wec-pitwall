@@ -43,6 +43,8 @@ const DriverComparison = lazy(() => import('./pages/DriverComparison'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Dsar = lazy(() => import('./pages/Dsar'));
 const Terms = lazy(() => import('./pages/Terms'));
+const CookiePreferencesPage = lazy(() => import('./pages/CookiePreferencesPage'));
+
 
 
 const RequireAuth = ({ children }: { children: React.ReactNode }) => {
@@ -150,6 +152,11 @@ const App = () => (
               <Route path="/data-request" element={
                 <Suspense fallback={<><Header /><PageLoader /></>}>
                   <Dsar />
+                </Suspense>
+              } />
+                            <Route path="/cookie-preferences" element={
+                <Suspense fallback={<PageLoader />}>
+                  <CookiePreferencesPage />
                 </Suspense>
               } />
               <Route path="/terms" element={

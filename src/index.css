@@ -409,3 +409,14 @@
   scrollbar-width: thin;
   scrollbar-color: #333 #0a0a0a;
 }
+
+/* Global Termly dialog & embed fallback styling */
+div[id*="termly"],
+iframe[src*="termly"],
+.termly-embed,
+[name="termly-embed"],
+[data-type="iframe"] {
+  background-color: #111111 !important;
+  color: #f5f5f5 !important;
+  border-radius: 0.75rem;
+}

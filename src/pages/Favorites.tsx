@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Star, LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
@@ -37,7 +37,7 @@ const FavoritesPage = () => {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('favorite_teams')
       .select('*')
       .eq('user_id', user?.id);
@@ -115,8 +115,7 @@ const FavoritesPage = () => {
 
   if (AUTH_ENABLED && !user) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
+      <Layout>
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -136,14 +135,13 @@ const FavoritesPage = () => {
             </Button>
           </motion.div>
         </main>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead title="Favourites" url="/favorites" noIndex={true} />
-      <Header />
       
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
         <motion.div
@@ -222,7 +220,7 @@ const FavoritesPage = () => {
           )}
         </motion.div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

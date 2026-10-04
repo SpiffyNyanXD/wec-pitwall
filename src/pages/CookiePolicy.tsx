@@ -1,5 +1,5 @@
 import SEOHead from '@/components/SEOHead';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 
 const cookiePolicyHTML = `
 <style>
@@ -94,15 +94,14 @@ export default function CookiePolicy() {
         title="Cookie Policy — WEC Pitwall"
         description="Cookie policy for WEC Pitwall analytics platform."
       />
-      <Header />
-      <div className="min-h-screen bg-background px-4 py-16">
+      <Layout>
         <div className="max-w-3xl mx-auto">
           <div
             className="glass-card p-8 legal-content"
             dangerouslySetInnerHTML={{ __html: cookiePolicyHTML }}
           />
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

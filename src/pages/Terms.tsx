@@ -1,5 +1,5 @@
 import SEOHead from '@/components/SEOHead';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 
 const termsHTML = `
 <style>
@@ -133,15 +133,14 @@ export default function Terms() {
         title="Terms of Use — WEC Pitwall"
         description="Terms of Use for WEC Pitwall analytics platform."
       />
-      <Header />
-      <div className="min-h-screen bg-background px-4 py-16">
+      <Layout>
         <div className="max-w-3xl mx-auto">
           <div
             className="glass-card p-8 legal-content"
             dangerouslySetInnerHTML={{ __html: termsHTML }}
           />
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

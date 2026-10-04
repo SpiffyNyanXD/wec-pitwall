@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home, Calendar, Trophy, ArrowLeft } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 
 const quickLinks = [
   { to: '/', label: 'Dashboard', icon: Home },
@@ -18,14 +18,12 @@ const NotFound = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
         <motion.div
@@ -130,7 +128,7 @@ const NotFound = () => {
           </motion.div>
         </motion.div>
       </main>
-    </div>
+    </Layout>
   );
 };
 
