@@ -5,7 +5,7 @@ import { Trophy, Calendar, Car, Shield, Milestone, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { standings2024, standings2025, hypercars2026 } from '@/data/wecData';
@@ -48,14 +48,13 @@ const Manufacturers = () => {
   }, {} as Record<string, typeof hypercars2026>);
 
   return (
-    <div className="min-h-screen pb-20 bg-background">
+    <Layout>
 
             <SEOHead
         title="WEC Manufacturers Championship 2026 | WEC Pitwall"
         description="2026 FIA WEC Manufacturers Championship — Toyota, Ferrari, BMW, Alpine, Aston Martin, Cadillac, Peugeot, Genesis."
         url="/manufacturers"
       />
-      <Header />
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
@@ -298,7 +297,7 @@ const Manufacturers = () => {
           </div>
         </section>
       </div>
-    </div>
+    </Layout>
   );
 };
 

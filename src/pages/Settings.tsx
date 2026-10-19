@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Bell, Heart, User, ChevronRight, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,7 +70,7 @@ const SettingsPage = () => {
   const handleMarketingConsentChange = async (checked: boolean) => {
     setMarketingConsent(checked);
     if (!user) return;
-    const { error: profileError } = await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({ marketing_emails: checked })
       .eq('user_id', user?.id);
@@ -121,7 +121,7 @@ const SettingsPage = () => {
     }
 
     setSavingProfile(true);
-    const { error: profileError } = await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({
         username: editUsername || null,
@@ -129,7 +129,7 @@ const SettingsPage = () => {
       })
       .eq('user_id', user?.id);
 
-    if (profileError) {
+    if (error) {
       toast.error('Failed to save profile');
     } else {
       toast.success('Profile updated');
@@ -145,7 +145,7 @@ const SettingsPage = () => {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('notification_subscriptions')
       .select('*')
       .eq('user_id', user?.id)
@@ -190,8 +190,7 @@ const SettingsPage = () => {
 
   if (AUTH_ENABLED && !user) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
+      <Layout>
         <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -211,14 +210,13 @@ const SettingsPage = () => {
             </Button>
           </motion.div>
         </main>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead title="Settings" url="/settings" noIndex={true} />
-      <Header />
       
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
         <motion.div
@@ -521,7 +519,7 @@ const SettingsPage = () => {
 
         </motion.div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

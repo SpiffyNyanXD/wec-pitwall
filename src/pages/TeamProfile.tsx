@@ -3,16 +3,17 @@ import SEOHead from "@/components/SEOHead";
 import { useParams, Link } from 'react-router-dom';
 
 import { useTeamProfile } from '@/hooks/useTeamProfile';
+import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
-import { Trophy, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
-import Header from '@/components/Header';
+import { Trophy, Flag, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
+import Layout from '@/components/Layout';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getTeamById, getDriverById } from '@/data/wecData';
+import { getTeamById, getDriverById, Team } from '@/data/wecData';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -226,7 +227,7 @@ const TeamProfile = () => {
   );
   const { user } = useAuth();
 
-  const { data: profile } = useTeamProfile(team?.name || '');
+  const { data: profile, isLoading: isProfileLoading } = useTeamProfile(team?.name || '');
 
   // Use DB drivers instead of static data for current drivers list
   const { data: dbDrivers, error: dbDriversError, isLoading: isDriversLoading } = useQuery({
@@ -282,7 +283,7 @@ const TeamProfile = () => {
   const checkFavorite = async () => {
     if (!user || !supabase) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('favorite_teams')
       .select('id')
       .eq('user_id', user.id)
@@ -381,7 +382,10 @@ const TeamProfile = () => {
     return `${team.manufacturer} Hybrid Power Unit`;
   };
 
-
+  const getClassLabel = () => {
+    if (team.class === 'LMP2') return 'Le Mans 24h Only';
+    return team.class;
+  };
 
   // Default values for extended data
   const teamData = {
@@ -406,7 +410,7 @@ const TeamProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead
         title={team.name}
         description={`${team.name} — FIA WEC team profile, car entries and driver lineup.`}
@@ -420,8 +424,6 @@ const TeamProfile = () => {
         />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         {/* Back Button */}
@@ -525,7 +527,7 @@ const TeamProfile = () => {
           </motion.div>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

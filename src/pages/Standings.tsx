@@ -2,7 +2,7 @@ import SEOHead from "@/components/SEOHead";
 import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Users, User, Factory, Info, Crown, Medal, Award, Calendar } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -685,7 +685,7 @@ const Standings = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
 
             <SEOHead
@@ -698,8 +698,6 @@ const Standings = () => {
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4 relative z-10">
         <motion.div
@@ -770,7 +768,7 @@ const Standings = () => {
           </div>
         </motion.div>
       </main>
-    </div>
+    </Layout>
   );
 };
 

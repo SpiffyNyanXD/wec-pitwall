@@ -2,7 +2,7 @@ import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 import CountdownWidget from '@/components/widgets/CountdownWidget';
 import StandingsWidget from '@/components/widgets/StandingsWidget';
@@ -25,7 +25,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
 
 
@@ -40,8 +40,6 @@ const Index = () => {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
       </div>
-      
-      <Header />
       
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 relative z-10">
         <h1 className="sr-only">WEC Pitwall Dashboard - FIA World Endurance Championship Companion</h1>
@@ -95,7 +93,7 @@ const Index = () => {
       </main>
       
       <Footer />
-    </div>
+    </Layout>
   );
 };
 

@@ -1,17 +1,16 @@
 import SEOHead from "@/components/SEOHead";
-import Header from "@/components/Header";
+import Layout from '@/components/Layout';
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 const CookiePreferencesPage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#000000]">
+    <Layout>
       <SEOHead
         title="Cookie Preferences | WEC Pitwall"
         description="Manage your cookie and consent preferences for WEC Pitwall."
       />
-      <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl pt-24">
         <div className="mb-8">
@@ -34,7 +33,7 @@ const CookiePreferencesPage = () => {
       </main>
 
       <Footer />
-    </div>
+    </Layout>
   );
 };
 

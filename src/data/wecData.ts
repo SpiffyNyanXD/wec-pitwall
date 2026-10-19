@@ -2251,7 +2251,23 @@ const getTeamMap = (): Map<string, Team> => {
 
 export const getDriverById = (id: string): Driver | undefined => getDriverMap().get(id);
 
-export const getTeamById = (id: string): Team | undefined => getTeamMap().get(id);
+export const getTeamById = (id: string): Team | undefined => {
+  if (!id) return undefined;
+  const map = getTeamMap();
+  if (map.has(id)) return map.get(id);
+
+  // If numeric ID/car number provided (e.g. "7", "50", "#7", "#50")
+  const cleanId = id.replace('#', '').trim();
+  if (/^\d+$/.test(cleanId) || /^\d+$/.test(id)) {
+    for (const team of map.values()) {
+      const cleanCarNum = team.carNumber ? team.carNumber.replace('#', '').trim() : '';
+      if (cleanCarNum === cleanId) {
+        return team;
+      }
+    }
+  }
+  return undefined;
+};
 
 export const getDriversByClass = (carClass: 'HYPERCAR' | 'LMP2' | 'LMGT3'): Driver[] => {
   return drivers2024.filter(d => d.class === carClass);

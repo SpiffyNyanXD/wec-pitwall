@@ -1,11 +1,12 @@
 import SEOHead from "@/components/SEOHead";
-import { useParams } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Calendar, MapPin, Users, Star } from 'lucide-react';
-import Header from '@/components/Header';
+import { Trophy, Flag, Medal, Calendar, MapPin, Users, Star, Quote } from 'lucide-react';
+import Layout from '@/components/Layout';
 import { AuthGate } from '@/components/AuthGate';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { getDriverById, getTeamById } from '@/data/wecData';
 import { getFlagEmoji } from '@/lib/flagUtils';
 
@@ -176,10 +177,33 @@ const DriverProfile = () => {
     return <NotFound />;
   }
 
+  const getClassBadge = (carClass: string) => {
+    switch (carClass) {
+      case 'HYPERCAR': return 'bg-primary/20 text-primary border-primary/30';
+      case 'LMP2': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'LMGT3': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      default: return 'bg-muted text-muted-foreground';
+    }
+  };
 
+
+
+  const formatDate = (dateString?: string) => {
+    const date = new Date(dateString);
+
+    if (!dateString || Number.isNaN(date.getTime())) {
+      return 'Unknown';
+    }
+
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <SEOHead
         title={`${driver.name} — WEC Pitwall`}
         description={`WEC career profile for ${driver.name}. ${profile?.bio?.slice(0, 120) ?? ''}`}
@@ -190,8 +214,6 @@ const DriverProfile = () => {
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         <AuthGate featureName="Driver Profiles">
@@ -247,7 +269,7 @@ const DriverProfile = () => {
         </div>
       </AuthGate>
       </main>
-    </div>
+    </Layout>
   );
 };
 

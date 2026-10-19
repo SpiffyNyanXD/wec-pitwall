@@ -1,3 +1,4 @@
+import { getTeamById } from '../data/wecData';
 /**
  * Smoke tests for WEC data integrity
  */
@@ -77,5 +78,18 @@ describe('WEC Data — 2026 Season', () => {
 
     expect(magnussenEntry?.id).toBe('kevin-magnussen');
     expect(getDriverById(magnussenEntry?.id || '')?.name).toBe('Kevin Magnussen');
+  });
+});
+
+describe('Numeric Team ID Lookup', () => {
+  it('resolves numeric car number string to matching team', () => {
+
+    const team7 = getTeamById('7');
+    expect(team7).toBeDefined();
+    expect(team7?.carNumber).toMatch(/7/);
+
+    const team50 = getTeamById('50');
+    expect(team50).toBeDefined();
+    expect(team50?.carNumber).toMatch(/50/);
   });
 });

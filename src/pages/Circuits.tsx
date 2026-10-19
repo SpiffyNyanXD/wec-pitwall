@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapPin, Route, Calendar, Search, X } from 'lucide-react';
-import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 import { Badge } from '@/components/ui/badge';
 import { circuits } from '@/data/wecData';
 
@@ -20,7 +20,7 @@ const Circuits = () => {
   }, [searchQuery]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
 
             <SEOHead
         title="WEC Circuits 2026 | WEC Pitwall"
@@ -31,8 +31,6 @@ const Circuits = () => {
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-
-      <Header />
 
       <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         <motion.div
@@ -119,7 +117,7 @@ const Circuits = () => {
           </div>
         )}
       </main>
-    </div>
+    </Layout>
   );
 };
 
