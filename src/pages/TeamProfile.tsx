@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
 import { Trophy, Users, MapPin, Calendar, Wrench, User, Quote, Star, Target, Heart } from 'lucide-react';
 import Header from '@/components/Header';
+import NotFound from './NotFound';
 import BackButton from '@/components/BackButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ import { toast } from 'sonner';
 import { getFlagEmoji } from '@/lib/flagUtils';
 
 
-const TeamDetails = ({ teamDrivers, dbDrivers, dbDriversError, isDriversLoading, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; dbDriversError: Error | null; isDriversLoading: boolean; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined }) => (
+const TeamDetails = ({ teamDrivers, dbDrivers, dbDriversError, isDriversLoading, teamData, profile }: { teamDrivers: Record<string, unknown>[]; dbDrivers: Record<string, unknown>[] | undefined; db[...]
   <div className="glass-card p-6">
     <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
       <Wrench className="w-5 h-5 text-primary" />
@@ -97,7 +98,7 @@ const TeamDetails = ({ teamDrivers, dbDrivers, dbDriversError, isDriversLoading,
   </div>
 );
 
-const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition: number | string }) => (
+const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; teamClass: string; teamPosition[...]
   <div className="glass-card p-6">
     <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
       <Trophy className="w-5 h-5 text-wec-gold" />
@@ -127,7 +128,7 @@ const TeamAchievements = ({ teamData, profile, teamClass, teamPosition }: { team
 );
 
 
-const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | null | undefined; isFavorite: boolean; toggleFavorite: () => void; getClassBadge: (c: string) => string }) => (
+const TeamHero = ({ team, teamData, profile, isFavorite, toggleFavorite, getClassBadge }: { team: Record<string, unknown>; teamData: Record<string, unknown>; profile: Record<string, unknown> | nu[...]
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -433,7 +434,7 @@ const TeamProfile = () => {
           <BackButton to="/teams" label="Back to Teams" />
         </motion.div>
 
-        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavorite} getClassBadge={getClassBadge} />
+        <TeamHero team={team} teamData={teamData as unknown as Record<string, unknown>} profile={profile as unknown as Record<string, unknown>} isFavorite={isFavorite} toggleFavorite={toggleFavor[...]
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Team Info */}
