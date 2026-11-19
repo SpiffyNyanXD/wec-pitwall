@@ -64,13 +64,13 @@ const Auth = () => {
   const validateForm = () => {
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
-      toast.error(emailResult.error.errors[0].message);
+      toast.error(emailResult.error.issues[0].message);
       return false;
     }
 
     const passwordResult = passwordSchema.safeParse(password);
     if (!passwordResult.success) {
-      toast.error(passwordResult.error.errors[0].message);
+      toast.error(passwordResult.error.issues[0].message);
       return false;
     }
 
