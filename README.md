@@ -45,7 +45,7 @@ Track races, standings, drivers, teams, and circuits across the 2024, 2025 and 2
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 26.x and npm
 - A Supabase project (free tier works)
 
 ### Setup
