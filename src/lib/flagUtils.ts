@@ -15,6 +15,14 @@ export function getFlagEmoji(code: string): string {
   return primary ? toEmoji(primary) : NEUTRAL_FLAG;
 }
 
+// Comparison aggregates can contain both NEUTRAL and a country from another
+// source. Preserve the neutral designation instead of assigning nationality.
+export function getComparisonFlagEmoji(code: string): string {
+  return /(?:^|[^A-Z])NEUTRAL(?:$|[^A-Z])/.test(code.toUpperCase())
+    ? NEUTRAL_FLAG
+    : getFlagEmoji(code);
+}
+
 export function countryCodeFromFlag(flag: string): string | null {
   const points = Array.from(flag);
   if (points.length !== 2) return null;

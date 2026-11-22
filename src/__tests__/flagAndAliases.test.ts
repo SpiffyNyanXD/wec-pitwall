@@ -1,4 +1,4 @@
-import { getFlagEmoji, primaryCountryCode, countryCodeFromFlag, NEUTRAL_FLAG } from '../lib/flagUtils';
+import { getComparisonFlagEmoji, getFlagEmoji, primaryCountryCode, countryCodeFromFlag, NEUTRAL_FLAG } from '../lib/flagUtils';
 import { getDriverById } from '../data/wecData';
 
 describe('flagUtils dual and neutral country codes', () => {
@@ -15,6 +15,13 @@ describe('flagUtils dual and neutral country codes', () => {
     expect(getFlagEmoji('N/A')).toBe(NEUTRAL_FLAG);
     expect(getFlagEmoji('')).toBe(NEUTRAL_FLAG);
     expect(primaryCountryCode('NEUTRAL')).toBeNull();
+  });
+  it('keeps neutral designations and source conflict codes honest on comparison cards', () => {
+    expect(getComparisonFlagEmoji('NEUTRAL')).toBe(NEUTRAL_FLAG);
+    expect(getComparisonFlagEmoji('NEUTRAL | RU')).toBe(NEUTRAL_FLAG);
+    expect(getComparisonFlagEmoji('N/A')).toBe(NEUTRAL_FLAG);
+    expect(getComparisonFlagEmoji('DE / DK')).toBe('🇩🇪');
+    expect(getComparisonFlagEmoji('GB | IE')).toBe('🇬🇧');
   });
   it('keeps clean ISO codes and flag parsing intact', () => {
     expect(getFlagEmoji('GB')).toBe('🇬🇧');
