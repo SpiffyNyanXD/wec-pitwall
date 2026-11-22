@@ -1,7 +1,719 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/auth",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/auth/callback",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/favorites",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/notifications",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/data-request",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/buemi",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/hartley",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/hirakawa",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/estre",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/lotterer",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vanthoor",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/fuoco",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/molina",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/nielsen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/nato",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/deletraz",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/sorensen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/gunn",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/calado-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/pier-guidi-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/giovinazzi-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/estre-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/lotterer-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vanthoor-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/buemi-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/hartley-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/hirakawa-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/kobayashi-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/conway-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/delacruz-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/fuoco-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/molina-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/nielsen-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vanthoor-dries-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/marciello-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vanderlinde-s-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/rast-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/frijns-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/farfus-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/schumacher-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/chatin-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/habsburg-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/milesi-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/makowiecki-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/gounon-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/diresta-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/jensen-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vergne-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/duval-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/jakobsen-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/vandoorne-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/lynn-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/nato-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/stevens-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/bamber-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/bourdais-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/button-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/gamble-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/tincknell-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/gunn-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/riberas-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/sorensen-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/kevin-magnussen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/marco-srensen-2024",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/marco-srensen-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/marco-srensen-2026",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/drivers/marco-srensen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/toyota-8",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/toyota-7",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/ferrari-50",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/ferrari-51",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/porsche-6",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/porsche-5",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/cadillac-2",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/peugeot-93",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/peugeot-94",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/alpine-35",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/idec-28",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/tds-33",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/cool-37",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/united-22",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/inter-34",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/hor-27",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/manthey-91",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/iron-85",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/proton-77",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/afc-55",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/ferrari-51-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/toyota-7-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/toyota-8-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/porsche-6-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/porsche-5-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/ferrari-50-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/peugeot-93-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/alpine-35-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/peugeot-94-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/united-22-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/hor-27-2025",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/cadillac-12",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/cadillac-38",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/alpine-36",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/bmw-15",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/bmw-20",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/aston-007",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/aston-009",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/genesis-17",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/genesis-19",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/manthey-92",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000002",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000003",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000004",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000005",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000008",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/race/20000001-0000-0000-0000-000000000006",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/8",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/51",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/7",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/35",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/20",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/50",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/15",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/38",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/007",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/83",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/36",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/94",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/12",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/009",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/17",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/93",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/69",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/33",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/92",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/91",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/32",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/21",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/58",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/88",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/23",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/77",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/54",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/79",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/19",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/10",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/78",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/61",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/34",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/27",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/87",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/101",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/43",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/343",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/29",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/26",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/37",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/28",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/4",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/22",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/183",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/99",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/9",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/25",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/14",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/44",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/222",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/48",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/3",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/24",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/150",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/74",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/57",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/59",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/2",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/62",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/30",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teams/13",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/circuit/lusail",
       "destination": "/index.html"
     }
   ],
@@ -30,6 +742,40 @@
         {
           "key": "Cache-Control",
           "value": "no-store, no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.posthog.com https://*.i.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://*.posthog.com https://*.i.posthog.com; frame-src https://app.termly.io; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/(auth|auth/callback|settings|favorites|notifications|reset-password)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
         }
       ]
     }

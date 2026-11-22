@@ -409,3 +409,14 @@
   scrollbar-width: thin;
   scrollbar-color: #333 #0a0a0a;
 }
+
+/* Shared navigation inset prevents content under the fixed desktop sidebar. */
+@media (min-width: 768px) { #root { margin-left: 80px; } }
+@media (min-width: 1024px) { #root { margin-left: 256px; } }
+@media (min-width: 1920px) { #root { margin-left: 288px; } }
+main { min-width: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+.legal-content, .legal-content [data-custom-class], .legal-content [data-custom-class] *, .legal-content .terms-body, .legal-content .terms-body h1, .legal-content .terms-body h2 { color: hsl(var(--foreground)) !important; }
+.legal-content a, .legal-content [data-custom-class='link'] { color: hsl(var(--primary)) !important; }
+

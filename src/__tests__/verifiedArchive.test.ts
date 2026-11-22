@@ -1,0 +1,19 @@
+import { comparison, drivers2024, drivers2025, drivers2026, teams2026, races, raceResults, getDriverById, getTeamById, getRaceById, verifiedStandings } from '../data/wecData';
+import { countryCodeFromFlag, getFlagEmoji } from '../lib/flagUtils';
+import { computeAllRaceStatuses } from '../utils/raceStatus';
+
+describe('Verified 2024–2026 release invariants',()=>{
+ test.each([2024,2025,2026])('%i has eight ordered scored rounds',year=>{const rs=races.filter(r=>r.season===year);expect(rs.map(r=>r.round)).toEqual([1,2,3,4,5,6,7,8]);expect(rs.every(r=>r.status==='completed'&&!!r.sourceUrl)).toBe(true)});
+ test('2026 replacements are Barcelona / Monza, without cancelled rounds',()=>{const rs=races.filter(r=>r.season===2026);expect(rs[6]).toMatchObject({circuitId:'barcelona',date:'2026-10-18'});expect(rs[7]).toMatchObject({circuitId:'monza',date:'2026-11-08'});expect(rs.some(r=>['qatar','bahrain'].includes(r.circuitId!))).toBe(false)});
+ test.each(['2024','2025','2026','ALL'])('%s comparison contains all 296 identities',scope=>{const rows=comparison.filter(r=>r.season===scope);expect(rows).toHaveLength(296);expect(new Set(rows.map(r=>r.driver_slug)).size).toBe(296);expect(rows.every(r=>['points','starts','wins','podiums','poles','fastest_laps'].every(k=>Number.isFinite(r[k])&&r[k]>=0))).toBe(true)});
+ test('ALL totals are exactly the sum of 2024–2026, including genuine zero seasons',()=>{for(const all of comparison.filter(r=>r.season==='ALL'))for(const metric of ['points','starts','wins','podiums','poles','fastest_laps','le_mans_wins','wec_titles'])expect(all[metric]).toBe(comparison.filter(r=>r.driver_slug===all.driver_slug&&r.season!=='ALL').reduce((s,r)=>s+r[metric],0))});
+ test('all 938 result rows retain actual source URLs',()=>{expect(raceResults).toHaveLength(24);expect(raceResults.reduce((n,r)=>n+r.results.length,0)).toBe(938);expect(races.every(r=>r.sourceUrl?.startsWith('https://files.alkamelcloud.com/wec/'))).toBe(true)});
+ test('every published driver and entry link resolves',()=>{for(const d of [...drivers2024,...drivers2025,...drivers2026]){expect(getDriverById(d.id)?.name).toBe(d.name);expect(getTeamById(d.teamId)).toBeDefined()}});
+ test('car number strings distinguish Toyota 7 from Aston Martin 007',()=>{expect(getTeamById('7')?.manufacturer).toBe('Toyota');expect(getTeamById('007')?.manufacturer).toBe('Aston Martin')});
+ test('legacy Nyck, team and captured race UUID aliases resolve',()=>{expect(getDriverById('delacruz-2025')?.id).toBe('nyck-de-vries-2025');expect(getTeamById('ferrari-51-2025')?.id).toBe('entry-2025-51');expect(getRaceById('20000001-0000-0000-0000-000000000002')?.id).toBe('2026-1')});
+ test('2026 Le Mans Hypercar winner is Toyota 7, not Spa context',()=>{const lm=races.find(r=>r.season===2026&&r.circuitId==='le-mans');const w=raceResults.find(r=>r.raceId===lm?.id)?.results.find(r=>r.class==='HYPERCAR'&&r.position===1);expect(w?.carNumber).toBe('#7')});
+ test('manufacturer and individual-driver official records remain separate',()=>{expect(verifiedStandings.filter(s=>s.year===2026&&s.type==='Manufacturers')).toHaveLength(8);expect(verifiedStandings.filter(s=>s.year===2026&&s.type==='Drivers').every(s=>!!s.driver_key)).toBe(true)});
+ test('flag adapters reject names and preserve verified ISO codes',()=>{expect(getFlagEmoji('GB')).toBe('🇬🇧');expect(countryCodeFromFlag('🇳🇱')).toBe('NL');expect(countryCodeFromFlag('de Vries')).toBeNull();expect(getFlagEmoji('Dutch')).toBe('🏁')});
+ test('elapsed dates never manufacture a completed classification',()=>{const s=computeAllRaceStatuses([{id:'past',scheduled_date:'2020-01-01',duration_hours:6,status:'scheduled'}]);expect(s.get('past')).toBe('awaiting')});
+ test('all published teams have resolvable seasonal crew references',()=>{for(const t of teams2026)for(const id of t.drivers)expect(getDriverById(id)).toBeDefined()});
+});

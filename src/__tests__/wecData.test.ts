@@ -75,7 +75,7 @@ describe('WEC Data — 2026 Season', () => {
       driver.drivers.includes('Magnussen')
     );
 
-    expect(magnussenEntry?.id).toBe('kevin-magnussen');
+    expect(magnussenEntry?.id).toBe('kevin-magnussen-2026');
     expect(getDriverById(magnussenEntry?.id || '')?.name).toBe('Kevin Magnussen');
   });
 });

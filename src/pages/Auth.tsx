@@ -1,21 +1,23 @@
+import { AUTH_ENABLED } from '@/lib/featureFlags';
+import VerifiedLayout from '@/components/VerifiedLayout';
 import SEOHead from "@/components/SEOHead";
 import WecLogo from '@/components/WecLogo';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, Loader2 } from 'lucide-react';
 
 const emailSchema = z.string().email('Please enter a valid email address');
-const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
+const passwordSchema = z.string().min(8, 'Password must be at least 8 characters');
 
-const Auth = () => {
+const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -48,6 +50,7 @@ const Auth = () => {
     setUsernameStatus('checking');
     if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
     usernameCheckTimer.current = setTimeout(async () => {
+      if (!supabase) { setUsernameStatus('idle'); return; }
       const { data, error } = await supabase.rpc('is_username_available', { uname: cleaned });
       if (!error) {
         setUsernameStatus(data ? 'available' : 'taken');
@@ -64,13 +67,13 @@ const Auth = () => {
   const validateForm = () => {
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
-      toast.error(emailResult.error.errors[0].message);
+      toast.error(emailResult.error.issues[0].message);
       return false;
     }
 
     const passwordResult = passwordSchema.safeParse(password);
     if (!passwordResult.success) {
-      toast.error(passwordResult.error.errors[0].message);
+      toast.error(passwordResult.error.issues[0].message);
       return false;
     }
 
@@ -400,4 +403,5 @@ const Auth = () => {
   );
 };
 
+const Auth = () => AUTH_ENABLED ? <AuthForm/> : <VerifiedLayout title="Account features unavailable"><p>Authentication and account changes are disabled in this verified archive build. Public race data is available without signing in.</p></VerifiedLayout>;
 export default Auth;

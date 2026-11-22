@@ -1,69 +1,7 @@
-export type RaceBadgeStatus = 'done' | 'live' | 'next' | 'upcoming' | 'postponed' | 'cancelled'
-
-interface RaceForStatus {
-  id: string
-  scheduled_date: string       // "YYYY-MM-DD"
-  start_time_utc?: string      // "HH:MM:SS" — may not exist yet, default to "11:00:00"
-  duration_hours: number
-  status: 'scheduled' | 'completed' | 'cancelled' | 'postponed' | string
-}
-
-/**
- * Classifies a race against its UTC start and duration, defaulting to 11:00 UTC.
- * Completed races are always done; both endpoints of the race window are live.
- */
-function getRaceWindowStatus(race: RaceForStatus, now: Date): 'done' | 'live' | 'upcoming' {
-  if (race.status === 'completed') return 'done'
-
-  const timeStr = race.start_time_utc ?? '11:00:00'
-  const start = new Date(`${race.scheduled_date}T${timeStr}Z`)
-  const end = new Date(start.getTime() + race.duration_hours * 60 * 60 * 1000)
-
-  if (now >= start && now <= end) return 'live'
-  if (now > end) return 'done'   // window passed, DB not updated yet
-  return 'upcoming'
-}
-
-/**
- * Maps race IDs to badge statuses at the current time, preserving cancellations
- * and postponements and marking only the earliest upcoming race as next.
- *
- * @param races - Races with scheduled dates, durations, and stored statuses.
- * @returns A status for each race ID, or an empty map when no races are supplied.
- */
-export function computeAllRaceStatuses(
-  races: RaceForStatus[]
-): Map<string, RaceBadgeStatus> {
-  const now = new Date()
-  const result = new Map<string, RaceBadgeStatus>()
-
-  // First pass
-  const computed = races.map(r => ({
-    id: r.id,
-    status: r.status === 'cancelled'
-      ? 'cancelled' as const
-      : r.status === 'postponed'
-      ? 'postponed' as const
-      : getRaceWindowStatus(r, now),
-    date: r.scheduled_date,
-    startTime: r.start_time_utc ?? '11:00:00',
-  }))
-
-  // Find single "next" race — earliest upcoming
-  const nextRace = computed
-    .filter(r => r.status === 'upcoming')
-    .sort((a, b) =>
-      new Date(`${a.date}T${a.startTime}Z`).getTime() -
-      new Date(`${b.date}T${b.startTime}Z`).getTime()
-    )[0]
-
-  computed.forEach(r => {
-    if (r.status === 'upcoming' && r.id === nextRace?.id) {
-      result.set(r.id, 'next')
-    } else {
-      result.set(r.id, r.status)
-    }
-  })
-
-  return result
+export type RaceBadgeStatus = 'done' | 'live' | 'next' | 'upcoming' | 'postponed' | 'cancelled' | 'awaiting';
+interface RaceForStatus { id:string; scheduled_date:string; start_time_utc?:string; duration_hours:number; status:string; }
+export function computeAllRaceStatuses(races:RaceForStatus[]):Map<string,RaceBadgeStatus>{
+ const now=Date.now(),map=new Map<string,RaceBadgeStatus>();
+ const next=races.filter(r=>!['completed','cancelled','postponed'].includes(r.status)&&Date.parse(r.scheduled_date+'T'+(r.start_time_utc??'23:59:59')+'Z')>now).sort((a,b)=>a.scheduled_date.localeCompare(b.scheduled_date))[0];
+ for(const r of races){let state:RaceBadgeStatus='upcoming';if(r.status==='completed')state='done';else if(r.status==='cancelled')state='cancelled';else if(r.status==='postponed')state='postponed';else if(r.start_time_utc){const start=Date.parse(r.scheduled_date+'T'+r.start_time_utc+'Z');if(now>=start&&now<=start+r.duration_hours*3600000)state='live';else if(now>start+r.duration_hours*3600000)state='awaiting';else if(r.id===next?.id)state='next';}else if(Date.parse(r.scheduled_date+'T23:59:59Z')<now)state='awaiting';else if(r.id===next?.id)state='next';map.set(r.id,state);}return map;
 }

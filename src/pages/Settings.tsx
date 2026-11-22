@@ -1,6 +1,6 @@
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Bell, Heart, User, ChevronRight, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTimezone, TIMEZONE_OPTIONS, useTimeFormat } from '@/hooks/useTimezone';
 import { useTheme } from 'next-themes';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -49,13 +49,35 @@ const SettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const loadNotificationSettings = useCallback(async () => {
+    if (!user || !supabase) {
+      setLoading(false);
+      return;
+    }
+
+    const { data } = await supabase
+      .from('notification_subscriptions')
+      .select('*')
+      .eq('user_id', user?.id)
+      .single();
+
+    if (data) {
+      setNotifications({
+        raceStartAlerts: data.race_start_alerts,
+        favoriteTeamAlerts: data.favorite_team_alerts,
+        pushNotifications: data.push_notifications,
+      });
+    }
+    setLoading(false);
+  }, [user]);
+
   useEffect(() => {
     if (user) {
       loadNotificationSettings();
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, loadNotificationSettings]);
 
   useEffect(() => {
     if (profile) {
@@ -69,13 +91,13 @@ const SettingsPage = () => {
 
   const handleMarketingConsentChange = async (checked: boolean) => {
     setMarketingConsent(checked);
-    if (!user) return;
+    if (!user || !supabase) return;
     const { error: profileError } = await supabase
       .from('profiles')
       .update({ marketing_emails: checked })
       .eq('user_id', user?.id);
-    if (error) {
-      console.error('Failed to update marketing consent:', error);
+    if (profileError) {
+      console.error('Failed to update marketing consent:', profileError);
       setMarketingConsent(!checked); // revert on error
       toast.error('Failed to update privacy preferences');
     } else {
@@ -139,30 +161,8 @@ const SettingsPage = () => {
     setSavingProfile(false);
   };
 
-  const loadNotificationSettings = async () => {
-    if (!user || !supabase) {
-      setLoading(false);
-      return;
-    }
-
-    const { data } = await supabase
-      .from('notification_subscriptions')
-      .select('*')
-      .eq('user_id', user?.id)
-      .single();
-
-    if (data) {
-      setNotifications({
-        raceStartAlerts: data.race_start_alerts,
-        favoriteTeamAlerts: data.favorite_team_alerts,
-        pushNotifications: data.push_notifications,
-      });
-    }
-    setLoading(false);
-  };
-
   const updateNotificationSetting = async (key: string, value: boolean) => {
-    if (AUTH_ENABLED && !user) {
+    if (!AUTH_ENABLED || !user) {
       toast.error('Please sign in to update settings');
       return;
     }
@@ -171,13 +171,13 @@ const SettingsPage = () => {
       return;
     }
 
-    const dbKey = key === 'raceStartAlerts' ? 'race_start_alerts' 
+    const dbKey: 'race_start_alerts' | 'favorite_team_alerts' | 'push_notifications' = key === 'raceStartAlerts' ? 'race_start_alerts' 
       : key === 'favoriteTeamAlerts' ? 'favorite_team_alerts' 
       : 'push_notifications';
 
     const { error } = await supabase
       .from('notification_subscriptions')
-      .update({ [dbKey]: value })
+      .update(dbKey === 'race_start_alerts' ? { race_start_alerts: value } : dbKey === 'favorite_team_alerts' ? { favorite_team_alerts: value } : { push_notifications: value })
       .eq('user_id', user?.id);
 
     if (error) {
@@ -188,20 +188,20 @@ const SettingsPage = () => {
     }
   };
 
-  if (AUTH_ENABLED && !user) {
+  if (!AUTH_ENABLED || !user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
+        <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-md mx-auto text-center glass-card p-8"
           >
             <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl mb-2">Sign In Required</h2>
+            <h2 className="text-xl mb-2">{AUTH_ENABLED ? 'Sign In Required' : 'Account features unavailable'}</h2>
             <p className="text-muted-foreground mb-6">
-              Please sign in to access your settings and preferences.
+              Account changes are disabled in this archive build. Theme and display preferences remain device-local.
             </p>
             <Button asChild className="racing-gradient">
               <Link to="/auth">
@@ -220,7 +220,7 @@ const SettingsPage = () => {
       <SEOHead title="Settings" url="/settings" noIndex={true} />
       <Header />
       
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -314,7 +314,7 @@ const SettingsPage = () => {
                   <p className="font-medium">Timezone</p>
                   <p className="text-sm text-muted-foreground">Select how session times are displayed</p>
                 </div>
-                <Select value={timezone} onValueChange={(val: Record<string, unknown>) => setTimezone(val)}>
+                <Select value={timezone} onValueChange={(val) => setTimezone(val as typeof timezone)}>
                   <SelectTrigger className="w-[180px] bg-background/50 border-border/50">
                     <SelectValue placeholder="Select Timezone" />
                   </SelectTrigger>
@@ -478,31 +478,7 @@ const SettingsPage = () => {
                     <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       disabled={isDeleting}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        setIsDeleting(true);
-
-                        if (!supabase) {
-                          setIsDeleting(false);
-                          toast.error('Failed to delete account. Please contact support.');
-                          return;
-                        }
-
-                        try {
-                          const { error } = await supabase.functions.invoke('delete-user');
-                          if (error) {
-                            setIsDeleting(false);
-                            toast.error('Failed to delete account. Please contact support.');
-                            return;
-                          }
-                          await signOut();
-                          toast.success('Account deleted successfully.');
-                          navigate('/');
-                        } catch (err) {
-                          setIsDeleting(false);
-                          toast.error('Failed to delete account. Please contact support.');
-                        }
-                      }}
+                      onClick={(e) => { e.preventDefault(); toast.error('Account deletion is disabled until server authorization and reauthentication are verified.'); }}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       {isDeleting ? 'Deleting...' : 'Delete Forever'}

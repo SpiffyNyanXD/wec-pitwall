@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import WecLogo from '@/components/WecLogo';
 import { Users, Menu, Bell, Settings, LogIn, LogOut, Home, Trophy, Calendar, Car, Heart, MapPin, Milestone, Factory, ChevronDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import {
   DropdownMenu,
@@ -55,6 +55,7 @@ const Header = () => {
     <>
 
 
+    <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-background focus:p-3">Skip to content</a>
     <motion.header 
       className="md:hidden sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl"
       initial={{ opacity: 0, y: -20 }}
@@ -66,7 +67,7 @@ const Header = () => {
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button variant="ghost" size="icon" aria-label="Open navigation" className="md:hidden">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -214,12 +215,12 @@ const Header = () => {
         
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="relative" asChild>
-            <Link to="/notifications">
+            <Link to="/notifications" aria-label="Notifications">
               <Bell className="h-5 w-5 text-muted-foreground" />
             </Link>
           </Button>
           <Button variant="ghost" size="icon" asChild className="hidden md:flex">
-            <Link to="/settings">
+            <Link to="/settings" aria-label="Settings">
               <Settings className="h-5 w-5 text-muted-foreground" />
             </Link>
           </Button>
@@ -284,7 +285,7 @@ const Header = () => {
     </motion.header>
 
       {/* Desktop Sidebar (>=768px) */}
-      <div className="hidden md:flex fixed top-0 left-0 h-screen bg-background border-r border-border/50 z-40 flex-col transition-all duration-300 w-20 lg:w-64 3xl:w-72">
+      <div data-app-sidebar="true" className="hidden md:flex fixed top-0 left-0 h-screen bg-background border-r border-border/50 z-40 flex-col transition-all duration-300 w-20 lg:w-64 3xl:w-72">
         <div className="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-border/50 shrink-0">
           <Link to="/" className="flex items-center gap-3">
             <WecLogo className="w-8 h-8" />
@@ -306,6 +307,8 @@ const Header = () => {
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
               }`}
+              aria-label={item.label}
+              aria-current={isActive(item.to) ? 'page' : undefined}
               title={item.label}
             >
               <item.icon className="w-5 h-5 shrink-0" />

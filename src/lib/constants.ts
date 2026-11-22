@@ -50,6 +50,7 @@ export const EMPTY_STATES = {
 
 export const APP_INFO = {
   NAME: 'WEC Pitwall',
+  DATA_NOTE: 'Verified 2024–2026 archive. Final official results; no live timing.',
   TAGLINE: 'Fan-Made WEC Companion',
   DISCLAIMER: 'Fan-made application. Not affiliated with FIA or WEC.',
 

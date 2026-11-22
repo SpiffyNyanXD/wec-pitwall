@@ -43,10 +43,10 @@ const Index = () => {
       
       <Header />
       
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 relative z-10">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-6 relative z-10">
         <h1 className="sr-only">WEC Pitwall Dashboard - FIA World Endurance Championship Companion</h1>
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -85,10 +85,10 @@ const Index = () => {
           <CalendarWidget />
 
           {/* Row 3: Quick Stats & Last Race */}
-          <div className="col-span-full md:col-span-1">
+          <div className="col-span-full md:col-span-1 xl:col-span-2">
             <QuickStatsWidget />
           </div>
-          <div className="col-span-full md:col-span-1">
+          <div className="col-span-full md:col-span-1 xl:col-span-2">
             <LastRaceWidget />
           </div>
         </motion.div>
