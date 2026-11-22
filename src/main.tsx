@@ -6,8 +6,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import ErrorFallback from "./components/ErrorFallback";
 
-injectSpeedInsights();
-inject();
+// Automatic telemetry disabled; optional analytics follow explicit consent.
+
 
 class BootErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
   constructor(props: { children: React.ReactNode }) {
@@ -51,7 +51,7 @@ async function bootstrap() {
         React.createElement(QueryClientProvider, { client: queryClient },
           React.createElement(HelmetProvider, null,
             React.createElement(Sentry.ErrorBoundary, {
-              fallback: ({ error }) => React.createElement(ErrorFallback, { error })
+              fallback: ({ error }) => React.createElement(ErrorFallback, { error: error instanceof Error ? error : new Error(String(error)) })
             },
               React.createElement(BootErrorBoundary, null,
                 React.createElement(App, null)
@@ -63,12 +63,8 @@ async function bootstrap() {
     );
   } catch (err) {
     console.error("Boot error:", err);
-    document.getElementById("root")!.innerHTML = `
-      <div style="color: red; padding: 20px; background: #000; font-family: monospace; height: 100vh; overflow: auto;">
-        <h2>Failed to boot the application</h2>
-        <pre>${err instanceof Error ? err.stack : String(err)}</pre>
-      </div>
-    `;
+    const root = document.getElementById('root');
+    if (root) root.textContent = 'WEC Pitwall could not start. Reload the page or try again later.';
   }
 }
 

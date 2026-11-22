@@ -1,3 +1,4 @@
+import SportingFlag from '@/components/SportingFlag';
 import SEOHead from "@/components/SEOHead";
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -34,7 +35,7 @@ const Circuits = () => {
 
       <Header />
 
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -72,14 +73,15 @@ const Circuits = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
+              className="min-w-0"
             >
               <Link
                 to={`/circuit/${circuit.id}`}
-                className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300 h-full"
+                className="group glass-card p-5 flex flex-col gap-4 hover:border-primary/50 transition-all duration-300 h-full min-w-0"
               >
                 <div className="flex justify-between items-start">
                   <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center text-3xl mb-3 shrink-0">
-                    {circuit.flag}
+                    <SportingFlag flag={circuit.flag}/>
                   </div>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                     WEC since {circuit.firstWEC}
@@ -87,7 +89,7 @@ const Circuits = () => {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors break-words">
                     {circuit.name}
                   </h3>
                   <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">

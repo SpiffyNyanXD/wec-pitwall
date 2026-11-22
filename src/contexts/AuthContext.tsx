@@ -1,29 +1,9 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { AUTH_ENABLED } from '@/lib/featureFlags';
+import { useEffect, useState, useRef, ReactNode } from 'react';
+import { AuthContext, AuthContextType, Profile } from './auth-context';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-interface Profile {
-  id: string;
-  user_id: string;
-  username: string | null;
-  display_name: string | null;
-  avatar_url: string | null;
-  marketing_emails: boolean;
-}
-
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  profile: Profile | null;
-  profileLoading: boolean;
-  signUp: (email: string, password: string, displayName?: string) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -32,15 +12,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
 
+  const profileRequest = useRef(0);
   const fetchProfile = async (userId: string) => {
-    if (!supabase) return;
+    if (!AUTH_ENABLED || !supabase) return;
+    const request = ++profileRequest.current;
     setProfileLoading(true);
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('id, user_id, username, display_name, avatar_url, marketing_emails')
       .eq('user_id', userId)
       .single();
-    setProfile(data ?? null);
+    if (request !== profileRequest.current) return;
+    setProfile(error ? null : data ?? null);
     setProfileLoading(false);
   };
 
@@ -52,20 +35,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user) {
       fetchProfile(user.id);
     } else {
+      profileRequest.current++;
       setProfile(null);
+      setProfileLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    if (!supabase) {
+    if (!AUTH_ENABLED || !supabase) {
       console.warn("Supabase client is not initialized.");
       setLoading(false);
       return;
     }
 
+    let disposed = false;
+    let authEventSeen = false;
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (disposed) return;
+        authEventSeen = true;
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -74,16 +63,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (disposed || authEventSeen) return;
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    const profileRequestRef = profileRequest;
+    return () => { disposed = true; profileRequestRef.current++; subscription.unsubscribe(); };
   }, []);
 
   const signUp = async (email: string, password: string, displayName?: string) => {
-    if (!supabase) return { error: new Error("Supabase is not initialized") };
+    if (!AUTH_ENABLED || !supabase) return { error: new Error("Supabase is not initialized") };
 
     const redirectUrl = `${window.location.origin}/`;
     
@@ -102,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: new Error("Supabase is not initialized") };
+    if (!AUTH_ENABLED || !supabase) return { error: new Error("Supabase is not initialized") };
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -113,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    if (!supabase) return;
+    if (!AUTH_ENABLED || !supabase) return;
     await supabase.auth.signOut();
   };
 
@@ -124,10 +115,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}

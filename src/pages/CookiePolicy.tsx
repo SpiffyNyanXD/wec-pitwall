@@ -96,7 +96,7 @@ export default function CookiePolicy() {
       />
       <Header />
       <div className="min-h-screen bg-background px-4 py-16">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto"><h1 className="sr-only">Cookie policy</h1>
           <div
             className="glass-card p-8 legal-content"
             dangerouslySetInnerHTML={{ __html: cookiePolicyHTML }}

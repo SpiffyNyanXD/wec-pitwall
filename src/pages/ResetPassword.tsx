@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export default function ResetPassword() {
+  const [recoveryAllowed, setRecoveryAllowed] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,15 +18,17 @@ export default function ResetPassword() {
   // Supabase sends the user back with a session in the URL hash.
   // The Supabase client picks this up automatically on mount.
   useEffect(() => {
+    if (!supabase) { setError('Account service is not configured.'); return; }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
-        // User is authenticated via the reset link — they can now set a new password.
+        setRecoveryAllowed(true);
       }
     });
     return () => subscription.unsubscribe();
   }, []);
 
   const handleReset = async () => {
+    if (!supabase || !recoveryAllowed) { setError('Open a valid password recovery link first.'); return; }
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -75,7 +78,7 @@ export default function ResetPassword() {
             />
             <Button
               onClick={handleReset}
-              disabled={isLoading}
+              disabled={isLoading || !recoveryAllowed}
               className="w-full racing-gradient text-white"
             >
               {isLoading ? 'Updating...' : 'Update Password'}

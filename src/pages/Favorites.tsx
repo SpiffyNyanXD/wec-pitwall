@@ -1,13 +1,14 @@
+import { teams2026, Team } from '@/data/wecData';
 import { AUTH_ENABLED } from '@/lib/featureFlags';
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Star, LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -29,10 +30,10 @@ const FavoritesPage = () => {
 
   // We don't have a good mock for all teams right now since we deprecated the static array
   // So I'm providing an empty state placeholder
-  const teamsList: Record<string, unknown>[] = [];
+  const teamsList: Team[] = teams2026;
 
-  const loadFavorites = async () => {
-    if ((AUTH_ENABLED && !user) || !supabase) {
+  const loadFavorites = useCallback(async () => {
+    if (!user || !supabase) {
       setLoading(false);
       return;
     }
@@ -46,7 +47,7 @@ const FavoritesPage = () => {
       setFavoriteTeams(data);
     }
     setLoading(false);
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -54,10 +55,10 @@ const FavoritesPage = () => {
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, loadFavorites]);
 
-  const addFavorite = async (team: Record<string, unknown>) => {
-    if (AUTH_ENABLED && !user) {
+  const addFavorite = async (team: Team) => {
+    if (!AUTH_ENABLED || !user) {
       toast.error('Please sign in to add favorites');
       return;
     }
@@ -84,7 +85,7 @@ const FavoritesPage = () => {
   };
 
   const removeFavorite = async (favoriteId: string) => {
-    if ((AUTH_ENABLED && !user) || !supabase) return;
+    if (!user || !supabase) return;
 
     const { error } = await supabase
       .from('favorite_teams')
@@ -113,20 +114,20 @@ const FavoritesPage = () => {
     }
   };
 
-  if (AUTH_ENABLED && !user) {
+  if (!AUTH_ENABLED || !user) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+        <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-md mx-auto text-center glass-card p-8"
           >
             <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl mb-2">Sign In Required</h2>
+            <h2 className="text-xl mb-2">{AUTH_ENABLED ? 'Sign In Required' : 'Account features unavailable'}</h2>
             <p className="text-muted-foreground mb-6">
-              Please sign in to manage your favorite teams and drivers.
+              Account persistence is not enabled in this archive build. Racing pages remain available without an account.
             </p>
             <Button asChild className="racing-gradient">
               <Link to="/auth">
@@ -145,7 +146,7 @@ const FavoritesPage = () => {
       <SEOHead title="Favourites" url="/favorites" noIndex={true} />
       <Header />
       
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

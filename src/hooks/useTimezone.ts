@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { usePreference } from './usePreference';
 import { formatInTimeZone, toDate } from 'date-fns-tz';
 
 export type TimezonePreference = 'auto' | 'UTC' | 'Europe/Paris' | 'Asia/Kolkata' | 'Asia/Tokyo' | 'America/Sao_Paulo' | 'America/Chicago' | 'Asia/Riyadh';
@@ -6,16 +6,8 @@ export type TimezonePreference = 'auto' | 'UTC' | 'Europe/Paris' | 'Asia/Kolkata
 export type TimeFormat = '24h' | '12h';
 
 export const useTimeFormat = () => {
-  const [timeFormat, setTimeFormat] = useState<TimeFormat>(
-    () => (localStorage.getItem('wec-time-format') as TimeFormat) || '24h'
-  );
-
-  const updateTimeFormat = (format: TimeFormat) => {
-    setTimeFormat(format);
-    localStorage.setItem('wec-time-format', format);
-  };
-
-  return { timeFormat, setTimeFormat: updateTimeFormat };
+  const [timeFormat, setTimeFormat] = usePreference<TimeFormat>('wec-time-format','24h');
+  return { timeFormat, setTimeFormat };
 };
 
 export const TIMEZONE_OPTIONS: { value: TimezonePreference; label: string }[] = [
@@ -43,14 +35,7 @@ export const CIRCUIT_TIMEZONES: Record<string, string> = {
 };
 
 export const useTimezone = () => {
-  const [timezone, setTimezone] = useState<TimezonePreference>(() => {
-    const saved = localStorage.getItem('wec-timezone');
-    return (saved as TimezonePreference) || 'auto';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('wec-timezone', timezone);
-  }, [timezone]);
+  const [timezone, setTimezone] = usePreference<TimezonePreference>('wec-timezone','auto');
 
   const getTargetTimezone = () => {
     if (timezone === 'auto') {
@@ -84,7 +69,7 @@ export const useTimezone = () => {
 
       return formattedTime;
     } catch (e) {
-      console.error('Error converting time', e);
+      // An invalid venue/time does not create a fabricated converted time.
       return timeStr;
     }
   };

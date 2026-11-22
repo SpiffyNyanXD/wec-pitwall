@@ -14,7 +14,7 @@ const Notifications = () => {
     <div className="min-h-screen bg-background">
       <SEOHead title="Notifications" url="/notifications" noIndex={true} />
       <Header />
-      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 py-12 px-4 relative z-10">
         <AuthGate featureName="Notifications">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -28,10 +28,9 @@ const Notifications = () => {
 
           <div className="glass-card p-12 text-center">
             <BellOff className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl mb-2">No notifications yet</h2>
+            <h2 className="text-xl mb-2">Notifications unavailable</h2>
             <p className="text-muted-foreground text-sm">
-              Race reminders and session alerts will appear here.
-              Check back closer to race weekends.
+              Notification delivery is not enabled in this archive build. This page does not schedule alerts.
             </p>
           </div>
         </motion.div>

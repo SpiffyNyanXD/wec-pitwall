@@ -7,7 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { SeasonProvider } from "@/contexts/SeasonContext";
 import { SkeletonBox } from "@/components/PageSkeleton";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -42,6 +43,8 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const DriverComparison = lazy(() => import('./pages/DriverComparison'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Dsar = lazy(() => import('./pages/Dsar'));
+const CookiePreferencesPage = lazy(() => import('./pages/CookiePreferencesPage'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const Terms = lazy(() => import('./pages/Terms'));
 
 
@@ -74,6 +77,7 @@ const PageLoader = () => (
 const PageTracker = () => {
   const location = useLocation();
   useEffect(() => {
+    document.documentElement.dataset.wecRoute = location.pathname;
     posthog.capture('$pageview');
   }, [location]);
   return null;
@@ -99,6 +103,8 @@ const App = () => (
             <RouteWrapper><Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+<Route path="/auth/callback" element={<AuthCallback />} />
+<Route path="/cookie-preferences" element={<CookiePreferencesPage />} />
               <Route path="/drivers" element={<Drivers />} />
               <Route path="/drivers/:id" element={<DriverProfile />} />
               <Route path="/teams" element={<Teams />} />
@@ -167,7 +173,7 @@ const App = () => (
       </AuthProvider>
     </ThemeProvider>
 
-    <SpeedInsights />
+
     </>
 
 );

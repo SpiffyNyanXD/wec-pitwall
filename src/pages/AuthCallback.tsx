@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
 const AuthCallback = () => {
@@ -12,7 +12,8 @@ const AuthCallback = () => {
     const handleCallback = async () => {
       const urlParams = new URLSearchParams(location.search);
       let code = urlParams.get('code');
-      const next = urlParams.get('next') || '/';
+      const requestedNext = urlParams.get('next') || '/';
+      const next = requestedNext.startsWith('/') && !requestedNext.startsWith('//') ? requestedNext : '/';
       
       // Fallback to hash if not in query string (Supabase uses hash by default)
       if (!code && location.hash) {

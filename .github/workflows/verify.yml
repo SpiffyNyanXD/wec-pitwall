@@ -1,0 +1,21 @@
+name: Verify local release
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
+      - run: npm test -- --runInBand
+      - run: npm audit --audit-level=moderate
+      - run: npm run build
+      - run: node scripts/verify-routes.mjs 1440
+      - run: node scripts/verify-routes.mjs 390

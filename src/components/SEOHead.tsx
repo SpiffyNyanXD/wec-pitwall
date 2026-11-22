@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-export const BASE_URL = 'https://wec-pitwall.vercel.app';
+import { useLocation } from 'react-router-dom';
+import { BASE_URL } from '@/lib/seo';
 
 interface SEOHeadProps {
   title: string;
@@ -22,8 +23,9 @@ const SEOHead = ({
   canonical: propCanonical,
   noIndex = false
 }: SEOHeadProps) => {
+  const location = useLocation();
   const metaDescription = description || DEFAULT_DESCRIPTION;
-  const canonical = propCanonical || (url ? `${BASE_URL}${url}` : BASE_URL);
+  const canonical = propCanonical || `${BASE_URL}${url || location.pathname}`;
 
   return (
     <Helmet>

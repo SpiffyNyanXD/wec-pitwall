@@ -1,0 +1,2 @@
+import { countryCodeFromFlag } from '@/lib/flagUtils';
+export default function SportingFlag({flag,label}:{flag:string;label?:string}){const code=countryCodeFromFlag(flag);return code?<img src={`/flags/${code}.svg`} width="24" height="16" alt={label??code} title={label??code} className="inline-block w-6 h-4 object-cover rounded-sm align-middle shrink-0"/>:<span aria-label={label??'Nationality unavailable'}>—</span>;}

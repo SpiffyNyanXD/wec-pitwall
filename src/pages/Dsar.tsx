@@ -39,20 +39,11 @@ export default function Dsar() {
             <div className="bg-muted/30 px-5 py-3 border-b border-border">
               <p className="text-sm font-medium text-foreground">Submit a Request</p>
               <p className="text-xs text-muted-foreground">
-                Fill in the form below. The data protection officer will be notified within 24 hours.
+                Fill in the form below. External service availability and response times are not guaranteed by this archive.
               </p>
             </div>
             <div className="dsar-iframe-wrapper">
-              <iframe
-                src="https://app.termly.io/dsar/0f2158a4-214c-4d05-9c7a-31977bf28326"
-                title="Data Subject Access Request Form"
-                className="w-full"
-                style={{
-                  border: 'none',
-                  minHeight: '700px',
-                  display: 'block',
-                }}
-              />
+              <p className="p-5 text-muted-foreground">The request form is hosted by Termly. It opens separately so a blocked or rate-limited external service cannot leave this page blank. No request is submitted by opening this page.</p><a className="block m-5 text-primary underline" href="https://app.termly.io/dsar/0f2158a4-214c-4d05-9c7a-31977bf28326" target="_blank" rel="noreferrer">Open external request form ↗</a>
             </div>
           </div>
 

@@ -1,96 +1,22 @@
-# Supabase Server Setup Guide
+# WEC Pitwall data and account setup
 
-This guide helps you set up Supabase server-side authentication and database operations for the wec-pitwall project.
+This repository is a Vite client-rendered app with build-time public prerendering. It does not contain a Supabase server SDK or a deletion endpoint.
 
-## Installation
+The 22 November 2026 public racing release reads `src/data/verifiedMaster.json`. It never combines an unavailable live query with a different season's static data. The matching prepared SQL is `20261122_verified_2024_2026_data.sql`, also in `supabase/migrations/20261122000001_verified_archive.sql`.
 
-The `@supabase/server` package is already added to `package.json`. Install dependencies:
+The SQL creates a versioned, public-read, write-restricted `wec_archive` read model and invoker views. It does not overwrite or backfill existing live `races`, `cars`, `drivers` or `race_results` tables. Legacy aggregate views are deprecated and are not consumed by the app. Review any other clients before retiring them. Reconcile an existing deployment's migration history before applying these files. The invalid historical demo seed is removed for clean local replay, not an instruction to rewrite an already-applied production migration.
 
-```bash
-npm install
-# or
-bun install
-```
+## Local build
 
-## Environment Variables
+1. Use Node 20 or later and `npm ci --ignore-scripts`.
+2. Run `npm run typecheck` and `npm test -- --runInBand`.
+3. Run `npm run build`. Build-time prerendering requires Chromium, either from Playwright or `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.
+4. Run `npm run preview`. Public snapshots have route-specific initial HTML; account pages are excluded.
 
-Server-side Supabase credentials are configured in `.env.example`. Make sure to update your `.env` (local) file:
+Optional public browser configuration is listed in `.env.example`. The Vite build reads `.env` through one validated environment source. Do not put service-role credentials or upload tokens in `VITE_*` variables. No source maps or bundle analysis are uploaded by this build.
 
-```env
-# Server-side configuration
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SECRET_KEY=your_secret_key
-SUPABASE_PUBLISHABLE_KEY=your_publishable_key
-SUPABASE_JWKS_URL=https://your-project.supabase.co/auth/v1/.well-known/jwks.json
-```
+## Account features
 
-⚠️ **Security Warning**: Never commit `.env` files. Keep `SUPABASE_SECRET_KEY` private.
+`AUTH_ENABLED` remains false. Public racing pages do not need an account. The account contract migration supplies the profile fields and bounded username-availability function referenced by the preserved account code. Deletion is disabled until a separately reviewed, authorized server flow and reauthentication exist. No auth form, account mutation, notification delivery or live Supabase RLS was tested. Local embedded PostgreSQL replay uses a small `auth` schema stub to test table policies, not Supabase Auth itself.
 
-## Usage
-
-### For Client-Side Operations (Browser)
-
-Use the existing client from `src/lib/supabase.ts`:
-
-```typescript
-import { supabase } from '@/lib/supabase';
-
-// Sign up
-const { data, error } = await supabase.auth.signUp({
-  email: 'user@example.com',
-  password: 'password123',
-});
-
-// Sign in
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'user@example.com',
-  password: 'password123',
-});
-```
-
-### For Server-Side Operations (Edge Functions, API Routes)
-
-Use the server utilities from `src/lib/supabase-server.ts`:
-
-```typescript
-import { createSupabaseServer, createSupabaseServerWithAuth } from '@/lib/supabase-server';
-
-// Admin operations (no user context required)
-const supabase = createSupabaseServer();
-
-const { data, error } = await supabase
-  .from('users')
-  .select('*')
-  .eq('id', userId);
-
-// User-authenticated operations (requires JWT token)
-const { data, error } = await createSupabaseServerWithAuth(userToken)
-  .from('profiles')
-  .select('*');
-```
-
-## Deployment to Vercel
-
-The environment variables are automatically available in Vercel deployments if configured in:
-1. **Project Settings** → **Environment Variables**
-2. Or via the Vercel CLI: `vercel env add SUPABASE_SECRET_KEY`
-
-## Project Structure
-
-- `src/lib/supabase.ts` - Client-side Supabase configuration
-- `src/lib/supabase-server.ts` - Server-side Supabase utilities
-- `.env.example` - Environment variable template
-- `supabase/` - Supabase migrations and configuration
-
-## Next Steps
-
-1. Update `.env` with your actual Supabase credentials
-2. Create Edge Functions in `supabase/functions/` for server-side logic
-3. Or create API routes for your backend operations
-4. Use the client/server utilities in your components and handlers
-
-## Resources
-
-- [Supabase Server Documentation](https://supabase.com/docs/guides/functions/quickstart)
-- [@supabase/server NPM](https://www.npmjs.com/package/@supabase/server)
-- [Vercel Deployment Guide](https://vercel.com/docs)
+Enable account features only after staging verification of provider redirect URLs, recovery events, owner/cross-user policies, session lifecycle and approved server endpoints. A successful local read model import is not approval to change a live database.
