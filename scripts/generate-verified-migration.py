@@ -172,7 +172,7 @@ CREATE OR REPLACE VIEW public.v_car_season_stats AS
 SELECT e.entry_key, s.year AS season_year, e.season_id, e.car_number, e.team_name, e.class,
   COUNT(r.id) AS starts,
   COUNT(*) FILTER (WHERE r.class_position = 1) AS class_wins,
-  COUNT(*) FILTER (WHERE r.class_position <= 3) AS class_podiums,
+  COUNT(*) FILTER (WHERE r.class_position BETWEEN 1 AND 3 AND r.status = 'Finished') AS class_podiums,
   COALESCE(SUM(r.points), 0) AS points
 FROM public.wec_entries e
 JOIN public.wec_seasons s ON s.id = e.season_id
